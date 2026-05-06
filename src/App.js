@@ -89,6 +89,7 @@ import StaticDynamicRAM from "./pages/Memory/StaticDynamicRAM";
 import ArrayOfRAMICs from "./pages/Memory/ArrayOfRAMICs";
 import MemoryConstructionRAM from "./pages/Memory/MemoryConstructionRAM";
 import DLDTrainerBoard from "./pages/TrainerBoard";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const { theme } = useTheme();
@@ -96,6 +97,7 @@ function App() {
   return (
     <div className={`app-root ${theme}`}>
       <BrowserRouter>
+        <Analytics />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
