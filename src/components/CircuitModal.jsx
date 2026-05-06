@@ -80,18 +80,33 @@ function validateCircuit(gates, wires, problem, assignment = null) {
       error: `Circuit has ${outputGates.length} OUTPUT gate(s) but problem needs ${probOutputs.length}.`,
     };
 
-  // Build ordered arrays using assignment map if provided, else use position
-  const orderedInputs = assignment
-    ? probInputs.map((name) =>
-        gates.find((g) => g.id === assignment.inputMap[name]),
-      )
-    : inputGates; // positional
+  // Try label-based matching (e.g. user renamed gate to "S1", "I0", "Y")
+  const tryLabelMatch = (portNames, gateList) => {
+    const matched = portNames.map((name) =>
+      gateList.find((g) => g.label === name),
+    );
+    return matched.every(Boolean) ? matched : null;
+  };
 
-  const orderedOutputs = assignment
-    ? probOutputs.map((name) =>
-        gates.find((g) => g.id === assignment.outputMap[name]),
-      )
-    : outputGates; // positional
+  let orderedInputs, orderedOutputs;
+
+  if (
+    assignment &&
+    (Object.keys(assignment.inputMap).length > 0 ||
+      Object.keys(assignment.outputMap).length > 0)
+  ) {
+    // 1st priority: user manually mapped via the assignment panel
+    orderedInputs = probInputs.map((name) =>
+      gates.find((g) => g.id === assignment.inputMap[name]),
+    );
+    orderedOutputs = probOutputs.map((name) =>
+      gates.find((g) => g.id === assignment.outputMap[name]),
+    );
+  } else {
+    // 2nd priority: label match, 3rd priority: positional fallback
+    orderedInputs = tryLabelMatch(probInputs, inputGates) ?? inputGates;
+    orderedOutputs = tryLabelMatch(probOutputs, outputGates) ?? outputGates;
+  }
 
   if (orderedInputs.some((g) => !g) || orderedOutputs.some((g) => !g))
     return {
@@ -104,7 +119,6 @@ function validateCircuit(gates, wires, problem, assignment = null) {
   let allPass = true;
 
   for (const truthRow of problem.truthTable) {
-    // Set each input gate's value according to this truth-table row
     const tempGates = gates.map((g) => {
       const idx = orderedInputs.findIndex((ig) => ig && ig.id === g.id);
       if (idx !== -1) {
@@ -113,7 +127,6 @@ function validateCircuit(gates, wires, problem, assignment = null) {
       return g;
     });
 
-    // Evaluate each output
     const gotValues = {};
     let rowPass = true;
     for (let oi = 0; oi < orderedOutputs.length; oi++) {

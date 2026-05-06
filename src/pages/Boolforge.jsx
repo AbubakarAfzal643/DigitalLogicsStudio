@@ -1072,7 +1072,7 @@ const Boolforge = ({
             inset: 0,
             background: "rgba(0,0,0,0.6)",
             backdropFilter: "blur(4px)",
-            zIndex: 2000,
+            zIndex: 5000,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
