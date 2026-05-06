@@ -5,7 +5,11 @@ import { SaveAndLoad } from "../components/SaveAndLoad";
 import { parseExpressionToCircuit } from "../utils/expressionParser";
 import "./../assets/css/Boolforge.css";
 
-const Boolforge = ({ simplifiedExpression = null, variables = [] }) => {
+const Boolforge = ({
+  simplifiedExpression = null,
+  variables = [],
+  onCircuitChange,
+}) => {
   const [gates, setGates] = useState([]);
   const [wires, setWires] = useState([]);
   const [selectedGate, setSelectedGate] = useState(null);
@@ -760,7 +764,11 @@ const Boolforge = ({ simplifiedExpression = null, variables = [] }) => {
       }
     }
   }, [simplifiedExpression, variables]);
-
+  useEffect(() => {
+    if (typeof onCircuitChange === "function") {
+      onCircuitChange(gates, wires);
+    }
+  }, [gates, wires, onCircuitChange]);
   return (
     <div
       className="container circuit-maker"
