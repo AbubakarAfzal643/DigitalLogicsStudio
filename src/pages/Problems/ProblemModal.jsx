@@ -71,35 +71,57 @@ const ProblemModal = ({ problem, onClose }) => {
             </section>
 
             <section className="prob-section">
-              <h4>Truth Table</h4>
+              <h4>
+                Truth Table
+                {problem.displayTruthTable && (
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      fontWeight: 400,
+                      textTransform: "none",
+                      letterSpacing: 0,
+                      color: "var(--secondary-text, #8899aa)",
+                      marginLeft: "0.5rem",
+                    }}
+                  >
+                    (condensed — full table used for validation)
+                  </span>
+                )}
+              </h4>
               <div className="prob-table-wrap">
-                <table className="prob-truth-table">
-                  <thead>
-                    <tr>
-                      {Object.keys(problem.truthTable[0]).map((col) => (
-                        <th key={col}>{col}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {problem.truthTable.map((row, i) => (
-                      <tr key={i}>
-                        {Object.values(row).map((val, j) => (
-                          <td
-                            key={j}
-                            className={
-                              typeof val === "number" && val === 1
-                                ? "cell-one"
-                                : ""
-                            }
-                          >
-                            {String(val)}
-                          </td>
+                {(() => {
+                  const tableData =
+                    problem.displayTruthTable ?? problem.truthTable;
+                  return (
+                    <table className="prob-truth-table">
+                      <thead>
+                        <tr>
+                          {Object.keys(tableData[0]).map((col) => (
+                            <th key={col}>{col}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tableData.map((row, i) => (
+                          <tr key={i}>
+                            {Object.values(row).map((val, j) => (
+                              <td
+                                key={j}
+                                className={
+                                  typeof val === "number" && val === 1
+                                    ? "cell-one"
+                                    : ""
+                                }
+                              >
+                                {String(val)}
+                              </td>
+                            ))}
+                          </tr>
                         ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      </tbody>
+                    </table>
+                  );
+                })()}
               </div>
             </section>
 
