@@ -173,6 +173,14 @@ const problemsData = [
       { S1: 1, S0: 1, I0: 1, I1: 1, I2: 1, I3: 1, Y: 1 },
     ],
     equations: ["Y = S1'S0'·I0 + S1'S0·I1 + S1S0'·I2 + S1S0·I3"],
+    // Compact display table: one representative row per select combination
+    // Full 64-row truth table is kept above for circuit validation
+    displayTruthTable: [
+      { S1: 0, S0: 0, "Selected Input": "I0", Y: "I0" },
+      { S1: 0, S0: 1, "Selected Input": "I1", Y: "I1" },
+      { S1: 1, S0: 0, "Selected Input": "I2", Y: "I2" },
+      { S1: 1, S0: 1, "Selected Input": "I3", Y: "I3" },
+    ],
     hint: "Use four AND gates (3-input each), one OR gate (4-input), and NOT gates for S1 and S0.",
     inputs: ["S1", "S0", "I0", "I1", "I2", "I3"],
     outputs: ["Y"],
@@ -436,6 +444,18 @@ const problemsData = [
     equations: [
       "Y = S2'S1'S0'·I0 + S2'S1'S0·I1 + S2'S1S0'·I2 + S2'S1S0·I3",
       "  + S2S1'S0'·I4 + S2S1'S0·I5  + S2S1S0'·I6  + S2S1S0·I7",
+    ],
+    // Compact display: one row per select address showing which input routes to Y
+    // Full 16-row validation table is kept above
+    displayTruthTable: [
+      { S2: 0, S1: 0, S0: 0, "Routes to Y": "I0" },
+      { S2: 0, S1: 0, S0: 1, "Routes to Y": "I1" },
+      { S2: 0, S1: 1, S0: 0, "Routes to Y": "I2" },
+      { S2: 0, S1: 1, S0: 1, "Routes to Y": "I3" },
+      { S2: 1, S1: 0, S0: 0, "Routes to Y": "I4" },
+      { S2: 1, S1: 0, S0: 1, "Routes to Y": "I5" },
+      { S2: 1, S1: 1, S0: 0, "Routes to Y": "I6" },
+      { S2: 1, S1: 1, S0: 1, "Routes to Y": "I7" },
     ],
     hint: "Use eight 4-input AND gates (one per data input, gated with 3 select lines and the data bit), then OR all eight together. Add NOT gates for S2, S1, S0 complements.",
     inputs: ["S2", "S1", "S0", "I0", "I1", "I2", "I3", "I4", "I5", "I6", "I7"],
