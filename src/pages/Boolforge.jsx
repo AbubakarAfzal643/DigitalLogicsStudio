@@ -488,12 +488,13 @@ const Boolforge = ({
     saveToHistory();
   };
 
-  // ── Click canvas to delete wires ──────────────────────────────────────────
-  const handleCanvasClick = (e) => {
+  // ── Right-click canvas to delete wires ───────────────────────────────────
+  // Samples points along the actual Bézier curve for accurate hit-testing.
+  const handleCanvasContextMenu = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
-    // Adjust click position for pan and zoom
     const x = (e.clientX - rect.left - panOffset.x) / zoom;
     const y = (e.clientY - rect.top - panOffset.y) / zoom;
 
@@ -505,22 +506,50 @@ const Boolforge = ({
       const fromX = fromGate.x + 120;
       const fromY = fromGate.y + 50;
       const toX = toGate.x;
-      // Use getInputY so N-input wires are hit-testable correctly
       const toY = getInputY(toGate, wire.toIndex);
 
-      const denom = Math.sqrt((toY - fromY) ** 2 + (toX - fromX) ** 2);
-      if (denom === 0) continue;
-      const distance =
-        Math.abs(
-          (toY - fromY) * x - (toX - fromX) * y + toX * fromY - toY * fromX,
-        ) / denom;
+      // Compute the same control points used in drawWires
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const controlDistance = Math.min(Math.abs(dx) / 2, distance / 3);
+      const cp1x = fromX + controlDistance;
+      const cp1y = fromY;
+      const cp2x = toX - controlDistance;
+      const cp2y = toY;
 
-      if (distance < 10) {
+      // Sample the Bézier curve and check if click is within threshold
+      const SAMPLES = 60;
+      const HIT_RADIUS = 8;
+      let hit = false;
+      for (let i = 0; i <= SAMPLES; i++) {
+        const t = i / SAMPLES;
+        const mt = 1 - t;
+        const bx =
+          mt * mt * mt * fromX +
+          3 * mt * mt * t * cp1x +
+          3 * mt * t * t * cp2x +
+          t * t * t * toX;
+        const by =
+          mt * mt * mt * fromY +
+          3 * mt * mt * t * cp1y +
+          3 * mt * t * t * cp2y +
+          t * t * t * toY;
+        if (Math.sqrt((bx - x) ** 2 + (by - y) ** 2) < HIT_RADIUS) {
+          hit = true;
+          break;
+        }
+      }
+
+      if (hit) {
+        e.preventDefault();
         setWires((prev) => prev.filter((w) => w.id !== wire.id));
         saveToHistory();
         return;
       }
     }
+    // If no wire was hit, let the default context menu appear (or suppress it)
+    e.preventDefault();
   };
 
   // ── Toggle input value ─────────────────────────────────────────────────────
@@ -773,7 +802,7 @@ const Boolforge = ({
           <p>• Drag gates to move them</p>
           <p>• Drag canvas background to pan</p>
           <p>• Click output → input to connect</p>
-          <p>• Click wire to delete it</p>
+          <p>• Right-click wire to delete it</p>
           <p>• Right-click gate to delete</p>
           <p>• Double-click gate to rename it</p>
           <p>• Scroll to zoom in/out</p>
@@ -800,7 +829,7 @@ const Boolforge = ({
       <div className="canvas-container" ref={containerRef}>
         <canvas
           ref={canvasRef}
-          onClick={handleCanvasClick}
+          onContextMenu={handleCanvasContextMenu}
           onMouseDown={handleCanvasMouseDown}
           style={{
             pointerEvents: "auto",
