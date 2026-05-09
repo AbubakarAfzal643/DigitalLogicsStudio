@@ -213,6 +213,7 @@
 .home-auth-btn:hover,
 .home-user-badge:hover {
   transform: translateY(-1px);
+
 }
 
 .home-auth-btn--ghost,
@@ -222,11 +223,21 @@
   color: var(--text-color);
 }
 
+.home-auth-btn--ghost:hover{
+   background-color: red;
+  transition: 0.18s ease;
+}
+
 [data-theme="light"] .home-auth-btn--ghost,
 [data-theme="light"] .home-user-badge {
   background: rgba(255, 255, 255, 0.72);
+  border: 2px black solid;
 }
 
+[data-theme="light"] .home-auth-btn--ghost:hover{
+  background-color: black;
+  color: whitesmoke;
+}
 .home-auth-btn--primary {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: #fff;
