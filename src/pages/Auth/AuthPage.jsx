@@ -44,7 +44,11 @@ export default function AuthPage({ mode }) {
   const [formError, setFormError] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { theme, toggle: toggleTheme } = useTheme();
-  const { isAuthenticated, isLoading, login, register } = useAuth();
+
+  // FIX 1: AuthContext exports `loading`, not `isLoading`.
+  // Renamed via destructuring alias so the rest of the file can keep using `isLoading`.
+  const { isAuthenticated, loading: isLoading, login, register } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname || "/";
@@ -72,32 +76,42 @@ export default function AuthPage({ mode }) {
 
     try {
       if (isSignup) {
-        const registeredUser = await register({
-          name: formValues.name.trim(),
-          email: formValues.email.trim().toLowerCase(),
-          password: formValues.password,
-        });
+        // FIX 2: AuthContext.register() expects three positional args (name, email, password),
+        // not a single object. Passing an object was causing name=[object Object],
+        // email=undefined, password=undefined → 400 from the backend every time.
+        const data = await register(
+          formValues.name.trim(),
+          formValues.email.trim().toLowerCase(),
+          formValues.password,
+        );
+
+        // FIX 3: register/login return the full API response object { success, message, user }.
+        // The user is nested under data.user, not at the top level.
         navigate(redirectTo, {
           replace: true,
           state: {
-            authMessage: `Welcome, ${registeredUser.name}. Your account has been created successfully.`,
+            authMessage: `Welcome, ${data.user.name}. Your account has been created successfully.`,
           },
         });
       } else {
-        const loggedInUser = await login({
-          email: formValues.email.trim().toLowerCase(),
-          password: formValues.password,
-        });
+        // FIX 2 (login side): AuthContext.login(email, password) expects two positional
+        // args, NOT an object. Passing { email, password } made email = the whole object
+        // and password = undefined → backend got empty fields → 400 "fields are required".
+        const data = await login(
+          formValues.email.trim().toLowerCase(),
+          formValues.password,
+        );
+
+        // FIX 3: Same as above — user is at data.user, not data directly.
         navigate(redirectTo, {
           replace: true,
-          state: { authMessage: `Welcome back, ${loggedInUser.name}.` },
+          state: { authMessage: `Welcome back, ${data.user.name}.` },
         });
       }
     } catch (error) {
-      // BUG FIX: The old catch block checked error.response which doesn't exist
-      // when Axios has already extracted the message via the response interceptor
-      // in apiClient.js.  Now we just use error.message directly, which works
-      // whether the error came from the network layer or the API.
+      // The Axios response interceptor in apiClient.js already extracts
+      // error.response.data.message into error.message, so we read error.message
+      // directly. A missing error.response means it never reached the server at all.
       const isNetworkError = !error.response && !error.status;
 
       if (isNetworkError) {
