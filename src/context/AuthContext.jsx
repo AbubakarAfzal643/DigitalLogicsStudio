@@ -37,9 +37,9 @@ export function AuthProvider({ children }) {
         setLoading(false);
       }
     };
-
+    console.log(solvedProblems);
     checkSession();
-  }, []);
+  }, [solvedProblems]);
 
   // ── Auth actions ──────────────────────────────────────────────────────────
   const login = useCallback(async (email, password) => {

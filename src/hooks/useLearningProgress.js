@@ -1,18 +1,42 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import progressService from "../services/progressService";
 
-export default function useLearningProgress({ user, topics = [], problems = [] }) {
-  const userKey = useMemo(() => progressService.getUserKey(user), [user]);
+// Fallback in case of circular-import / stale-module resolution
+const normalizeUserKey = (userOrKey) => {
+  if (typeof userOrKey === "string" && userOrKey.trim()) {
+    return userOrKey.trim().toLowerCase();
+  }
+  if (!userOrKey) return "guest";
+  return String(
+    userOrKey.id ||
+      userOrKey._id ||
+      userOrKey.email ||
+      userOrKey.username ||
+      "guest",
+  ).toLowerCase();
+};
+
+const getUserKey = (user) => {
+  if (typeof progressService.getUserKey === "function") {
+    return progressService.getUserKey(user);
+  }
+  // Fallback if circular import caused progressService to resolve partially
+  return normalizeUserKey(user);
+};
+
+export default function useLearningProgress({
+  user,
+  topics = [],
+  problems = [],
+}) {
+  const userKey = useMemo(() => getUserKey(user), [user]);
   const catalog = useMemo(() => ({ topics, problems }), [topics, problems]);
   const [snapshot, setSnapshot] = useState(() =>
     progressService.getSnapshot(userKey, catalog),
   );
 
-  // Track which DB-solved arrays we've already synced to avoid infinite loops
   const syncedRef = useRef(null);
 
-  // Sync DB-solved problems into localStorage whenever the user's solvedProblems changes.
-  // This ensures a logged-in user sees their solved history even on a new device.
   useEffect(() => {
     const dbSolved = user?.solvedProblems;
     if (!Array.isArray(dbSolved) || dbSolved.length === 0) return;
@@ -35,7 +59,11 @@ export default function useLearningProgress({ user, topics = [], problems = [] }
 
   const recordAttempt = useCallback(
     async (problem) => {
-      const nextSnapshot = await progressService.recordAttempt(userKey, problem, catalog);
+      const nextSnapshot = await progressService.recordAttempt(
+        userKey,
+        problem,
+        catalog,
+      );
       setSnapshot(nextSnapshot);
     },
     [catalog, userKey],
@@ -56,7 +84,11 @@ export default function useLearningProgress({ user, topics = [], problems = [] }
 
   const openTopic = useCallback(
     async (topic) => {
-      const nextSnapshot = await progressService.openTopic(userKey, topic, catalog);
+      const nextSnapshot = await progressService.openTopic(
+        userKey,
+        topic,
+        catalog,
+      );
       setSnapshot(nextSnapshot);
     },
     [catalog, userKey],
