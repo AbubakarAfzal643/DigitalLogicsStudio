@@ -1,0 +1,288 @@
+import rawProblems from "./ProblemsData";
+
+const syntheticProblems = [
+  {
+    id: 2001,
+    title: "Canonical SOP Builder",
+    difficulty: "Easy",
+    tags: ["Boolean Algebra", "Minterms"],
+    description:
+      "Given a truth-table output column, derive the canonical SOP expression and identify the corresponding minterm set.",
+    equations: ["F(A,B,C) = Σm(...)"],
+    hint: "Collect the rows where F = 1, then map each row to a minterm.",
+    inputs: ["A", "B", "C"],
+    outputs: ["F"],
+  },
+  {
+    id: 2002,
+    title: "Boolean Law Simplifier",
+    difficulty: "Medium",
+    tags: ["Boolean Algebra", "Identities"],
+    description:
+      "Simplify a chained Boolean expression by applying absorption, consensus, and complement laws in the correct order.",
+    equations: ["X + XY = X", "X + X'Y = X + Y"],
+    hint: "Look for absorption opportunities before you expand the terms.",
+    inputs: ["X", "Y", "Z"],
+    outputs: ["F"],
+  },
+  {
+    id: 2003,
+    title: "Binary Overflow Detector",
+    difficulty: "Medium",
+    tags: ["Number Systems", "Arithmetic"],
+    description:
+      "Determine when signed binary addition overflows and identify the final carry and interpreted decimal result.",
+    equations: ["Overflow = Cn xor Cn-1"],
+    hint: "Signed overflow depends on carry into and carry out of the MSB.",
+    inputs: ["A3..A0", "B3..B0"],
+    outputs: ["S3..S0", "Overflow"],
+  },
+  {
+    id: 2004,
+    title: "Sequence Detector FSM",
+    difficulty: "Hard",
+    tags: ["Sequential Circuits", "State Machine"],
+    description:
+      "Design a Moore machine that detects the input sequence 1011 with overlap and derive the state table.",
+    equations: ["Q(next) = f(Q, X)"],
+    hint: "Name states by the longest matched prefix so overlap is easy to preserve.",
+    inputs: ["X", "CLK"],
+    outputs: ["Z"],
+  },
+  {
+    id: 2005,
+    title: "Register Transfer Scheduling",
+    difficulty: "Medium",
+    tags: ["Registers", "RTL"],
+    description:
+      "Schedule conditional register transfers for a micro-operation sequence and identify which control signals must be asserted.",
+    equations: ["P: R2 <- R1", "Q: R3 <- R2 + 1"],
+    hint: "Translate each condition into a gated transfer and check data dependencies.",
+    inputs: ["P", "Q", "CLK"],
+    outputs: ["R2", "R3"],
+  },
+  {
+    id: 2006,
+    title: "RAM Address Decoder Map",
+    difficulty: "Easy",
+    tags: ["Memory Systems", "Decoder"],
+    description:
+      "Map a binary address space to word lines and identify which decoder outputs activate each memory row.",
+    equations: ["Word_i = Decoder(A)"],
+    hint: "Each address activates exactly one word line in a basic RAM array.",
+    inputs: ["A2", "A1", "A0"],
+    outputs: ["W0..W7"],
+  },
+  {
+    id: 2007,
+    title: "PLA Programming Table",
+    difficulty: "Hard",
+    tags: ["Memory Systems", "PLA"],
+    description:
+      "Populate the AND/OR plane programming table needed to implement a given set of Boolean functions in a PLA.",
+    equations: ["F1 = A'B + AC", "F2 = AB + BC'"],
+    hint: "Share product terms across functions before finalizing the OR plane.",
+    inputs: ["A", "B", "C"],
+    outputs: ["F1", "F2"],
+  },
+];
+
+const slugify = (value) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const inferTopic = (problem) => {
+  const tagText = (problem.tags || []).join(" ").toLowerCase();
+  const titleText = problem.title.toLowerCase();
+
+  if (
+    tagText.includes("boolean algebra") ||
+    tagText.includes("minterm") ||
+    tagText.includes("identit")
+  ) {
+    return {
+      topic: "Boolean Algebra",
+      primaryTopicId: "boolean-algebra",
+      filterGroup: "Boolean Algebra",
+    };
+  }
+
+  if (tagText.includes("memory") || tagText.includes("pla")) {
+    return {
+      topic: "Memory Systems",
+      primaryTopicId: "memory-systems",
+      filterGroup: "Memory Systems",
+    };
+  }
+
+  if (tagText.includes("register") || tagText.includes("rtl")) {
+    return {
+      topic: "Registers & Transfers",
+      primaryTopicId: "registers-and-register-transfers",
+      filterGroup: "Registers & Transfers",
+    };
+  }
+
+  if (
+    tagText.includes("sequential") ||
+    tagText.includes("state machine") ||
+    titleText.includes("latch") ||
+    titleText.includes("flip")
+  ) {
+    return {
+      topic: "Sequential Circuits",
+      primaryTopicId: "sequential-circuits",
+      filterGroup: "Sequential Circuits",
+    };
+  }
+
+  if (
+    tagText.includes("arithmetic") ||
+    tagText.includes("parity") ||
+    titleText.includes("adder") ||
+    titleText.includes("subtractor") ||
+    titleText.includes("overflow")
+  ) {
+    return {
+      topic: "Arithmetic Functions",
+      primaryTopicId: "arithmetic-functions-and-hdls",
+      filterGroup: "Arithmetic Functions",
+    };
+  }
+
+  if (
+    tagText.includes("mux") ||
+    tagText.includes("decoder") ||
+    titleText.includes("multiplexer") ||
+    titleText.includes("demultiplexer") ||
+    titleText.includes("decoder")
+  ) {
+    return {
+      topic: "Combinational Circuits",
+      primaryTopicId: "combinational-circuits",
+      filterGroup: "Combinational Circuits",
+    };
+  }
+
+  if (tagText.includes("number systems")) {
+    return {
+      topic: "Number Systems",
+      primaryTopicId: "number-systems",
+      filterGroup: "Number Systems",
+    };
+  }
+
+  return {
+    topic: "Digital Logic",
+    primaryTopicId: "advanced-logic",
+    filterGroup: "Digital Logic",
+  };
+};
+
+const computeAcceptance = (problem) => {
+  const baseByDifficulty = {
+    Easy: 78,
+    Medium: 58,
+    Hard: 36,
+  };
+
+  const base = baseByDifficulty[problem.difficulty] || 62;
+  const variation = ((problem.id * 17) % 19) - 6;
+  return Number(Math.max(28, Math.min(94, base + variation)).toFixed(1));
+};
+
+const enrichProblem = (problem) => {
+  const inferred = inferTopic(problem);
+  const normalizedTags = Array.from(
+    new Set([...(problem.tags || []), inferred.filterGroup, "Digital Logic"]),
+  );
+
+  return {
+    ...problem,
+    slug: slugify(problem.title),
+    numericId: problem.id,
+    listId: String(problem.id).padStart(4, "0"),
+    acceptanceRate: computeAcceptance(problem),
+    premium: problem.id % 5 === 0,
+    topic: inferred.topic,
+    primaryTopicId: inferred.primaryTopicId,
+    filterGroup: inferred.filterGroup,
+    tags: normalizedTags,
+  };
+};
+
+const baseCatalog = [...rawProblems, ...syntheticProblems].map(enrichProblem);
+
+const uniqueByTitle = [];
+const seenTitles = new Set();
+baseCatalog.forEach((problem) => {
+  if (!seenTitles.has(problem.title)) {
+    uniqueByTitle.push(problem);
+    seenTitles.add(problem.title);
+  }
+});
+
+export const problemsCatalog = uniqueByTitle.sort((left, right) => left.numericId - right.numericId);
+
+export const problemFilterGroups = [
+  "All Topics",
+  "Digital Logic",
+  "Boolean Algebra",
+  "Arithmetic Functions",
+  "Combinational Circuits",
+  "Sequential Circuits",
+  "Registers & Transfers",
+  "Memory Systems",
+];
+
+export const problemBannerCards = [
+  {
+    title: "JavaScript Challenges",
+    description: "Interactive logic-driven warmups",
+    eyebrow: "30 Day Sprint",
+    gradient: "linear-gradient(135deg, #f97316, #fb7185)",
+  },
+  {
+    title: "Interview Questions",
+    description: "Premium problem walkthroughs",
+    eyebrow: "Top Picks",
+    gradient: "linear-gradient(135deg, #2563eb, #60a5fa)",
+  },
+  {
+    title: "DSA Courses",
+    description: "Structured path cards",
+    eyebrow: "Skill Tracks",
+    gradient: "linear-gradient(135deg, #0f766e, #14b8a6)",
+  },
+  {
+    title: "Logic Challenges",
+    description: "Circuit-focused practice arena",
+    eyebrow: "Boolforge",
+    gradient: "linear-gradient(135deg, #7c3aed, #a78bfa)",
+  },
+  {
+    title: "SQL Practice",
+    description: "Database reasoning modules",
+    eyebrow: "Coming Next",
+    gradient: "linear-gradient(135deg, #334155, #64748b)",
+  },
+  {
+    title: "Core Logic Practice",
+    description: "Boolean, memory, and FSM drills",
+    eyebrow: "Live Now",
+    gradient: "linear-gradient(135deg, #111827, #1d4ed8)",
+  },
+];
+
+export const problemDifficultyOptions = ["All Difficulties", "Easy", "Medium", "Hard"];
+export const problemStatusOptions = ["All Status", "Solved", "Attempted", "Unsolved"];
+export const problemSortOptions = [
+  "Recommended",
+  "Acceptance",
+  "Difficulty",
+  "Title",
+];
+
+export default problemsCatalog;

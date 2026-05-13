@@ -1,20 +1,15 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import HeroSection from "./HeroSection";
 import Footer from "./Footer";
 import ArticleSection from "./ArticleSection";
 import homeData from "./HomeData";
 import { useTheme } from "../../context/ThemeContext";
-import ProblemsSection from "../Problems/ProblemsSection";
+import CoreTopicsSection from "../../components/topics/CoreTopicsSection";
+import coreTopics from "../../data/coreTopics";
 import { buildSearchIndex, searchIndexedItems } from "../../utils/search";
 import "./Home.css";
-
-const topicGroupOrder = {
-  algebra: 1,
-  circuits: 2,
-  advanced: 3,
-};
 
 const Home = () => {
   const { theme, toggle: toggleTheme } = useTheme();
@@ -63,6 +58,28 @@ const Home = () => {
     [deferredSearchTerm, indexedHomeData],
   );
 
+  const filteredTopics = React.useMemo(() => {
+    const query = deferredSearchTerm.trim().toLowerCase();
+
+    if (!query) {
+      return coreTopics;
+    }
+
+    return coreTopics.filter((topic) => {
+      const haystack = [
+        topic.title,
+        topic.description,
+        topic.eyebrow,
+        topic.progressLabel,
+        ...topic.links.map((link) => link.text),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(query);
+    });
+  }, [deferredSearchTerm]);
+
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -72,19 +89,14 @@ const Home = () => {
     .filter((item) => item.section === "featured")
     .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-  const topicCards = filteredData
-    .filter((item) => item.section === "topics")
-    .sort((a, b) => {
-      const groupDiff =
-        (topicGroupOrder[a.topicGroup] || 99) -
-        (topicGroupOrder[b.topicGroup] || 99);
-      if (groupDiff !== 0) return groupDiff;
-      return (a.topicOrder || 0) - (b.topicOrder || 0);
-    });
-
   const learningResources = filteredData
     .filter((item) => item.section === "resources")
     .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+  const hasResults =
+    featuredTools.length > 0 ||
+    filteredTopics.length > 0 ||
+    learningResources.length > 0;
 
   return (
     <div className="home-page">
@@ -119,7 +131,7 @@ const Home = () => {
         />
 
         <div className="home-sections" ref={resultsRef}>
-          {filteredData.length > 0 ? (
+          {hasResults ? (
             <>
               <ArticleSection
                 title="Featured Tools"
@@ -128,12 +140,7 @@ const Home = () => {
                 sectionClassName="home-featured-section"
                 gridClassName="home-featured-grid"
               />
-              <ArticleSection
-                title="Core Logic Topics"
-                description="Browse the main learning and problem-solving modules in a clear progression from algebraic foundations to circuit design and advanced logic."
-                data={topicCards}
-                sectionClassName="home-topic-section"
-              />
+              {filteredTopics.length > 0 ? <CoreTopicsSection topics={filteredTopics} /> : null}
               <ArticleSection
                 title="Learning Resources"
                 description="Use these supporting resources for practice, reference, and timing-based visualization."
@@ -141,9 +148,27 @@ const Home = () => {
                 sectionClassName="home-resource-section"
                 gridClassName="home-resource-grid"
               />
-
-              {/* ===== PROBLEMS SECTION ===== */}
-              <ProblemsSection />
+              <section className="home-section home-problems-cta">
+                <div className="home-problems-cta-copy">
+                  <span className="home-problems-cta-badge">Dedicated Practice Arena</span>
+                  <h2 className="home-section-title">
+                    Solve digital logic problems in a real practice workspace.
+                  </h2>
+                  <p className="home-section-description">
+                    Move into the new three-column Problems experience with topic filters,
+                    search, solved tracking, calendar activity, and learner stats inspired by
+                    premium competitive-learning platforms.
+                  </p>
+                </div>
+                <div className="home-problems-cta-actions">
+                  <Link to="/problems" className="home-problems-cta-link primary">
+                    Open Problems
+                  </Link>
+                  <Link to="/boolforge" className="home-problems-cta-link">
+                    Open Circuit Forge
+                  </Link>
+                </div>
+              </section>
             </>
           ) : (
             <div

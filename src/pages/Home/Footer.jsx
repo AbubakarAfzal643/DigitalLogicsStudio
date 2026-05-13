@@ -4,6 +4,7 @@ const FOOTER_COLS = [
   {
     heading: "Tools",
     links: [
+      { label: "Problems", to: "/problems" },
       { label: "Circuit Forge", to: "/boolforge" },
       { label: "K-Map Studio", to: "/kmapgenerator" },
       { label: "Boolean Algebra", to: "/boolean-algebra" },

@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const NAV_LINKS = [
+  { to: "/problems", label: "Problems" },
   { to: "/boolforge", label: "Circuit Forge" },
   { to: "/kmapgenerator", label: "K-Map Studio" },
   { to: "/boolean-algebra", label: "Boolean Algebra" },
@@ -37,7 +38,7 @@ function MoonIcon() {
 
 export function Navbar({ toggleTheme, theme, onHomeClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, isLoading, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleHomeClick = () => {
@@ -116,14 +117,14 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
         </nav>
 
         <div className="home-nav-controls">
-          {!isLoading && (
+          {!loading && (
             <div className="home-auth-actions">
               {user ? (
                 <>
                   <Link
-                    to="/"
+                    to="/profile"
                     className="home-user-badge"
-                    onClick={handleHomeClick}
+                    onClick={() => setMenuOpen(false)}
                   >
                     {user.name}
                   </Link>
@@ -195,14 +196,14 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
               {label}
             </NavLink>
           ))}
-          {!isLoading && (
+          {!loading && (
             <div className="home-mobile-auth">
               {user ? (
                 <>
                   <Link
-                    to="/"
+                    to="/profile"
                     className="home-user-badge"
-                    onClick={handleHomeClick}
+                    onClick={() => setMenuOpen(false)}
                   >
                     {user.name}
                   </Link>

@@ -90,7 +90,14 @@ const ProblemModal = ({ problem, onClose }) => {
     };
 
     // Run against truth table
-    const table = problem.truthTable;
+    const table = problem.truthTable || [];
+    if (!table.length) {
+      setSubmitResult({
+        passed: false,
+        details: "No truth table available for automatic validation on this problem.",
+      });
+      return;
+    }
     let failures = [];
     table.forEach((row, rowIdx) => {
       const tempGates = circuitGates.map((g) => {
@@ -203,35 +210,41 @@ const ProblemModal = ({ problem, onClose }) => {
 
             <section className="prob-section">
               <h4>Truth Table</h4>
-              <div className="prob-table-wrap">
-                <table className="prob-truth-table">
-                  <thead>
-                    <tr>
-                      {Object.keys(problem.truthTable[0]).map((col) => (
-                        <th key={col}>{col}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {problem.truthTable.map((row, i) => (
-                      <tr key={i}>
-                        {Object.values(row).map((val, j) => (
-                          <td
-                            key={j}
-                            className={
-                              typeof val === "number" && val === 1
-                                ? "cell-one"
-                                : ""
-                            }
-                          >
-                            {String(val)}
-                          </td>
+              {problem.truthTable?.length ? (
+                <div className="prob-table-wrap">
+                  <table className="prob-truth-table">
+                    <thead>
+                      <tr>
+                        {Object.keys(problem.truthTable[0]).map((col) => (
+                          <th key={col}>{col}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {problem.truthTable.map((row, i) => (
+                        <tr key={i}>
+                          {Object.values(row).map((val, j) => (
+                            <td
+                              key={j}
+                              className={
+                                typeof val === "number" && val === 1
+                                  ? "cell-one"
+                                  : ""
+                              }
+                            >
+                              {String(val)}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p style={{ color: "var(--secondary-text)", fontSize: "0.85rem" }}>
+                  No truth table available for this problem type.
+                </p>
+              )}
             </section>
 
             {showHint && (

@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import authService from "../services/authService";
+import apiClient from "../services/apiClient";
 
 // FIX 5: AuthContext.jsx was not present in the uploaded codebase but is
 //         imported by index.js (<AuthProvider>) and indirectly used across
@@ -57,6 +58,25 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // Mark a problem solved via the API and update the in-memory user object so
+  // downstream consumers (CircuitModal, ProblemsPage) reflect the change
+  // without needing a page reload.
+  const markProblemSolved = useCallback(async (problemId) => {
+    const { data } = await apiClient.post(`/progress/problems/${problemId}/complete`);
+    if (data?.user) {
+      setUser(data.user);
+    }
+  }, []);
+
+  // Idempotent solved check against the authoritative DB list on the user object.
+  const hasSolvedProblem = useCallback(
+    (problemId) => {
+      if (!user?.solvedProblems) return false;
+      return user.solvedProblems.includes(Number(problemId));
+    },
+    [user],
+  );
+
   const value = {
     user,
     loading,
@@ -64,6 +84,8 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    markProblemSolved,
+    hasSolvedProblem,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

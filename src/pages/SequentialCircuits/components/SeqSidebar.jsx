@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const SeqSidebar = ({ seqPages, currentIndex, progress, sidebarOpen, setSidebarOpen }) => {
   return (
@@ -22,23 +22,28 @@ const SeqSidebar = ({ seqPages, currentIndex, progress, sidebarOpen, setSidebarO
 
         <nav className="seq-sidebar-nav">
           {seqPages.map((p, i) => {
-            const isActive = window.location.pathname === p.path;
             const isVisited = i < currentIndex;
             return (
-              <Link
+              <NavLink
                 key={p.path}
                 to={p.path}
-                className={`seq-nav-item${isActive ? ' active' : ''}${isVisited ? ' visited' : ''}`}
+                className={({ isActive }) => (
+                  `seq-nav-item${isActive ? ' active' : ''}${isVisited ? ' visited' : ''}`
+                )}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span className="seq-nav-num">{String(i + 1).padStart(2, '0')}</span>
-                <span className="seq-nav-icon">{p.icon}</span>
-                <span className="seq-nav-label-text">{p.label}</span>
-                <span className="seq-nav-status">
-                  {isActive && <span className="seq-nav-dot-active" />}
-                  {isVisited && <span className="seq-nav-check">✓</span>}
-                </span>
-              </Link>
+                {({ isActive }) => (
+                  <>
+                    <span className="seq-nav-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="seq-nav-icon">{p.icon}</span>
+                    <span className="seq-nav-label-text">{p.label}</span>
+                    <span className="seq-nav-status">
+                      {isActive && <span className="seq-nav-dot-active" />}
+                      {isVisited && <span className="seq-nav-check">✓</span>}
+                    </span>
+                  </>
+                )}
+              </NavLink>
             );
           })}
         </nav>

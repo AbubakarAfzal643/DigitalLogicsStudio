@@ -217,6 +217,11 @@
   margin-top: 1.5rem;
 }
 
+/* Profile page needs more horizontal room for its 2-column card grid */
+.profile-main {
+  width: min(960px, calc(100% - 2rem));
+}
+
 .auth-status-screen {
   position: relative;
   min-height: 100vh;

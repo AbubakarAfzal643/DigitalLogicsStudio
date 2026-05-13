@@ -34,7 +34,7 @@ export default function ProfilePage() {
       <div className="grid-background" />
       <Navbar toggleTheme={toggleTheme} theme={theme} />
 
-      <main className="auth-main">
+      <main className="auth-main profile-main">
         <section className="profile-panel">
           <div className="profile-hero">
             <span className="auth-eyebrow">Authenticated session</span>
