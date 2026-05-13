@@ -402,7 +402,12 @@ const CircuitModal = ({ open, onClose, problem }) => {
   const [isSavingCompletion, setIsSavingCompletion] = useState(false);
   // assignment: null → use positional, else { inputMap, outputMap }
   const [assignment, setAssignment] = useState({ inputMap: {}, outputMap: {} });
-  const { isAuthenticated, user, markProblemSolved, hasSolvedProblem } = useAuth();
+  const {
+    isAuthenticated = false,
+    user = null,
+    markProblemSolved = async () => {},
+    hasSolvedProblem = () => false,
+  } = useAuth() || {};
   const problemId = problem?.id;
   const isAssigned =
     Object.keys(assignment.inputMap).length > 0 ||
@@ -433,7 +438,12 @@ const CircuitModal = ({ open, onClose, problem }) => {
   const isSolvedForUser = problem ? hasSolvedProblem(problem.id) : false;
 
   const persistSolvedState = useCallback(async () => {
-    if (!problemId || !isAuthenticated || isSolvedForUser || isSavingCompletion) {
+    if (
+      !problemId ||
+      !isAuthenticated ||
+      isSolvedForUser ||
+      isSavingCompletion
+    ) {
       return;
     }
 

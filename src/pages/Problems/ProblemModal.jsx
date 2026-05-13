@@ -152,6 +152,10 @@ const ProblemModal = ({ problem, onClose }) => {
         onSubmit={handleSubmitCircuit}
         submitResult={submitResult}
         onClearResult={() => setSubmitResult(null)}
+        hasSolvedProblem={(problemId) =>
+          submitResult?.passed === true &&
+          (problemId === undefined || problemId === problem?.id)
+        }
       />
     );
   }
