@@ -18,7 +18,8 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // true = still checking session
+  const [loading, setLoading] = useState(true);
+  const [solvedProblems, setSolvedProblems] = useState(new Set());
 
   // ── Bootstrap: check if there is an existing session cookie ──────────────
   useEffect(() => {
@@ -26,8 +27,11 @@ export function AuthProvider({ children }) {
       try {
         const data = await authService.getCurrentUser();
         setUser(data.user);
+        // If backend embeds solvedProblems on the user object, use that
+        if (data.user?.solvedProblems?.length) {
+          setSolvedProblems(new Set(data.user.solvedProblems));
+        }
       } catch {
-        // 401 → no active session, that is fine
         setUser(null);
       } finally {
         setLoading(false);
@@ -41,6 +45,9 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = await authService.login({ email, password });
     setUser(data.user);
+    if (data.user?.solvedProblems?.length) {
+      setSolvedProblems(new Set(data.user.solvedProblems));
+    }
     return data;
   }, []);
 
@@ -55,6 +62,7 @@ export function AuthProvider({ children }) {
       await authService.logout();
     } finally {
       setUser(null);
+      setSolvedProblems(new Set());
     }
   }, []);
 
@@ -62,7 +70,9 @@ export function AuthProvider({ children }) {
   // downstream consumers (CircuitModal, ProblemsPage) reflect the change
   // without needing a page reload.
   const markProblemSolved = useCallback(async (problemId) => {
-    const { data } = await apiClient.post(`/progress/problems/${problemId}/complete`);
+    const { data } = await apiClient.post(
+      `/progress/problems/${problemId}/complete`,
+    );
     if (data?.user) {
       setUser(data.user);
     }

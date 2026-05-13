@@ -44,4 +44,6 @@ Thumbs.db
 out/
 .txtconfig
 .txtignore
+/.txtconfig
+/.txtignore
 frontend.txt

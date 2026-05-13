@@ -400,9 +400,16 @@ const CircuitModal = ({ open, onClose, problem }) => {
   const [showAssign, setShowAssign] = useState(false);
   const [completionError, setCompletionError] = useState("");
   const [isSavingCompletion, setIsSavingCompletion] = useState(false);
+  // Ref-based guard so persistSolvedState doesn't need isSavingCompletion as a dep
+  const isSavingRef = React.useRef(false);
   // assignment: null → use positional, else { inputMap, outputMap }
   const [assignment, setAssignment] = useState({ inputMap: {}, outputMap: {} });
-  const { isAuthenticated, user, markProblemSolved, hasSolvedProblem } = useAuth();
+  const {
+    isAuthenticated = false,
+    user = null,
+    markProblemSolved = async () => {},
+    hasSolvedProblem = () => false,
+  } = useAuth() || {};
   const problemId = problem?.id;
   const isAssigned =
     Object.keys(assignment.inputMap).length > 0 ||
@@ -433,10 +440,16 @@ const CircuitModal = ({ open, onClose, problem }) => {
   const isSolvedForUser = problem ? hasSolvedProblem(problem.id) : false;
 
   const persistSolvedState = useCallback(async () => {
-    if (!problemId || !isAuthenticated || isSolvedForUser || isSavingCompletion) {
+    if (
+      !problemId ||
+      !isAuthenticated ||
+      isSolvedForUser ||
+      isSavingRef.current
+    ) {
       return;
     }
 
+    isSavingRef.current = true;
     setIsSavingCompletion(true);
     setCompletionError("");
 
@@ -448,15 +461,10 @@ const CircuitModal = ({ open, onClose, problem }) => {
           "Circuit is correct, but progress could not be saved.",
       );
     } finally {
+      isSavingRef.current = false;
       setIsSavingCompletion(false);
     }
-  }, [
-    isAuthenticated,
-    isSolvedForUser,
-    isSavingCompletion,
-    markProblemSolved,
-    problemId,
-  ]);
+  }, [isAuthenticated, isSolvedForUser, markProblemSolved, problemId]); // isSavingCompletion removed — using ref instead to avoid infinite loop
 
   useEffect(() => {
     if (!open || !problem || !hasRight || isSolvedForUser) {
@@ -474,7 +482,12 @@ const CircuitModal = ({ open, onClose, problem }) => {
       return;
     }
 
-    setResult(validationResult);
+    // Only update result and persist if not already solved
+    setResult((prev) => {
+      // Avoid redundant state update if already showing a passing result
+      if (prev?.pass) return prev;
+      return validationResult;
+    });
     persistSolvedState();
   }, [
     assignment,
