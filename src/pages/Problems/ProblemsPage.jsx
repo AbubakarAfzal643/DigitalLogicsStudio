@@ -46,7 +46,9 @@ const difficultyTone = {
 
 const weekdayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
-const topicLookup = Object.fromEntries(coreTopics.map((topic) => [topic.id, topic]));
+const topicLookup = Object.fromEntries(
+  coreTopics.map((topic) => [topic.id, topic]),
+);
 
 const monthLabel = (date) =>
   new Intl.DateTimeFormat("en-US", {
@@ -64,13 +66,18 @@ const sortProblems = (items, sortValue, progressMap) => {
 
   switch (sortValue) {
     case "Acceptance":
-      return cloned.sort((left, right) => right.acceptanceRate - left.acceptanceRate);
+      return cloned.sort(
+        (left, right) => right.acceptanceRate - left.acceptanceRate,
+      );
     case "Difficulty":
       return cloned.sort(
-        (left, right) => difficultyRank[left.difficulty] - difficultyRank[right.difficulty],
+        (left, right) =>
+          difficultyRank[left.difficulty] - difficultyRank[right.difficulty],
       );
     case "Title":
-      return cloned.sort((left, right) => left.title.localeCompare(right.title));
+      return cloned.sort((left, right) =>
+        left.title.localeCompare(right.title),
+      );
     default:
       return cloned.sort((left, right) => {
         const leftStatus = progressMap[left.id]?.status || "not_started";
@@ -85,7 +92,10 @@ const sortProblems = (items, sortValue, progressMap) => {
 function CalendarWidget({ month, setMonth, monthMatrix }) {
   const days = monthMatrix(month);
   const firstWeekday = new Date(days[0]?.date || month).getDay();
-  const blanks = Array.from({ length: firstWeekday }, (_, index) => `blank-${index}`);
+  const blanks = Array.from(
+    { length: firstWeekday },
+    (_, index) => `blank-${index}`,
+  );
 
   return (
     <section className="problems-widget">
@@ -98,7 +108,9 @@ function CalendarWidget({ month, setMonth, monthMatrix }) {
           <button
             type="button"
             onClick={() =>
-              setMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
+              setMonth(
+                (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1),
+              )
             }
             aria-label="Previous month"
           >
@@ -107,7 +119,9 @@ function CalendarWidget({ month, setMonth, monthMatrix }) {
           <button
             type="button"
             onClick={() =>
-              setMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
+              setMonth(
+                (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1),
+              )
             }
             aria-label="Next month"
           >
@@ -151,12 +165,7 @@ function CalendarWidget({ month, setMonth, monthMatrix }) {
   );
 }
 
-function SelectedProblemCard({
-  problem,
-  status,
-  onAttempt,
-  onToggleSolved,
-}) {
+function SelectedProblemCard({ problem, status, onAttempt, onToggleSolved }) {
   if (!problem) {
     return null;
   }
@@ -168,7 +177,9 @@ function SelectedProblemCard({
           <span className="problems-widget-label">Selected Problem</span>
           <h3>{problem.title}</h3>
         </div>
-        <span className={`difficulty-pill ${difficultyTone[problem.difficulty]}`}>
+        <span
+          className={`difficulty-pill ${difficultyTone[problem.difficulty]}`}
+        >
           {problem.difficulty}
         </span>
       </div>
@@ -187,7 +198,9 @@ function SelectedProblemCard({
         <span>{status?.status === "solved" ? "Solved" : "In progress"}</span>
       </div>
 
-      {problem.hint ? <p className="selected-problem-hint">Hint: {problem.hint}</p> : null}
+      {problem.hint ? (
+        <p className="selected-problem-hint">Hint: {problem.hint}</p>
+      ) : null}
 
       <div className="selected-problem-actions">
         <button type="button" onClick={() => onAttempt(problem)}>
@@ -212,38 +225,77 @@ export default function ProblemsPage() {
   const { user } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
   const [activeLibraryItem, setActiveLibraryItem] = React.useState("Library");
+  const bannerRef = React.useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
+
+  const updateScrollButtons = React.useCallback(() => {
+    const el = bannerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+  }, []);
+
+  React.useEffect(() => {
+    const el = bannerRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener("scroll", updateScrollButtons, { passive: true });
+    const ro = new ResizeObserver(updateScrollButtons);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      ro.disconnect();
+    };
+  }, [updateScrollButtons]);
+
+  const scrollBanner = (direction) => {
+    if (!bannerRef.current) return;
+    const scrollAmount = bannerRef.current.offsetWidth * 0.75;
+    bannerRef.current.scrollBy({
+      left: direction * scrollAmount,
+      behavior: "smooth",
+    });
+  };
   const [activeGroup, setActiveGroup] = React.useState("All Topics");
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [difficulty, setDifficulty] = React.useState(problemDifficultyOptions[0]);
+  const [difficulty, setDifficulty] = React.useState(
+    problemDifficultyOptions[0],
+  );
   const [topicFilter, setTopicFilter] = React.useState(problemFilterGroups[0]);
-  const [statusFilter, setStatusFilter] = React.useState(problemStatusOptions[0]);
+  const [statusFilter, setStatusFilter] = React.useState(
+    problemStatusOptions[0],
+  );
   const [sortBy, setSortBy] = React.useState(problemSortOptions[0]);
-  const [selectedProblemId, setSelectedProblemId] = React.useState(problemsCatalog[0]?.id);
+  const [selectedProblemId, setSelectedProblemId] = React.useState(
+    problemsCatalog[0]?.id,
+  );
   const [activeProblem, setActiveProblem] = React.useState(null);
-  const [month, setMonth] = React.useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [month, setMonth] = React.useState(
+    () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+  );
   const deferredSearch = React.useDeferredValue(searchTerm);
 
-  const {
-    snapshot,
-    recordAttempt,
-    setProblemSolved,
-    monthMatrix,
-  } = useLearningProgress({
-    user,
-    topics: coreTopics,
-    problems: problemsCatalog,
-  });
+  const { snapshot, recordAttempt, setProblemSolved, monthMatrix } =
+    useLearningProgress({
+      user,
+      topics: coreTopics,
+      problems: problemsCatalog,
+    });
 
   const filteredProblems = React.useMemo(() => {
     const normalizedSearch = deferredSearch.trim().toLowerCase();
 
     const matches = problemsCatalog.filter((problem) => {
-      const problemStatus = snapshot.state.problems[problem.id]?.status || "not_started";
+      const problemStatus =
+        snapshot.state.problems[problem.id]?.status || "not_started";
       const matchesSearch =
         !normalizedSearch ||
         problem.title.toLowerCase().includes(normalizedSearch) ||
         problem.description.toLowerCase().includes(normalizedSearch) ||
-        problem.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch));
+        problem.tags.some((tag) =>
+          tag.toLowerCase().includes(normalizedSearch),
+        );
 
       const matchesDifficulty =
         difficulty === "All Difficulties" || problem.difficulty === difficulty;
@@ -290,7 +342,9 @@ export default function ProblemsPage() {
       return;
     }
 
-    const stillVisible = filteredProblems.some((problem) => problem.id === selectedProblemId);
+    const stillVisible = filteredProblems.some(
+      (problem) => problem.id === selectedProblemId,
+    );
     if (!stillVisible) {
       setSelectedProblemId(filteredProblems[0].id);
     }
@@ -312,7 +366,8 @@ export default function ProblemsPage() {
     }))
     .sort(
       (left, right) =>
-        (right.progress?.completionPercentage || 0) - (left.progress?.completionPercentage || 0),
+        (right.progress?.completionPercentage || 0) -
+        (left.progress?.completionPercentage || 0),
     )
     .slice(0, 4);
 
@@ -328,10 +383,16 @@ export default function ProblemsPage() {
           <div className="problems-sidebar-brand">
             <span className="problems-sidebar-badge">Practice Arena</span>
             <h1>Problems</h1>
-            <p>LeetCode-style digital logic practice with activity, progress, and topic depth.</p>
+            <p>
+              LeetCode-style digital logic practice with activity, progress, and
+              topic depth.
+            </p>
           </div>
 
-          <nav className="problems-sidebar-nav" aria-label="Problems navigation">
+          <nav
+            className="problems-sidebar-nav"
+            aria-label="Problems navigation"
+          >
             {leftNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeLibraryItem === item.label;
@@ -347,7 +408,11 @@ export default function ProblemsPage() {
                     <Icon size={17} />
                     <span>{item.label}</span>
                   </span>
-                  {item.badge ? <span className="problems-sidebar-link-badge">{item.badge}</span> : null}
+                  {item.badge ? (
+                    <span className="problems-sidebar-link-badge">
+                      {item.badge}
+                    </span>
+                  ) : null}
                 </button>
               );
             })}
@@ -370,14 +435,42 @@ export default function ProblemsPage() {
         </aside>
 
         <section className="problems-center">
-          <div className="problems-banner-row">
-            {problemBannerCards.map((card) => (
-              <article key={card.title} className="problems-banner-card" style={{ background: card.gradient }}>
-                <span>{card.eyebrow}</span>
-                <h2>{card.title}</h2>
-                <p>{card.description}</p>
-              </article>
-            ))}
+          <div className="problems-banner-slider">
+            {canScrollLeft && (
+              <button
+                type="button"
+                className="banner-slider-arrow banner-slider-arrow-left"
+                onClick={() => scrollBanner(-1)}
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            )}
+
+            <div className="problems-banner-row" ref={bannerRef}>
+              {problemBannerCards.map((card) => (
+                <article
+                  key={card.title}
+                  className="problems-banner-card"
+                  style={{ background: card.gradient }}
+                >
+                  <span>{card.eyebrow}</span>
+                  <h2>{card.title}</h2>
+                  <p>{card.description}</p>
+                </article>
+              ))}
+            </div>
+
+            {canScrollRight && (
+              <button
+                type="button"
+                className="banner-slider-arrow banner-slider-arrow-right"
+                onClick={() => scrollBanner(1)}
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
           </div>
 
           <div className="problems-filter-chip-row">
@@ -408,7 +501,10 @@ export default function ProblemsPage() {
             </label>
 
             <div className="problems-toolbar-selects">
-              <select value={difficulty} onChange={(event) => setDifficulty(event.target.value)}>
+              <select
+                value={difficulty}
+                onChange={(event) => setDifficulty(event.target.value)}
+              >
                 {problemDifficultyOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -416,7 +512,10 @@ export default function ProblemsPage() {
                 ))}
               </select>
 
-              <select value={topicFilter} onChange={(event) => setTopicFilter(event.target.value)}>
+              <select
+                value={topicFilter}
+                onChange={(event) => setTopicFilter(event.target.value)}
+              >
                 {problemFilterGroups.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -424,7 +523,10 @@ export default function ProblemsPage() {
                 ))}
               </select>
 
-              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+              >
                 {problemStatusOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -432,7 +534,10 @@ export default function ProblemsPage() {
                 ))}
               </select>
 
-              <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+              <select
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value)}
+              >
                 {problemSortOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -492,17 +597,29 @@ export default function ProblemsPage() {
                         <td>{problem.listId}</td>
                         <td>
                           <div className="problem-title-cell">
-                            <span className="problem-title-text">{problem.title}</span>
-                            <span className="problem-topic-text">{problem.topic}</span>
+                            <span className="problem-title-text">
+                              {problem.title}
+                            </span>
+                            <span className="problem-topic-text">
+                              {problem.topic}
+                            </span>
                           </div>
                         </td>
                         <td>{problem.acceptanceRate}%</td>
                         <td>
-                          <span className={`difficulty-pill ${difficultyTone[problem.difficulty]}`}>
+                          <span
+                            className={`difficulty-pill ${difficultyTone[problem.difficulty]}`}
+                          >
                             {problem.difficulty}
                           </span>
                         </td>
-                        <td>{problem.premium ? <Lock size={16} aria-label="Premium problem" /> : "Open"}</td>
+                        <td>
+                          {problem.premium ? (
+                            <Lock size={16} aria-label="Premium problem" />
+                          ) : (
+                            "Open"
+                          )}
+                        </td>
                         <td>
                           <button
                             type="button"
@@ -518,7 +635,11 @@ export default function ProblemsPage() {
                               }
                             }}
                           >
-                            {solved ? "Solved" : attempted ? "Attempted" : "Start"}
+                            {solved
+                              ? "Solved"
+                              : attempted
+                                ? "Attempted"
+                                : "Start"}
                           </button>
                         </td>
                         <td>
@@ -537,7 +658,9 @@ export default function ProblemsPage() {
               {!filteredProblems.length ? (
                 <div className="problems-empty-state">
                   <h3>No problems match those filters yet</h3>
-                  <p>Try widening the topic, difficulty, or solved-state filters.</p>
+                  <p>
+                    Try widening the topic, difficulty, or solved-state filters.
+                  </p>
                 </div>
               ) : null}
             </div>
@@ -549,7 +672,9 @@ export default function ProblemsPage() {
             <div className="problems-widget-head">
               <div>
                 <span className="problems-widget-label">Learner Snapshot</span>
-                <h3>{user?.name ? `${user.name}'s progress` : "Guest progress"}</h3>
+                <h3>
+                  {user?.name ? `${user.name}'s progress` : "Guest progress"}
+                </h3>
               </div>
             </div>
 
@@ -573,11 +698,19 @@ export default function ProblemsPage() {
             </div>
           </div>
 
-          <CalendarWidget month={month} setMonth={setMonth} monthMatrix={monthMatrix} />
+          <CalendarWidget
+            month={month}
+            setMonth={setMonth}
+            monthMatrix={monthMatrix}
+          />
 
           <SelectedProblemCard
             problem={selectedProblem}
-            status={selectedProblem ? snapshot.state.problems[selectedProblem.id] : null}
+            status={
+              selectedProblem
+                ? snapshot.state.problems[selectedProblem.id]
+                : null
+            }
             onAttempt={recordAttempt}
             onToggleSolved={setProblemSolved}
           />
@@ -595,10 +728,17 @@ export default function ProblemsPage() {
                 <div key={topic.id} className="topic-progress-mini-item">
                   <div className="topic-progress-mini-copy">
                     <strong>{topic.title}</strong>
-                    <span>{progress?.completedCount || 0}/{progress?.totalSubtopics || topic.links.length} modules</span>
+                    <span>
+                      {progress?.completedCount || 0}/
+                      {progress?.totalSubtopics || topic.links.length} modules
+                    </span>
                   </div>
                   <div className="topic-progress-mini-bar">
-                    <span style={{ width: `${progress?.completionPercentage || 0}%` }} />
+                    <span
+                      style={{
+                        width: `${progress?.completionPercentage || 0}%`,
+                      }}
+                    />
                   </div>
                 </div>
               ))}
@@ -616,22 +756,28 @@ export default function ProblemsPage() {
             <div className="recent-activity-list">
               {snapshot.recentEvents.length ? (
                 snapshot.recentEvents.slice(0, 5).map((event) => {
-                  const topic = event.topicId ? topicLookup[event.topicId] : null;
+                  const topic = event.topicId
+                    ? topicLookup[event.topicId]
+                    : null;
                   return (
                     <div key={event.id} className="recent-activity-item">
                       <strong>
                         {event.type === "problem_solved" && "Solved problem"}
-                        {event.type === "problem_attempted" && "Attempted problem"}
+                        {event.type === "problem_attempted" &&
+                          "Attempted problem"}
                         {event.type === "topic_opened" && "Opened topic"}
                         {event.type === "topic_completed" && "Completed topic"}
                       </strong>
-                      <span>{event.title || topic?.title || "Learning activity"}</span>
+                      <span>
+                        {event.title || topic?.title || "Learning activity"}
+                      </span>
                     </div>
                   );
                 })
               ) : (
                 <p className="recent-activity-empty">
-                  Start solving or opening modules to populate your activity stream.
+                  Start solving or opening modules to populate your activity
+                  stream.
                 </p>
               )}
             </div>

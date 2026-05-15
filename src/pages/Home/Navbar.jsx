@@ -6,15 +6,25 @@ const NAV_LINKS = [
   { to: "/problems", label: "Problems" },
   { to: "/boolforge", label: "Circuit Forge" },
   { to: "/kmapgenerator", label: "K-Map Studio" },
-  { to: "/boolean-algebra", label: "Boolean Algebra" },
-  { to: "/numbersystemcalculator", label: "Number Systems" },
-  { to: "/sequential/intro", label: "Sequential" },
-  { to: "/timing-diagrams", label: "Resources" },
+  // { to: "/boolean-algebra", label: "Boolean Algebra" },
+  // { to: "/numbersystemcalculator", label: "Number Systems" },
+  // { to: "/sequential/intro", label: "Sequential" },
+  // { to: "/timing-diagrams", label: "Resources" },
 ];
 
 function SunIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="5" />
       <line x1="12" y1="1" x2="12" y2="3" />
       <line x1="12" y1="21" x2="12" y2="23" />
@@ -30,7 +40,17 @@ function SunIcon() {
 
 function MoonIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   );
@@ -69,12 +89,28 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
           <div className="home-logo-container">
             <svg viewBox="0 0 100 100" className="home-logo-svg">
               <defs>
-                <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient
+                  id="logo-grad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
                   <stop offset="0%" style={{ stopColor: "#3b82f6" }} />
                   <stop offset="100%" style={{ stopColor: "#8b5cf6" }} />
                 </linearGradient>
-                <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                <filter
+                  id="soft-glow"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                >
+                  <feGaussianBlur
+                    in="SourceGraphic"
+                    stdDeviation="4"
+                    result="blur"
+                  />
                   <feMerge>
                     <feMergeNode in="blur" />
                     <feMergeNode in="SourceGraphic" />
@@ -90,9 +126,30 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
                 strokeLinejoin="round"
                 className="logo-trace"
               />
-              <circle cx="30" cy="20" r="7" fill="var(--logo-node-color)" className="logo-node" style={{ filter: "url(#soft-glow)" }} />
-              <circle cx="30" cy="50" r="7" fill="var(--logo-node-color)" className="logo-node" style={{ filter: "url(#soft-glow)" }} />
-              <circle cx="30" cy="80" r="7" fill="var(--logo-node-color)" className="logo-node" style={{ filter: "url(#soft-glow)" }} />
+              <circle
+                cx="30"
+                cy="20"
+                r="7"
+                fill="var(--logo-node-color)"
+                className="logo-node"
+                style={{ filter: "url(#soft-glow)" }}
+              />
+              <circle
+                cx="30"
+                cy="50"
+                r="7"
+                fill="var(--logo-node-color)"
+                className="logo-node"
+                style={{ filter: "url(#soft-glow)" }}
+              />
+              <circle
+                cx="30"
+                cy="80"
+                r="7"
+                fill="var(--logo-node-color)"
+                className="logo-node"
+                style={{ filter: "url(#soft-glow)" }}
+              />
             </svg>
           </div>
           <div className="home-brand-text">
@@ -107,7 +164,9 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
               key={to}
               to={to}
               className={({ isActive }) =>
-                isActive ? "home-nav-link home-nav-link--active" : "home-nav-link"
+                isActive
+                  ? "home-nav-link home-nav-link--active"
+                  : "home-nav-link"
               }
               onClick={() => setMenuOpen(false)}
             >
@@ -159,7 +218,9 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
           <button
             onClick={toggleTheme}
             className="home-theme-btn"
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -189,7 +250,9 @@ export function Navbar({ toggleTheme, theme, onHomeClick }) {
               key={to}
               to={to}
               className={({ isActive }) =>
-                isActive ? "home-mobile-link home-nav-link--active" : "home-mobile-link"
+                isActive
+                  ? "home-mobile-link home-nav-link--active"
+                  : "home-mobile-link"
               }
               onClick={() => setMenuOpen(false)}
             >

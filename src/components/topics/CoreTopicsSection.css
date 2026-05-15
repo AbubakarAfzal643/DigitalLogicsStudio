@@ -53,8 +53,11 @@
   padding: 1rem 1.05rem;
   border-radius: 1rem;
   border: 1px solid rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.76));
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.92),
+    rgba(15, 23, 42, 0.76)
+  );
   backdrop-filter: blur(14px);
 }
 
@@ -72,13 +75,14 @@
 }
 
 .core-topics-grid {
-  display: grid;
+  /* display: grid; */
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.25rem;
 }
 
 .core-topic-card {
   position: relative;
+  margin-top: 25px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -87,7 +91,11 @@
   padding: 1.3rem;
   border-radius: 1.5rem;
   background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 26%),
+    radial-gradient(
+      circle at top right,
+      rgba(255, 255, 255, 0.08),
+      transparent 26%
+    ),
     linear-gradient(180deg, rgba(8, 15, 31, 0.98), rgba(11, 19, 35, 0.88));
   border: 1px solid rgba(148, 163, 184, 0.14);
   box-shadow: 0 20px 40px rgba(2, 6, 23, 0.28);
@@ -113,23 +121,55 @@
   pointer-events: none;
 }
 
-.accent-violet .core-topic-card-glow { background: rgba(167, 139, 250, 0.9); }
-.accent-cyan .core-topic-card-glow { background: rgba(34, 211, 238, 0.9); }
-.accent-amber .core-topic-card-glow { background: rgba(251, 191, 36, 0.9); }
-.accent-blue .core-topic-card-glow { background: rgba(59, 130, 246, 0.9); }
-.accent-emerald .core-topic-card-glow { background: rgba(16, 185, 129, 0.9); }
-.accent-rose .core-topic-card-glow { background: rgba(244, 63, 94, 0.8); }
-.accent-indigo .core-topic-card-glow { background: rgba(99, 102, 241, 0.85); }
-.accent-slate .core-topic-card-glow { background: rgba(148, 163, 184, 0.7); }
+.accent-violet .core-topic-card-glow {
+  background: rgba(167, 139, 250, 0.9);
+}
+.accent-cyan .core-topic-card-glow {
+  background: rgba(34, 211, 238, 0.9);
+}
+.accent-amber .core-topic-card-glow {
+  background: rgba(251, 191, 36, 0.9);
+}
+.accent-blue .core-topic-card-glow {
+  background: rgba(59, 130, 246, 0.9);
+}
+.accent-emerald .core-topic-card-glow {
+  background: rgba(16, 185, 129, 0.9);
+}
+.accent-rose .core-topic-card-glow {
+  background: rgba(244, 63, 94, 0.8);
+}
+.accent-indigo .core-topic-card-glow {
+  background: rgba(99, 102, 241, 0.85);
+}
+.accent-slate .core-topic-card-glow {
+  background: rgba(148, 163, 184, 0.7);
+}
 
-.accent-violet:hover { border-color: rgba(167, 139, 250, 0.42); }
-.accent-cyan:hover { border-color: rgba(34, 211, 238, 0.42); }
-.accent-amber:hover { border-color: rgba(251, 191, 36, 0.42); }
-.accent-blue:hover { border-color: rgba(96, 165, 250, 0.42); }
-.accent-emerald:hover { border-color: rgba(52, 211, 153, 0.42); }
-.accent-rose:hover { border-color: rgba(251, 113, 133, 0.42); }
-.accent-indigo:hover { border-color: rgba(129, 140, 248, 0.42); }
-.accent-slate:hover { border-color: rgba(148, 163, 184, 0.34); }
+.accent-violet:hover {
+  border-color: rgba(167, 139, 250, 0.42);
+}
+.accent-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.42);
+}
+.accent-amber:hover {
+  border-color: rgba(251, 191, 36, 0.42);
+}
+.accent-blue:hover {
+  border-color: rgba(96, 165, 250, 0.42);
+}
+.accent-emerald:hover {
+  border-color: rgba(52, 211, 153, 0.42);
+}
+.accent-rose:hover {
+  border-color: rgba(251, 113, 133, 0.42);
+}
+.accent-indigo:hover {
+  border-color: rgba(129, 140, 248, 0.42);
+}
+.accent-slate:hover {
+  border-color: rgba(148, 163, 184, 0.34);
+}
 
 .core-topic-card-head {
   display: grid;
