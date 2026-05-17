@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Boolforge",
+  "name": "Boolforge",
+  "description": "Interactive digital logic design learning platform — Boolean algebra, K-maps, number systems, sequential circuits, and more.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,11 +11,37 @@
     {
       "src": "favicon.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/?source=pwa",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait-primary",
+  "theme_color": "#020617",
+  "background_color": "#020617",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "screenshots": [
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Boolean Algebra interactive solver"
+    },
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "K-Map generator on mobile"
+    }
+  ]
 }
