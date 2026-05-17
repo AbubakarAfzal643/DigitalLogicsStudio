@@ -34,7 +34,11 @@
 /* ── Light theme overrides ─────────────────────────────────── */
 [data-theme="light"] .afhdl-layout {
   --afhdl-bg:
-    radial-gradient(circle at top left, rgba(96, 165, 250, 0.08), transparent 34%),
+    radial-gradient(
+      circle at top left,
+      rgba(96, 165, 250, 0.08),
+      transparent 34%
+    ),
     linear-gradient(180deg, #f7f9fc 0%, #eff4fb 52%, #f8fbff 100%);
   --afhdl-surface: rgba(255, 255, 255, 0.85);
   --afhdl-surface-strong: rgba(255, 255, 255, 0.96);
@@ -77,7 +81,11 @@
   height: clamp(180px, 24vw, 380px);
   right: -80px;
   top: 160px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.28), transparent 64%);
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.28),
+    transparent 64%
+  );
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -136,7 +144,9 @@
   height: 2px;
   background: var(--afhdl-muted);
   border-radius: 2px;
-  transition: transform 0.22s ease, opacity 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
 }
 .afhdl-hamburger.is-open .afhdl-ham-bar:nth-child(1) {
   transform: translateY(6px) rotate(45deg);
@@ -200,7 +210,10 @@
   background: var(--afhdl-surface-soft);
   color: var(--afhdl-muted-strong);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
   flex-shrink: 0;
 }
 .afhdl-theme-btn:hover {
@@ -339,7 +352,10 @@
   border-radius: 0.85rem;
   color: var(--afhdl-muted);
   text-decoration: none;
-  transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
 }
 .afhdl-nav-item:hover,
 .afhdl-nav-item:focus-visible {
@@ -408,7 +424,9 @@
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 600;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
 }
 .afhdl-sidebar-home-btn:hover {
   color: var(--afhdl-accent);
@@ -442,10 +460,20 @@
   text-decoration: none;
   transition: color 0.15s ease;
 }
-.afhdl-bc-link:hover { color: var(--afhdl-accent); }
-.afhdl-bc-sep { color: var(--afhdl-muted); opacity: 0.5; }
-.afhdl-bc-mid { color: var(--afhdl-muted); }
-.afhdl-bc-current { color: var(--afhdl-muted-strong); font-weight: 600; }
+.afhdl-bc-link:hover {
+  color: var(--afhdl-accent);
+}
+.afhdl-bc-sep {
+  color: var(--afhdl-muted);
+  opacity: 0.5;
+}
+.afhdl-bc-mid {
+  color: var(--afhdl-muted);
+}
+.afhdl-bc-current {
+  color: var(--afhdl-muted-strong);
+  font-weight: 600;
+}
 
 /* ── Hero section ───────────────────────────────────────────── */
 .afhdl-hero {
@@ -454,8 +482,16 @@
   padding: 1.5rem;
   border-radius: 1.35rem;
   background:
-    radial-gradient(circle at top right, rgba(79, 70, 229, 0.1), transparent 32%),
-    linear-gradient(180deg, color-mix(in srgb, var(--afhdl-surface-strong) 92%, transparent), var(--afhdl-surface));
+    radial-gradient(
+      circle at top right,
+      rgba(79, 70, 229, 0.1),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--afhdl-surface-strong) 92%, transparent),
+      var(--afhdl-surface)
+    );
   border: 1px solid var(--afhdl-border);
   box-shadow: var(--afhdl-shadow);
 }
@@ -551,7 +587,9 @@
   border-radius: 50%;
   background: var(--afhdl-border);
   border: 1px solid var(--afhdl-border);
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
   flex-shrink: 0;
 }
 .afhdl-dot.active {
@@ -590,7 +628,10 @@
   color: var(--afhdl-text);
   text-decoration: none;
   min-width: min(100%, 240px);
-  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s ease;
 }
 .afhdl-footer-link:hover {
   border-color: var(--afhdl-border-strong);
@@ -704,17 +745,32 @@
 .afhdl-section ul {
   color: var(--afhdl-muted);
   line-height: 1.72;
+  margin-left: 35px;
 }
-.afhdl-card-subtitle { margin: 0.3rem 0 0; font-size: 0.9rem; }
+.afhdl-card-subtitle {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+}
 .afhdl-card-content,
-.afhdl-info-content { margin-top: 0.75rem; }
+.afhdl-info-content {
+  margin-top: 0.75rem;
+}
 
 .afhdl-note-card {
   border-left: 4px solid var(--afhdl-accent);
-  background: linear-gradient(180deg, var(--afhdl-accent-soft), transparent), var(--afhdl-surface);
+  background:
+    linear-gradient(180deg, var(--afhdl-accent-soft), transparent),
+    var(--afhdl-surface);
 }
-.afhdl-note-card h4 { margin: 0; font-size: 0.95rem; }
-.afhdl-note-card p { margin: 0.45rem 0 0; color: var(--afhdl-muted); line-height: 1.7; }
+.afhdl-note-card h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.afhdl-note-card p {
+  margin: 0.45rem 0 0;
+  color: var(--afhdl-muted);
+  line-height: 1.7;
+}
 
 .afhdl-divider {
   border: 0;
@@ -728,7 +784,10 @@
   display: grid;
   gap: 0.5rem;
 }
-.afhdl-steps li { color: var(--afhdl-muted); line-height: 1.7; }
+.afhdl-steps li {
+  color: var(--afhdl-muted);
+  line-height: 1.7;
+}
 
 .afhdl-actions {
   display: flex;
@@ -756,9 +815,13 @@
   color: var(--afhdl-muted-strong);
   font-size: 0.9rem;
 }
-.afhdl-toggle input { accent-color: var(--afhdl-accent); }
+.afhdl-toggle input {
+  accent-color: var(--afhdl-accent);
+}
 
-.afhdl-chart { padding-left: 1.1rem; }
+.afhdl-chart {
+  padding-left: 1.1rem;
+}
 
 /* ── Buttons ────────────────────────────────────────────────── */
 .afhdl-copy-btn,
@@ -770,14 +833,21 @@
   gap: 0.45rem;
   border-radius: 0.8rem;
   border: 1px solid var(--afhdl-border-strong);
-  background: linear-gradient(180deg, rgba(79, 70, 229, 0.16), rgba(79, 70, 229, 0.1));
+  background: linear-gradient(
+    180deg,
+    rgba(79, 70, 229, 0.16),
+    rgba(79, 70, 229, 0.1)
+  );
   color: var(--afhdl-text);
   font-size: 0.88rem;
   font-weight: 600;
   text-decoration: none;
   padding: 0.65rem 1rem;
   cursor: pointer;
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    background 0.16s ease;
 }
 .afhdl-copy-btn:hover,
 .afhdl-layout .kmap-btn:hover,
@@ -802,7 +872,9 @@
   color: var(--afhdl-text);
   padding: 0.75rem 0.9rem;
   font-size: 0.94rem;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
 }
 .afhdl-layout .tool-input:focus,
 .afhdl-layout input[type="text"]:focus,
@@ -845,9 +917,16 @@
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--afhdl-border);
 }
-.afhdl-data-row:last-child { border-bottom: 0; }
-.afhdl-data-label { color: var(--afhdl-muted); }
-.afhdl-data-value { color: var(--afhdl-text); font-weight: 700; }
+.afhdl-data-row:last-child {
+  border-bottom: 0;
+}
+.afhdl-data-label {
+  color: var(--afhdl-muted);
+}
+.afhdl-data-value {
+  color: var(--afhdl-text);
+  font-weight: 700;
+}
 
 /* ══════════════════════════════════════════════════════════════
    RESPONSIVE UTILITY CLASSES
@@ -956,9 +1035,15 @@
 
 /* Very small screens */
 @media (max-width: 400px) {
-  .afhdl-topbar-link span { display: none; }
-  .afhdl-main { padding: 0.75rem 0.65rem 2rem; }
-  .afhdl-hero { padding: 0.9rem; }
+  .afhdl-topbar-link span {
+    display: none;
+  }
+  .afhdl-main {
+    padding: 0.75rem 0.65rem 2rem;
+  }
+  .afhdl-hero {
+    padding: 0.9rem;
+  }
 }
 
 /* ── Accessibility: reduce motion ───────────────────────────── */

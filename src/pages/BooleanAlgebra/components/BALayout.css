@@ -750,6 +750,7 @@
 .ba-section ul {
   color: var(--ba-muted);
   line-height: 1.72;
+  margin-left: 35px;
 }
 .ba-card-subtitle {
   margin: 0.3rem 0 0;
