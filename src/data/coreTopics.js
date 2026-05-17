@@ -20,10 +20,18 @@ const coreTopics = [
       { id: "duality", text: "Duality", to: "/boolean/duality" },
       { id: "consensus", text: "Consensus", to: "/boolean/consensus" },
       { id: "complement", text: "Complement", to: "/boolean/complement" },
-      { id: "standard-forms", text: "SOP & POS", to: "/standard-forms" },
       { id: "minterms", text: "Minterms", to: "/boolean/minterms" },
       { id: "maxterms", text: "Maxterms", to: "/boolean/maxterms" },
-      { id: "relation", text: "Relation", to: "/boolean/minterms-maxterms" },
+      {
+        id: "standard-forms",
+        text: "SOP & POS",
+        to: "/boolean/minterms-maxterms",
+      },
+      {
+        id: "significant-digits",
+        text: "Significant Digits",
+        to: "/boolean/significant-digits",
+      },
     ],
   },
   {
