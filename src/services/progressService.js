@@ -386,8 +386,15 @@ const progressService = {
     const dateKey = toDateKey();
     const current = mergeTopicState(topic, state.topics[topic.id]);
     const completedSet = new Set(current.completedSubtopics);
+    const equivalentIds = [
+      subtopicId,
+      ...Object.entries(topic?.subtopicAliases || {})
+        .filter(([, canonicalId]) => canonicalId === subtopicId)
+        .map(([legacyId]) => legacyId),
+    ];
+    const isCompleted = equivalentIds.some((id) => completedSet.has(id));
 
-    if (completedSet.has(subtopicId)) completedSet.delete(subtopicId);
+    if (isCompleted) equivalentIds.forEach((id) => completedSet.delete(id));
     else completedSet.add(subtopicId);
 
     current.completedSubtopics = Array.from(completedSet);
@@ -417,6 +424,7 @@ const progressService = {
     await tryRemotePost(`/progress/topics/${topic.id}/subtopics/${subtopicId}`, {
       title: topic.title,
       subtopicId,
+      equivalentSubtopicIds: equivalentIds,
       totalSubtopics: topic?.links?.length || 0,
     });
 

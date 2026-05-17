@@ -71,6 +71,7 @@ function CheckCircleIcon() {
 }
 
 const noop = async () => {};
+const EMPTY_ALIASES = {};
 
 const PremiumLearningShell = ({
   title,
@@ -99,6 +100,7 @@ const PremiumLearningShell = ({
   const next = safeIndex < pages.length - 1 ? pages[safeIndex + 1] : null;
 
   const pathToSubtopicId = tracking?.pathToSubtopicId || {};
+  const subtopicAliases = tracking?.subtopicAliases || EMPTY_ALIASES;
   const trackedTopic = tracking?.topic || null;
   const subtopicId = pathToSubtopicId[currentPath] || null;
   const userKey = progressService.getUserKey(user);
@@ -110,8 +112,12 @@ const PremiumLearningShell = ({
   const getCompletedSubtopics = useCallback(() => {
     if (!trackedTopic || !catalog) return [];
     const snapshot = progressService.getSnapshot(userKey, catalog);
-    return snapshot.state.topics?.[trackedTopic.id]?.completedSubtopics || [];
-  }, [catalog, trackedTopic, userKey]);
+    const completed =
+      snapshot.state.topics?.[trackedTopic.id]?.completedSubtopics || [];
+    return Array.from(
+      new Set(completed.map((id) => subtopicAliases[id] || id)),
+    );
+  }, [catalog, subtopicAliases, trackedTopic, userKey]);
 
   const [completedSubtopics, setCompletedSubtopics] = useState(() =>
     getCompletedSubtopics(),

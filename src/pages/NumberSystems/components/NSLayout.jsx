@@ -4,19 +4,27 @@ import "./NSLayout.css";
 import { nsPages } from "./nsConfig";
 
 const PATH_TO_SUBTOPIC_ID = {
-  "/number-systems/binary-representation": "binary-representation",
-  "/number-systems/number-conversion": "number-conversion",
+  "/number-systems/binary-representation": "binary-visualizer",
+  "/number-systems/number-conversion": "base-converter",
   "/number-systems/bit-extension": "bit-extension",
-  "/number-systems/bcd-notation": "bcd-notation",
-  "/number-systems/ascii-notation": "ascii-notation",
+  "/number-systems/bcd-notation": "bcd",
+  "/number-systems/ascii-notation": "ascii",
   "/number-systems/bit-converter": "bit-converter",
   "/number-systems/calculator": "calculator",
+};
+
+const LEGACY_SUBTOPIC_ALIASES = {
+  "binary-representation": "binary-visualizer",
+  "number-conversion": "base-converter",
+  "bcd-notation": "bcd",
+  "ascii-notation": "ascii",
 };
 
 const NS_TOPIC = {
   id: "number-systems",
   title: "NUMBER SYSTEMS",
   links: Object.values(PATH_TO_SUBTOPIC_ID).map((id) => ({ id })),
+  subtopicAliases: LEGACY_SUBTOPIC_ALIASES,
 };
 
 const DEFAULT_HIGHLIGHTS = {
@@ -138,6 +146,7 @@ const NSLayout = ({ title, subtitle, intro, highlights = [], children }) => (
     tracking={{
       topic: NS_TOPIC,
       pathToSubtopicId: PATH_TO_SUBTOPIC_ID,
+      subtopicAliases: LEGACY_SUBTOPIC_ALIASES,
     }}
   >
     {children}
