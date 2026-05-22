@@ -101,15 +101,19 @@ export default function BinaryRepresentation() {
     const generateChartData = (type) => {
         const data = [];
         for (let i = 10; i >= -10; i--) {
-            let binary = '';
             if (type === 'SM') {
                 const abs = Math.abs(i);
                 const bin = abs.toString(2).padStart(4, '0');
-                binary = i === 0 ? `0${bin}` : (i < 0 ? '1' : '0') + bin;
+                if (i === 0) {
+                    data.push({ id: 'sm-positive-zero', dec: '+0', bin: `0${bin}` });
+                    data.push({ id: 'sm-negative-zero', dec: '-0', bin: `1${bin}` });
+                    continue;
+                }
+                data.push({ id: `sm-${i}`, dec: i, bin: (i < 0 ? '1' : '0') + bin });
             } else {
-                binary = i >= 0 ? i.toString(2).padStart(5, '0') : (32 + i).toString(2);
+                const binary = i >= 0 ? i.toString(2).padStart(5, '0') : (32 + i).toString(2);
+                data.push({ id: `tc-${i}`, dec: i, bin: binary });
             }
-            data.push({ dec: i, bin: binary });
         }
         return data;
     };
@@ -177,7 +181,7 @@ export default function BinaryRepresentation() {
                                     </thead>
                                     <tbody>
                                         {generateChartData('SM').map((row) => (
-                                            <tr key={row.dec} className="binary-table-row">
+                                            <tr key={row.id} className="binary-table-row">
                                                 <td className="binary-table-cell">{row.dec}</td>
                                                 <td className="binary-table-cell binary-table-cell-right binary-table-cell-mono binary-table-cell-primary">
                                                     <span className="binary-table-cell-danger">{row.bin[0]}</span>
@@ -261,6 +265,17 @@ export default function BinaryRepresentation() {
                     {/* SM Range */}
                     <div className="binary-info-box binary-info-secondary">
                         <h3 className="binary-info-heading">Range Calculator</h3>
+                        <p className="binary-text">
+                            For <strong>n bits</strong>, signed magnitude uses 1 sign bit and <strong>n - 1 magnitude bits</strong>.
+                        </p>
+                        <div className="binary-example-box">
+                            <p className="binary-formula">
+                                Range: -(2<sup>n-1</sup> - 1) to +(2<sup>n-1</sup> - 1)
+                            </p>
+                            <p className="binary-formula-note">
+                                Distinct bit patterns: 2<sup>n</sup>, but +0 and -0 both represent zero.
+                            </p>
+                        </div>
                         <div className="binary-input-group">
                             <label className="binary-label">Bit width:</label>
                             <input
@@ -313,7 +328,7 @@ export default function BinaryRepresentation() {
                                     </thead>
                                     <tbody>
                                         {generateChartData('TC').map((row) => (
-                                            <tr key={row.dec} className="binary-table-row">
+                                            <tr key={row.id} className="binary-table-row">
                                                 <td className="binary-table-cell">{row.dec}</td>
                                                 <td className="binary-table-cell binary-table-cell-right binary-table-cell-mono binary-table-cell-secondary">
                                                     <span className="binary-table-cell-danger">{row.bin[0]}</span>
@@ -396,6 +411,17 @@ export default function BinaryRepresentation() {
                     {/* TC Range */}
                     <div className="binary-info-box binary-info-primary">
                         <h3 className="binary-info-heading">Range Calculator</h3>
+                        <p className="binary-text">
+                            For <strong>n bits</strong>, two's complement gives one extra negative value because there is only one zero.
+                        </p>
+                        <div className="binary-example-box">
+                            <p className="binary-formula">
+                                Range: -2<sup>n-1</sup> to +(2<sup>n-1</sup> - 1)
+                            </p>
+                            <p className="binary-formula-note">
+                                Distinct values: 2<sup>n</sup>.
+                            </p>
+                        </div>
                         <div className="binary-input-group">
                             <label className="binary-label">Bit width:</label>
                             <input
@@ -460,6 +486,17 @@ export default function BinaryRepresentation() {
 
                     <div className="binary-info-box binary-info-amber">
                         <h3 className="binary-info-heading">Range Calculator</h3>
+                        <p className="binary-text">
+                            For <strong>n bits</strong>, every bit is a value bit, so all combinations count upward from zero.
+                        </p>
+                        <div className="binary-example-box">
+                            <p className="binary-formula">
+                                Range: 0 to 2<sup>n</sup> - 1
+                            </p>
+                            <p className="binary-formula-note">
+                                Distinct values: 2<sup>n</sup>.
+                            </p>
+                        </div>
                         <div className="binary-input-group">
                             <label className="binary-label">Bit width:</label>
                             <input

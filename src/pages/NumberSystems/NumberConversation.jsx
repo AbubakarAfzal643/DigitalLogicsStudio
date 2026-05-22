@@ -287,6 +287,36 @@ export default function NumberConverter() {
         return steps;
     };
 
+    const explainGroupedToBinary = (source, sourceKey) => {
+        const parts = normalizeNumberParts(source.value);
+        const groupSize = sourceKey === 'oct' ? 3 : 4;
+        const sourceLabel = sourceKey.toUpperCase();
+        const padDigit = (digit) => parseInt(digit, source.base).toString(2).padStart(groupSize, '0');
+        const integerGroups = parts.integer.split('').map((digit) => ({
+            digit,
+            binary: padDigit(digit),
+        }));
+        const fractionGroups = parts.fraction.split('').map((digit) => ({
+            digit,
+            binary: padDigit(digit),
+        }));
+        const integerBinary = integerGroups.map((group) => group.binary).join('').replace(/^0+(?=\d)/, '') || '0';
+        const fractionBinary = fractionGroups.map((group) => group.binary).join('');
+        const result = `${parts.negative ? '-' : ''}${integerBinary}${fractionBinary ? `.${fractionBinary}` : ''}`;
+        const steps = [
+            `Start with ${parts.display} in ${source.name}.`,
+            `Direct trick: each ${source.name} digit maps to exactly ${groupSize} binary bits, so you do not need to convert through Decimal first.`,
+            `Convert the integer digits one by one: ${integerGroups.map((group) => `${group.digit} -> ${group.binary}`).join(', ')}.`,
+        ];
+
+        if (fractionGroups.length) {
+            steps.push(`Convert the fractional digits one by one: ${fractionGroups.map((group) => `${group.digit} -> ${group.binary}`).join(', ')}.`);
+        }
+
+        steps.push(`Join the groups and remove only the extra leading integer zeros: ${parts.display} (${sourceLabel}) = ${result} (BIN).`);
+        return steps;
+    };
+
     const explainViaDecimal = (source, sourceKey, target, targetKey) => {
         const decimalExplanation = explainToDecimal(source, sourceKey);
         const targetExplanation = explainFromDecimal(
@@ -314,6 +344,8 @@ export default function NumberConverter() {
             steps = explainFromDecimal(source, target).steps;
         } else if (sourceKey === 'bin' && ['oct', 'hex'].includes(targetKey)) {
             steps = explainGroupedConversion(source, sourceKey, target, targetKey);
+        } else if (targetKey === 'bin' && ['oct', 'hex'].includes(sourceKey)) {
+            steps = explainGroupedToBinary(source, sourceKey);
         } else {
             steps = explainViaDecimal(source, sourceKey, target, targetKey);
         }

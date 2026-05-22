@@ -2049,6 +2049,23 @@
   overflow-wrap: anywhere;
 }
 
+.ns-layout .binary-formula {
+  margin: 0;
+  color: var(--ns-text-hi);
+  font-family: var(--ns-font-mono);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.ns-layout .binary-formula-note {
+  margin: 0.4rem 0 0;
+  color: var(--ns-text-muted);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
 .ns-layout .binary-concept-grid {
   display: flex;
   flex-direction: column;
