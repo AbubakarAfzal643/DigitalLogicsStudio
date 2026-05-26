@@ -9,7 +9,7 @@ import coreTopics from "../../data/coreTopics";
 import problemsCatalog from "../Problems/problemCatalog";
 import progressService from "../../services/progressService";
 import apiClient from "../../services/apiClient";
-import Footer from "../Home/Footer";
+// Removed duplicate Footer import
 import "./Auth.css";
 import "./DashboardProfile.css";
 import "./ProfileDashboard.css";
@@ -559,7 +559,6 @@ export default function ProfilePage() {
             <button className="db-icon-btn" title="Notifications">
               <Bell size={18} />
             </button>
-
             <button className="db-icon-btn" title="Help Guide">
               <HelpCircle size={18} />
             </button>
