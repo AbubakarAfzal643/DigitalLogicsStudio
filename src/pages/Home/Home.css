@@ -323,15 +323,15 @@
   align-items: center;
   padding: 1.5rem;
   border-radius: 1.75rem;
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  border: 1px solid var(--border-color);
   background:
     radial-gradient(
       circle at top right,
       rgba(59, 130, 246, 0.14),
       transparent 24%
     ),
-    linear-gradient(180deg, rgba(8, 15, 31, 0.94), rgba(15, 23, 42, 0.82));
-  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.24);
+    linear-gradient(180deg, var(--bg-color), var(--bg-gradient-end));
+  box-shadow: 0 22px 44px var(--card-border);
 }
 
 .home-problems-cta-copy {
@@ -343,9 +343,9 @@
   align-items: center;
   padding: 0.36rem 0.82rem;
   border-radius: 999px;
-  background: rgba(59, 130, 246, 0.12);
-  border: 1px solid rgba(96, 165, 250, 0.22);
-  color: #bfdbfe;
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  color: var(--badge-text);
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -363,11 +363,11 @@
   min-height: 46px;
   padding: 0.8rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  border: 1px solid var(--border-color);
   color: var(--text-color);
   text-decoration: none;
   font-weight: 700;
-  background: rgba(15, 23, 42, 0.68);
+  background: var(--card-bg-solid);
 }
 
 .home-problems-cta-link.primary {
@@ -386,10 +386,10 @@
 
 /* Premium Cards */
 .home-card {
-  background: var(--card-bg) !important;
+  background: var(--card-bg-solid) !important;
   backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color) !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid var(--card-border) !important;
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   padding: 1.75rem !important;
@@ -400,14 +400,15 @@
     opacity 0.55s ease,
     transform 0.55s ease,
     border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease;
   transition-delay: var(--card-delay, 0ms);
 }
 
 .feature-card {
   border-color: rgba(59, 130, 246, 0.35) !important;
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.2),
+    var(--card-shadow),
     0 0 24px rgba(59, 130, 246, 0.12);
 }
 
@@ -420,7 +421,7 @@
   transform: translateY(-8px) scale(1.02);
   border-color: var(--accent-color) !important;
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.2),
+    var(--card-shadow-hover),
     0 0 20px rgba(59, 130, 246, 0.1);
 }
 
@@ -459,7 +460,7 @@
 }
 
 .home-card-link {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--chip-bg) !important;
   border: 1px solid var(--border-color) !important;
   padding: 0.6rem 0.75rem !important;
   font-size: 0.8rem !important;
@@ -496,8 +497,24 @@
 }
 
 /* Light Mode Specific Adjustments */
+[data-theme="light"] .home-card {
+  background: var(--card-bg-solid) !important;
+  border: var(--card-border-width, 2px) solid var(--card-border) !important;
+}
+
+[data-theme="light"] .feature-card {
+  border: var(--card-border-width, 2px) solid var(--card-border) !important;
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .home-card:hover,
+[data-theme="light"] .feature-card:hover {
+  border-color: #047857 !important;
+  box-shadow: var(--card-shadow-hover);
+}
+
 [data-theme="light"] .home-card-link {
-  background: rgba(15, 23, 42, 0.05) !important;
+  background: var(--chip-bg) !important;
   color: var(--text-color) !important;
 }
 
@@ -507,7 +524,31 @@
 }
 
 [data-theme="light"] .primary-link {
-  background: rgba(37, 99, 235, 0.08) !important;
+  background: rgba(4, 120, 87, 0.08) !important;
+  color: var(--accent-color) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .home-problems-cta-badge {
+  color: var(--badge-text);
+  background: var(--badge-bg);
+  border-color: var(--badge-border);
+}
+
+[data-theme="light"] .home-problems-cta {
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .hero-badge {
+  background: var(--badge-bg);
+  border-color: var(--badge-border);
+  color: var(--accent-color);
+}
+
+[data-theme="light"] .grid-background {
+  background-image:
+    linear-gradient(to right, rgba(6, 95, 70, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 95, 70, 0.08) 1px, transparent 1px);
 }
 
 @media (max-width: 640px) {

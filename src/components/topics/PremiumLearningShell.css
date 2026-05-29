@@ -1,4 +1,5 @@
-.premium-topic-shell {
+/* Dark-only premium shell overrides — light mode uses each layout's native tokens */
+[data-theme="dark"] .premium-topic-shell {
   --afhdl-bg:
     radial-gradient(circle at top left, rgba(91, 140, 255, 0.16), transparent 28%),
     radial-gradient(circle at 85% 12%, rgba(129, 140, 248, 0.12), transparent 26%),
@@ -64,7 +65,7 @@
   --ba-shadow: var(--afhdl-shadow);
 }
 
-.premium-topic-shell.ns-layout {
+[data-theme="dark"] .premium-topic-shell.ns-layout {
   --ns-bg: #08111f;
   --ns-surface-0: #0b1323;
   --ns-surface-1: #0f172a;
@@ -91,7 +92,7 @@
   --ns-shadow-teal-hi: 0 0 32px rgba(91, 140, 255, 0.24);
 }
 
-.premium-topic-shell.seq-layout {
+[data-theme="dark"] .premium-topic-shell.seq-layout {
   --bg: #08111f;
   --muted: #9fb0c8;
   --text: #e5edf8;
@@ -102,7 +103,7 @@
   --glass: rgba(11, 19, 36, 0.62);
 }
 
-.premium-topic-shell.reg-layout {
+[data-theme="dark"] .premium-topic-shell.reg-layout {
   --amber: #5b8cff;
   --amber-dim: #436fe8;
   --amber-glow: rgba(91, 140, 255, 0.14);
@@ -123,7 +124,7 @@
     0 0 40px rgba(91, 140, 255, 0.12), 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.premium-topic-shell.mem-layout {
+[data-theme="dark"] .premium-topic-shell.mem-layout {
   --mem-bg: #08111f;
   --mem-surface: #0b1323;
   --mem-card: #10192d;
@@ -140,4 +141,10 @@
   --mem-glow-cyan: rgba(91, 140, 255, 0.14);
   --mem-glow-indigo: rgba(129, 140, 248, 0.12);
   --mem-glow-green: rgba(52, 211, 153, 0.1);
+}
+
+[data-theme="light"] .premium-topic-shell {
+  --afhdl-bg:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.08), transparent 34%),
+    linear-gradient(180deg, #f7f9fc 0%, #eff4fb 52%, #f8fbff 100%);
 }

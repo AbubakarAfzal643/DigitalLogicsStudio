@@ -31,8 +31,8 @@
   --problems-surface: rgba(255, 255, 255, 0.88);
   --problems-surface-soft: rgba(248, 250, 252, 0.94);
   --problems-surface-strong: rgba(241, 245, 249, 0.96);
-  --problems-border: rgba(148, 163, 184, 0.2);
-  --problems-border-strong: rgba(148, 163, 184, 0.26);
+  --problems-border: #065f46;
+  --problems-border-strong: #047857;
   --problems-row-hover: rgba(226, 232, 240, 0.78);
   --problems-text-strong: #0f172a;
   --problems-text-soft: #334155;
@@ -51,6 +51,254 @@
       transparent 24%
     ),
     linear-gradient(180deg, #f8fbff 0%, #eef4ff 55%, #f8fafc 100%);
+}
+
+.problems-page.theme-light .problems-sidebar,
+.problems-page.theme-light .problems-widget,
+.problems-page.theme-light .problems-table-card,
+.problems-page.theme-light .problems-banner-card {
+  border-width: 2px;
+  border-color: var(--problems-border);
+  box-shadow: 0 12px 28px rgba(6, 95, 70, 0.1);
+}
+
+.problems-page.theme-light .problems-sidebar-badge,
+.problems-page.theme-light .problems-widget-label,
+.problems-page.theme-light .table-summary-label {
+  color: var(--problems-tag-text);
+  background: var(--problems-tag-bg);
+  border-color: var(--problems-tag-border);
+}
+
+/* ── Light theme: table ─────────────────────────────────────────────────── */
+.problems-page.theme-light .problems-table thead th {
+  color: #475569;
+  background: #f1f5f9;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.problems-page.theme-light .problems-table th,
+.problems-page.theme-light .problems-table td {
+  border-top-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.problems-page.theme-light .problems-table tbody tr:hover,
+.problems-page.theme-light .problems-table tbody tr.is-selected {
+  background: #f0fdf4;
+}
+
+.problems-page.theme-light .problem-title-text {
+  color: #0f172a;
+}
+
+.problems-page.theme-light .problem-topic-text {
+  color: #64748b;
+}
+
+/* ── Light theme: difficulty pills ─────────────────────────────────────── */
+.problems-page.theme-light .difficulty-pill.easy {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.1);
+}
+
+.problems-page.theme-light .difficulty-pill.medium {
+  color: #b45309;
+  background: rgba(217, 119, 6, 0.1);
+}
+
+.problems-page.theme-light .difficulty-pill.hard {
+  color: #b91c1c;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* ── Light theme: status chip ───────────────────────────────────────────── */
+.problems-page.theme-light .status-chip {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.problems-page.theme-light .status-chip.is-attempted {
+  color: #b45309;
+  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(217, 119, 6, 0.3);
+}
+
+.problems-page.theme-light .status-chip.is-solved {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+/* ── Light theme: tags ──────────────────────────────────────────────────── */
+.problems-page.theme-light .problem-tag-list span,
+.problems-page.theme-light .selected-problem-tags span {
+  background: rgba(37, 99, 235, 0.07);
+  border-color: rgba(37, 99, 235, 0.18);
+  color: #1d4ed8;
+}
+
+/* ── Light theme: search & selects ─────────────────────────────────────── */
+.problems-page.theme-light .problems-search {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.problems-page.theme-light .problems-search input {
+  color: #0f172a;
+}
+
+.problems-page.theme-light .problems-search input::placeholder {
+  color: #94a3b8;
+}
+
+.problems-page.theme-light .problems-toolbar-selects select {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+/* ── Light theme: filter chips ──────────────────────────────────────────── */
+.problems-page.theme-light .problems-filter-chip {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.problems-page.theme-light .problems-filter-chip.is-active {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #0f172a;
+}
+
+/* ── Light theme: sidebar nav ───────────────────────────────────────────── */
+.problems-page.theme-light .problems-sidebar-link {
+  color: #334155;
+}
+
+.problems-page.theme-light .problems-sidebar-link:hover,
+.problems-page.theme-light .problems-sidebar-link.is-active {
+  background: #f0fdf4;
+  border-color: rgba(6, 95, 70, 0.2);
+}
+
+.problems-page.theme-light .problems-sidebar-link-badge {
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+}
+
+.problems-page.theme-light .problems-sidebar-foot div {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.problems-page.theme-light .problems-sidebar-foot strong {
+  color: #0f172a;
+}
+
+/* ── Light theme: stats grid ────────────────────────────────────────────── */
+.problems-page.theme-light .stats-grid div {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.problems-page.theme-light .stats-grid strong {
+  color: #0f172a;
+}
+
+/* ── Light theme: calendar ──────────────────────────────────────────────── */
+.problems-page.theme-light .calendar-cell {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+.problems-page.theme-light .intensity-0 {
+  background: #e2e8f0;
+}
+
+.problems-page.theme-light .intensity-1 {
+  background: rgba(22, 163, 74, 0.18);
+}
+
+.problems-page.theme-light .intensity-2 {
+  background: rgba(22, 163, 74, 0.32);
+}
+
+.problems-page.theme-light .intensity-3 {
+  background: rgba(22, 163, 74, 0.52);
+}
+
+.problems-page.theme-light .intensity-4 {
+  background: rgba(22, 163, 74, 0.76);
+}
+
+.problems-page.theme-light .calendar-nav button {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+/* ── Light theme: topic progress & activity items ───────────────────────── */
+.problems-page.theme-light .topic-progress-mini-item,
+.problems-page.theme-light .recent-activity-item {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.problems-page.theme-light .topic-progress-mini-copy strong,
+.problems-page.theme-light .recent-activity-item strong {
+  color: #0f172a;
+}
+
+.problems-page.theme-light .topic-progress-mini-bar {
+  background: #e2e8f0;
+}
+
+/* ── Light theme: selected problem widget ───────────────────────────────── */
+.problems-page.theme-light .selected-problem-description,
+.problems-page.theme-light .selected-problem-hint {
+  color: #334155;
+}
+
+.problems-page.theme-light .selected-problem-meta span {
+  color: #64748b;
+}
+
+.problems-page.theme-light .selected-problem-actions button,
+.problems-page.theme-light .selected-problem-link {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.problems-page.theme-light .selected-problem-actions .is-solved {
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.3);
+  color: #15803d;
+}
+
+/* ── Light theme: table summary ─────────────────────────────────────────── */
+.problems-page.theme-light .problems-table-summary strong {
+  color: #0f172a;
+}
+
+.problems-page.theme-light .table-summary-stats {
+  color: #475569;
+}
+
+/* ── Light theme: banner slider arrows ──────────────────────────────────── */
+.problems-page.theme-light .banner-slider-arrow {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.problems-page.theme-light .banner-slider-arrow:hover {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #0f172a;
 }
 
 .problems-backdrop {
@@ -753,7 +1001,7 @@
 .topic-progress-mini-bar {
   height: 7px;
   border-radius: 999px;
-  background: rgba(30, 41, 59, 0.92);
+  background: var(--problems-surface-strong);
   overflow: hidden;
 }
 
@@ -767,8 +1015,8 @@
 .recent-activity-item {
   padding: 0.9rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: var(--problems-surface-soft);
+  border: 1px solid var(--problems-border);
 }
 
 .recent-activity-item strong,

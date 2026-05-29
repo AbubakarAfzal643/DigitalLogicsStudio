@@ -40,7 +40,7 @@
       rgba(59, 130, 246, 0.12),
       transparent 24%
     ),
-    linear-gradient(180deg, var(--bg-color) 0%, rgba(15, 23, 42, 0.92) 100%);
+    linear-gradient(180deg, var(--bg-color) 0%, var(--bg-gradient-end) 100%);
   font-size: 1rem;
   letter-spacing: 0.02em;
 }
@@ -391,8 +391,8 @@
 
 /* Enhanced UI Components for Boolean Algebra Pages */
 .info-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
   border-radius: 0.75rem;
   padding: 1.2rem;
   margin: 1rem 0;
@@ -400,13 +400,13 @@
 
 .info-card h4 {
   margin: 0 0 0.8rem 0;
-  color: #e5e7eb;
+  color: var(--heading-color);
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .example-box {
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--card-bg);
   border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 0.75rem;
   padding: 1.2rem;
@@ -415,7 +415,7 @@
 
 .example-box h4 {
   margin: 0 0 0.8rem 0;
-  color: #60a5fa;
+  color: var(--subtext-color);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -424,7 +424,7 @@
   background: linear-gradient(
     135deg,
     rgba(37, 99, 235, 0.15),
-    rgba(15, 23, 42, 0.8)
+    var(--card-bg-solid)
   );
   border: 1px solid rgba(37, 99, 235, 0.4);
   border-radius: 0.75rem;
@@ -434,7 +434,7 @@
 
 .key-insight h4 {
   margin: 0 0 0.8rem 0;
-  color: #818cf8;
+  color: var(--accent-color);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -455,7 +455,7 @@
 }
 
 .arithmetic-tools {
-  background: rgba(15, 23, 42, 0.74);
+  background: var(--card-bg);
   border: 1px dotted rgba(59, 130, 246, 0.4);
   border-radius: 1rem;
   padding: 1rem;
@@ -463,18 +463,18 @@
 }
 
 .arithmetic-tools h4 {
-  color: #93c5fd;
+  color: var(--subtext-color);
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
 .arithmetic-tools p {
-  color: #cbd5e1;
+  color: var(--secondary-text);
 }
 
 .arithmetic-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
   border-radius: 0.75rem;
   padding: 1rem;
   margin: 0.8rem 0;
@@ -483,12 +483,12 @@
 .arithmetic-card h3 {
   margin-top: 0;
   font-size: 1.15rem;
-  color: #60a5fa;
+  color: var(--subtext-color);
 }
 
 .arithmetic-card .subtext {
   margin: 0.2rem 0 0.8rem 0;
-  color: #93c5fd;
+  color: var(--secondary-text);
   font-size: 0.9rem;
 }
 
@@ -498,7 +498,7 @@
 
 .arithmetic-toggle label {
   cursor: pointer;
-  color: #cbd5e1;
+  color: var(--text-color);
   user-select: none;
 }
 
@@ -508,10 +508,10 @@
 .tool-input {
   width: 100%;
   padding: 0.7rem 0.85rem;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid var(--input-border);
   border-radius: 0.5rem;
-  background: rgba(15, 23, 42, 0.8);
-  color: #e2e8f0;
+  background: var(--input-bg);
+  color: var(--text-color);
   transition:
     border-color 0.15s ease,
     transform 0.1s ease;
@@ -538,15 +538,15 @@
 }
 
 .comparison-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
   border-radius: 0.75rem;
   padding: 1.2rem;
 }
 
 .comparison-card h5 {
   margin: 0 0 0.8rem 0;
-  color: #e5e7eb;
+  color: var(--heading-color);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -554,7 +554,7 @@
 .comparison-card ul {
   margin: 0;
   padding-left: 1.2rem;
-  color: #9ca3af;
+  color: var(--secondary-text);
 }
 
 .comparison-card li {
@@ -570,22 +570,22 @@
 }
 
 .gate-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
   border-radius: 0.75rem;
   padding: 1rem;
 }
 
 .gate-card h5 {
   margin: 0 0 0.6rem 0;
-  color: #60a5fa;
+  color: var(--subtext-color);
   font-size: 0.95rem;
   font-weight: 600;
 }
 
 .gate-card p {
   margin: 0.3rem 0;
-  color: #9ca3af;
+  color: var(--secondary-text);
   font-size: 0.85rem;
   line-height: 1.4;
 }
@@ -598,29 +598,29 @@
 }
 
 .law-card {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
   border-radius: 0.75rem;
   padding: 1.2rem;
 }
 
 .law-name {
   margin: 0 0 0.6rem 0;
-  color: #818cf8;
+  color: var(--accent-color);
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .law-example {
   margin: 0.4rem 0;
-  color: #e5e7eb;
+  color: var(--text-color);
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
 }
 
 .law-explanation {
   margin: 0.6rem 0;
-  color: #9ca3af;
+  color: var(--secondary-text);
   font-size: 0.9rem;
   line-height: 1.4;
 }
@@ -633,8 +633,8 @@
 }
 
 .mini-table {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 0.5rem;
   padding: 0.8rem;
   margin: 0.8rem 0;
@@ -645,17 +645,17 @@
 .mini-table td {
   padding: 0.4rem 0.6rem;
   text-align: center;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .mini-table th {
   background: rgba(37, 99, 235, 0.2);
-  color: #e5e7eb;
+  color: var(--heading-color);
   font-weight: 600;
 }
 
 .mini-table td {
-  color: #9ca3af;
+  color: var(--text-color);
 }
 
 .note {
@@ -669,15 +669,15 @@
 }
 
 details {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 0.5rem;
   padding: 0.8rem;
   margin: 0.8rem 0;
 }
 
 summary {
-  color: #60a5fa;
+  color: var(--subtext-color);
   cursor: pointer;
   font-weight: 600;
   padding: 0.4rem;
@@ -720,38 +720,255 @@ summary:hover {
     justify-content: center;
   }
 }
-/* Sequential Circuits card gets a distinct purple-indigo accent
-   to visually separate it from the blue combinational-circuits card */
-.sequential-card {
+/* Sequential Circuits card — distinct purple accent (needs !important vs .home-card) */
+.home-card.sequential-card {
   background: radial-gradient(
     circle at top left,
     rgba(167, 139, 250, 0.18),
-    /* purple-400 at low opacity */ rgba(15, 23, 42, 0.96)
-  );
-  border-color: rgba(167, 139, 250, 0.35);
-}
-
-.sequential-card::before {
-  background: radial-gradient(
-    circle at top right,
-    rgba(139, 92, 246, 0.28),
-    transparent 60%
+    var(--card-bg-solid) 72%
   ) !important;
+  border-color: rgba(167, 139, 250, 0.35) !important;
 }
 
-.sequential-card h3 {
-  color: #c4b5fd; /* violet-300 */
+.home-card.sequential-card .home-card-title {
+  color: #c4b5fd !important;
 }
 
-/* Links inside the sequential card use the violet palette */
-.sequential-card .home-card-link {
-  border-color: rgba(139, 92, 246, 0.65);
-  color: #ddd6fe; /* violet-200 */
+.home-card.sequential-card .home-card-link {
+  border-color: rgba(139, 92, 246, 0.65) !important;
+  color: #ddd6fe !important;
 }
 
-.sequential-card .home-card-link:hover {
-  background: rgba(109, 40, 217, 0.2);
+.home-card.sequential-card .home-card-link:hover {
+  background: rgba(109, 40, 217, 0.2) !important;
+  color: #fff !important;
   box-shadow: 0 10px 25px rgba(109, 40, 217, 0.3);
+}
+
+[data-theme="light"] .home-card.sequential-card {
+  background: radial-gradient(
+    circle at top left,
+    rgba(167, 139, 250, 0.14),
+    #ffffff 72%
+  ) !important;
+  border: var(--card-border-width, 2px) solid var(--card-border) !important;
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .home-card.sequential-card .home-card-title {
+  color: #065f46 !important;
+}
+
+[data-theme="light"] .home-card.sequential-card .home-card-link {
+  border-color: rgba(6, 95, 70, 0.45) !important;
+  color: #065f46 !important;
+}
+
+[data-theme="light"] .home-card.sequential-card .home-card-link:hover {
+  background: rgba(4, 120, 87, 0.14) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 25px rgba(6, 95, 70, 0.16);
+}
+
+[data-theme="light"] .info-card,
+[data-theme="light"] .example-box,
+[data-theme="light"] .key-insight,
+[data-theme="light"] .interactive-example,
+[data-theme="light"] .arithmetic-tools,
+[data-theme="light"] .arithmetic-card,
+[data-theme="light"] .comparison-card,
+[data-theme="light"] .gate-card,
+[data-theme="light"] .law-card,
+[data-theme="light"] details {
+  background: var(--card-bg-solid);
+  border: var(--card-border-width, 2px) solid var(--card-border);
+  color: var(--text-color);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .interactive-example h4 {
+  color: #059669;
+}
+
+/* K-Map: ensure group indicators and legend boxes are light in light theme
+   and use dark green text for readability */
+[data-theme="light"] .kmap-cell-group-indicator,
+[data-theme="light"] .kmap-group-legend-color {
+  background-color: rgba(6, 95, 70, 0.12) !important;
+  border-color: rgba(6, 95, 70, 0.25) !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .kmap-card .kmap-section-title,
+[data-theme="light"] .kmap-groups-legend .kmap-groups-legend-title,
+[data-theme="light"] .kmap-groups-legend-list > .kmap-group-legend-item span,
+[data-theme="light"] .kmap-cell-value {
+  color: #065f46 !important;
+}
+
+/* ── K-Map full light-theme overrides ───────────────────────────────────── */
+
+/* Card background */
+[data-theme="light"] .kmap-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+  border-color: rgba(6, 95, 70, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(6, 95, 70, 0.08) !important;
+}
+
+/* Section title */
+[data-theme="light"] .kmap-section-title {
+  color: #065f46 !important;
+}
+
+/* Grid container */
+[data-theme="light"] .kmap-grid-container {
+  background: rgba(240, 253, 244, 0.9) !important;
+  border-color: rgba(6, 95, 70, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(6, 95, 70, 0.1) !important;
+}
+
+/* Corner cell */
+[data-theme="light"] .kmap-corner {
+  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%) !important;
+  border-color: rgba(6, 95, 70, 0.3) !important;
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-corner::after {
+  color: #065f46 !important;
+  opacity: 0.6 !important;
+}
+
+/* Header and row label cells */
+[data-theme="light"] .kmap-header-cell {
+  background: linear-gradient(180deg, rgba(6, 95, 70, 0.1) 0%, rgba(6, 95, 70, 0.04) 100%) !important;
+  border-color: rgba(6, 95, 70, 0.25) !important;
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-header-cell:hover {
+  background: linear-gradient(180deg, rgba(6, 95, 70, 0.18) 0%, rgba(6, 95, 70, 0.08) 100%) !important;
+  color: #064e3b !important;
+}
+[data-theme="light"] .kmap-row-header {
+  background: linear-gradient(90deg, rgba(6, 95, 70, 0.1) 0%, rgba(6, 95, 70, 0.04) 100%) !important;
+  border-color: rgba(6, 95, 70, 0.25) !important;
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-row-header:hover {
+  background: linear-gradient(90deg, rgba(6, 95, 70, 0.18) 0%, rgba(6, 95, 70, 0.08) 100%) !important;
+  color: #064e3b !important;
+}
+
+/* Empty cells */
+[data-theme="light"] .kmap-cell-empty {
+  background: #f8fafc !important;
+  color: #94a3b8 !important;
+  border-color: rgba(6, 95, 70, 0.15) !important;
+}
+[data-theme="light"] .kmap-cell-empty:hover {
+  background: #e8f5e9 !important;
+}
+
+/* Filled cells (1s) */
+[data-theme="light"] .kmap-cell-filled {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.15) 0%, rgba(6, 95, 70, 0.08) 100%) !important;
+  border-color: rgba(6, 95, 70, 0.4) !important;
+  box-shadow: inset 0 0 12px rgba(6, 95, 70, 0.1) !important;
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-cell-filled:hover {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.25) 0%, rgba(6, 95, 70, 0.15) 100%) !important;
+}
+[data-theme="light"] .kmap-cell-filled:hover .kmap-cell-value {
+  text-shadow: 0 0 10px rgba(6, 95, 70, 0.5) !important;
+}
+
+/* Don't-care cells */
+[data-theme="light"] .kmap-cell-dontcare {
+  background: rgba(251, 191, 36, 0.12) !important;
+  color: #b45309 !important;
+  border-color: rgba(251, 191, 36, 0.4) !important;
+}
+
+/* All cell borders */
+[data-theme="light"] .kmap-cell {
+  border-color: rgba(6, 95, 70, 0.15) !important;
+}
+
+/* Inputs and selects */
+[data-theme="light"] .kmap-input,
+[data-theme="light"] .kmap-select {
+  background: #ffffff !important;
+  border-color: rgba(6, 95, 70, 0.3) !important;
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-input:focus,
+[data-theme="light"] .kmap-select:focus {
+  border-color: #065f46 !important;
+  box-shadow: 0 0 0 3px rgba(6, 95, 70, 0.12) !important;
+}
+[data-theme="light"] .kmap-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Labels and helper text */
+[data-theme="light"] .kmap-label {
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-helper-text {
+  color: #6b7280 !important;
+}
+
+/* Expression result box */
+[data-theme="light"] .kmap-expression-box {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.08) 0%, rgba(6, 95, 70, 0.04) 100%) !important;
+  border-color: rgba(6, 95, 70, 0.3) !important;
+}
+[data-theme="light"] .kmap-expression {
+  color: #065f46 !important;
+}
+
+/* Groups legend */
+[data-theme="light"] .kmap-groups-legend {
+  background: rgba(240, 253, 244, 0.8) !important;
+  border-color: rgba(6, 95, 70, 0.2) !important;
+}
+[data-theme="light"] .kmap-group-legend-item {
+  color: #065f46 !important;
+}
+
+/* Info box */
+[data-theme="light"] .kmap-info-box {
+  background: rgba(6, 95, 70, 0.05) !important;
+  border-color: rgba(6, 95, 70, 0.25) !important;
+}
+[data-theme="light"] .kmap-info-title,
+[data-theme="light"] .kmap-info-item {
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-info-item::before {
+  color: #065f46 !important;
+}
+
+/* Result box */
+[data-theme="light"] .kmap-result-box {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.08) 0%, rgba(6, 95, 70, 0.04) 100%) !important;
+  border-color: rgba(6, 95, 70, 0.3) !important;
+  color: #065f46 !important;
+}
+
+/* Header gradient area */
+[data-theme="light"] .kmap-header-gradient {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+}
+[data-theme="light"] .kmap-main-title {
+  color: #065f46 !important;
+}
+[data-theme="light"] .kmap-subtitle {
+  color: #047857 !important;
+}
+[data-theme="light"] .note {
+  background: rgba(251, 191, 36, 0.12);
+  color: #b45309;
 }
 
 /* Global Responsive Overrides for all pages */

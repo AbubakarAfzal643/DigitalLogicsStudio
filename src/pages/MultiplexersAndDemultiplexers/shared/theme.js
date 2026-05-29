@@ -1,14 +1,14 @@
 /**
- * theme.js — Shared design tokens
- * Same palette used across Encoder/Decoder, Mux/Demux pages.
+ * theme.js — Shared design tokens (Mux/Demux)
+ * Maps to global CSS variables for light/dark theming.
  */
 
 export const COLORS = {
-  pageBg: "#080e1e",
-  cardBg: "rgba(10,16,32,0.85)",
-  inputBg: "rgba(12,18,35,0.7)",
-  darkBg: "rgba(8,14,30,0.9)",
-  deepBg: "rgba(15,23,42,0.9)",
+  pageBg: "var(--bg-color)",
+  cardBg: "var(--card-bg-solid)",
+  inputBg: "var(--input-bg)",
+  darkBg: "var(--surface-muted)",
+  deepBg: "var(--card-bg-solid)",
   indigo: "#6366f1",
   indigoLight: "#a5b4fc",
   indigoMuted: "rgba(99,102,241,0.2)",
@@ -17,13 +17,13 @@ export const COLORS = {
   warn: "#fbbf24",
   blue: "#60a5fa",
   purple: "#a78bfa",
-  textPrimary: "#e2e8f0",
-  textSecondary: "#9ca3af",
-  textMuted: "#6b7280",
-  textDim: "#4b5563",
-  glassBg: "rgba(10, 16, 32, 0.4)",
-  glassBorder: "rgba(255, 255, 255, 0.1)",
-  glassShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+  textPrimary: "var(--text-color)",
+  textSecondary: "var(--secondary-text)",
+  textMuted: "var(--secondary-text)",
+  textDim: "var(--secondary-text)",
+  glassBg: "var(--card-bg)",
+  glassBorder: "var(--card-border)",
+  glassShadow: "var(--card-shadow)",
   glowShadow: (color) => `0 0 15px ${color}60, 0 0 5px ${color}40`,
 };
 

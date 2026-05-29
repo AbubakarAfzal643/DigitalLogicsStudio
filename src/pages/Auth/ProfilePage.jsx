@@ -657,16 +657,6 @@ export default function ProfilePage() {
             </div>
             <div className="pd-hero-info">
               <div className="pd-hero-badges-row">
-                <span className="auth-eyebrow">Authenticated session</span>
-                <span
-                  className={`pd-status-badge pd-status-badge--${backendOk === false ? "warn" : "ok"}`}
-                >
-                  {backendOk === null
-                    ? "Checking…"
-                    : backendOk
-                      ? "● Active"
-                      : "⚠ Offline"}
-                </span>
                 {streakCurrent >= 3 && (
                   <span className="pd-status-badge pd-status-badge--fire">
                     🔥 {streakCurrent}-day streak
@@ -680,7 +670,15 @@ export default function ProfilePage() {
                 <span className="pd-dot">·</span>
                 <span>Last active {lastLogin}</span>
                 <span className="pd-dot">·</span>
-                <span className="pd-role-chip">Student</span>
+                <span
+                  className={`pd-role-chip pd-role-chip--${backendOk === false ? "warn" : "ok"}`}
+                >
+                  {backendOk === null
+                    ? "Checking…"
+                    : backendOk
+                      ? "● Active"
+                      : "⚠ Offline"}
+                </span>
                 <span className="pd-dot">·</span>
                 <span className="pd-role-chip pd-role-chip--green">
                   {badges.filter((b) => b.earned).length} badges

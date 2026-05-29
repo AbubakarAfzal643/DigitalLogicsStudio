@@ -812,17 +812,158 @@
   width: 100%;
 }
 
-/* ── Light mode overrides ────────────────────────────────────── */
-[data-theme='light'] .pd-stat-card,
-[data-theme='light'] .pd-card,
+/* ── Light mode — prominent dark green card outlines (matches home) ── */
 [data-theme='light'] .pd-hero,
+[data-theme='light'] .pd-card,
+[data-theme='light'] .pd-stat-card,
 [data-theme='light'] .pd-rec-card,
 [data-theme='light'] .pd-badge,
-[data-theme='light'] .pd-saved-card {
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+[data-theme='light'] .pd-saved-card,
+[data-theme='light'] .pd-goal-card,
+[data-theme='light'] .pd-track-card,
+[data-theme='light'] .pd-eng-badge-card,
+[data-theme='light'] .pd-eng-tip-card,
+[data-theme='light'] .pd-notif-panel,
+[data-theme='light'] .pd-goal-form,
+[data-theme='light'] .pd-chart-tooltip,
+[data-theme='light'] .pd-feedback-textarea {
+  background: var(--card-bg-solid);
+  border: var(--card-border-width, 2px) solid var(--card-border);
+  box-shadow: var(--card-shadow);
 }
 
-[data-theme='light'] .pd-cal-dot--0 { background: rgba(15, 23, 42, 0.06); }
+[data-theme='light'] .pd-stat-card {
+  border-left: 3px solid var(--card-border);
+}
+
+[data-theme='light'] .pd-rec-card {
+  border-left: 3px solid var(--card-border);
+}
+
+[data-theme='light'] .pd-stat-card:hover,
+[data-theme='light'] .pd-rec-card:hover,
+[data-theme='light'] .pd-saved-card:hover,
+[data-theme='light'] .pd-track-card:hover,
+[data-theme='light'] .pd-badge--earned:hover,
+[data-theme='light'] .pd-eng-badge-card--earned:hover,
+[data-theme='light'] .pd-eng-tip-card:hover {
+  border-color: #047857;
+  box-shadow: var(--card-shadow-hover);
+}
+
+[data-theme='light'] .pd-goal-card--done {
+  border-color: #047857;
+  opacity: 1;
+}
+
+[data-theme='light'] .pd-goal-card--overdue {
+  border-color: #dc2626;
+}
+
+[data-theme='light'] .pd-badge--earned {
+  border-color: var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme='light'] .pd-btn--ghost {
+  border-color: var(--card-border);
+  background: var(--card-bg-solid);
+}
+
+[data-theme='light'] .pd-btn--ghost:hover {
+  border-color: #047857;
+}
+
+[data-theme='light'] .pd-role-chip {
+  border-color: rgba(6, 95, 70, 0.35);
+  background: rgba(4, 120, 87, 0.08);
+  color: #065f46;
+}
+
+[data-theme='light'] .pd-notif-item:hover {
+  background: rgba(4, 120, 87, 0.06);
+}
+
+[data-theme='light'] .pd-goal-form {
+  background: rgba(4, 120, 87, 0.04);
+}
+
+[data-theme='light'] .pd-goal-input:focus,
+[data-theme='light'] .pd-feedback-textarea:focus {
+  border-color: var(--card-border);
+}
+
+[data-theme='light'] .pd-cal-dot--0 {
+  background: rgba(6, 95, 70, 0.08);
+}
+
+[data-theme='light'] .pd-cal-dot--1 {
+  background: rgba(6, 95, 70, 0.2);
+}
+
+[data-theme='light'] .pd-cal-dot--2 {
+  background: rgba(6, 95, 70, 0.4);
+}
+
+[data-theme='light'] .pd-cal-dot--3 {
+  background: rgba(6, 95, 70, 0.6);
+}
+
+[data-theme='light'] .pd-cal-dot--4 {
+  background: #047857;
+}
+
+[data-theme='light'] .pd-cert-card {
+  background: linear-gradient(145deg, #ffffff, #f0fdf4);
+  border: var(--card-border-width, 2px) solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme='light'] .pd-cert-card--unlocked {
+  border-color: color-mix(in srgb, var(--cert-color) 55%, #065f46);
+  box-shadow: var(--card-shadow), 0 0 20px color-mix(in srgb, var(--cert-color) 12%, transparent);
+}
+
+[data-theme='light'] .pd-cert-seal {
+  background: rgba(4, 120, 87, 0.06);
+  border-color: rgba(6, 95, 70, 0.25);
+}
+
+[data-theme='light'] .pd-skill-track {
+  background: rgba(6, 95, 70, 0.12);
+}
+
+[data-theme='light'] .pd-badge-bar-track {
+  background: rgba(6, 95, 70, 0.12);
+}
+
+[data-theme='light'] .pd-badge-bar-fill {
+  background: linear-gradient(90deg, #047857, #065f46);
+}
+
+[data-theme='light'] .pd-badge-premium {
+  background: linear-gradient(145deg, #ffffff, #f0fdf4);
+  border: var(--card-border-width, 2px) solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme='light'] .pd-badge-premium--earned {
+  border-color: color-mix(in srgb, var(--badge-accent) 45%, #065f46);
+}
+
+[data-theme='light'] .pd-badge-premium--earned:hover {
+  border-color: #047857;
+  box-shadow: var(--card-shadow-hover);
+}
+
+[data-theme='light'] .pd-badge-premium-icon-ring {
+  background: rgba(4, 120, 87, 0.06);
+  border-color: rgba(6, 95, 70, 0.28);
+}
+
+[data-theme='light'] .pd-badge-premium-progress-bar {
+  background: rgba(6, 95, 70, 0.12);
+}
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -897,6 +1038,18 @@
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.25);
   color: #10b981;
+}
+
+/* ── Role chip active / offline variants ─────────────────────── */
+.pd-role-chip--ok {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+.pd-role-chip--warn {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
 }
 
 /* ── Chart tooltip ───────────────────────────────────────────── */

@@ -160,7 +160,7 @@
   font-size: 0.7rem;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  color: var(--accent-color, #60a5fa);
   border-radius: 4px;
   padding: 0.15rem 0.5rem;
 }
@@ -214,7 +214,7 @@
 }
 
 .prob-modal {
-  background: var(--bg-medium, #141b2d);
+  background: var(--card-bg-solid, #141b2d);
   border: 1px solid var(--border-color, #2a3550);
   border-radius: 16px;
   width: 100%;
@@ -232,7 +232,7 @@
   border-bottom: 1px solid var(--border-color, #2a3550);
   position: sticky;
   top: 0;
-  background: var(--bg-medium, #141b2d);
+  background: var(--card-bg-solid, #141b2d);
   z-index: 2;
 }
 
@@ -378,7 +378,7 @@
 }
 
 .prob-forge-panel {
-  background: var(--bg-light, #1e2842);
+  background: var(--card-bg, #1e2842);
   border: 1px solid var(--border-color, #2a3550);
   border-radius: 12px;
   padding: 1.25rem;
@@ -443,7 +443,7 @@
 .input-pill {
   background: rgba(59, 130, 246, 0.12);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #60a5fa;
+  color: var(--accent-color, #60a5fa);
 }
 
 .output-pill {

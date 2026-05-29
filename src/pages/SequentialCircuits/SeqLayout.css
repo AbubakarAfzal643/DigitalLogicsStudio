@@ -414,8 +414,8 @@ body,
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid white;
-  background: black;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
 }
 .seq-dot.active {
   width: 22px;
