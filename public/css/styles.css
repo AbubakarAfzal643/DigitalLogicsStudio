@@ -119,9 +119,17 @@
 }
 
 [data-theme="light"] .kmap-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-  border: 2px solid rgba(6, 95, 70, 0.3);
-  box-shadow: 0 4px 20px rgba(6, 95, 70, 0.08);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-color: rgba(37, 99, 235, 0.15);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .kmap-section-title {
+  color: var(--text-color, #0f172a);
+}
+
+[data-theme="light"] .kmap-section-title::before {
+  box-shadow: none;
 }
 
 [data-theme="light"] .converter-card,
@@ -156,7 +164,10 @@ body {
     color 0.3s ease;
 }
 
-body:has(.circuit-maker) {
+/* When the circuit maker is used standalone (not inside the boolforge-page
+   shell), keep the original full-screen overflow lock. The boolforge-page
+   shell overrides this for the routed page via Boolforge.css. */
+body:has(.circuit-maker):not(:has(.boolforge-page)) {
   overflow: hidden;
 }
 
@@ -4917,6 +4928,31 @@ select:focus-visible {
   z-index: 0;
 }
 
+/* ─── K-Map page shell ───────────────────────────────────────────────────── */
+.kmap-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-color, var(--bg-dark));
+  position: relative;
+  overflow-x: hidden;
+}
+
+.kmap-page-main {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* Footer baseline — same fix used in ProfileDashboard and Boolforge */
+.kmap-page .home-footer {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-color, var(--bg-dark));
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
 .kmap-container {
   padding: 70px;
 }
@@ -5621,80 +5657,132 @@ select:focus-visible {
   transform: scale(1.3);
 }
 
-/* Truth Table */
+/* ─── Truth Table ─────────────────────────────────────────────────────────── */
 .kmap-truth-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   margin-top: var(--spacing-lg);
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
 
-.kmap-truth-table thead {
-  background: linear-gradient(
-    135deg,
-    var(--bg-light) 0%,
-    var(--bg-medium) 100%
-  );
+/* ── Header ── */
+.kmap-truth-table thead tr {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.12) 0%, rgba(0, 255, 136, 0.08) 100%);
 }
 
 .kmap-truth-table th {
-  padding: var(--spacing-md);
+  padding: 14px 16px;
   font-family: var(--font-mono);
   font-weight: 700;
-  color: var(--accent-primary);
+  color: var(--accent-secondary, #00d4ff);
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-bottom: 3px solid var(--accent-secondary);
-  font-size: 0.95rem;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.35);
+  font-size: 0.82rem;
+  text-align: center;
 }
 
+/* ── Body rows — dark mode ── */
 .kmap-truth-table tbody tr {
-  background: rgba(17, 24, 39, 0.5);
-  transition: all 0.3s ease;
+  background: rgba(15, 23, 42, 0.6);
+  transition: background 0.2s ease;
 }
 
 .kmap-truth-table tbody tr:nth-child(even) {
-  background: rgba(26, 34, 52, 0.5);
+  background: rgba(26, 34, 52, 0.6);
 }
 
 .kmap-truth-table tbody tr:hover {
-  background: rgba(96, 165, 250, 0.1);
-  /* transform: scale(1.02); */
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+  background: rgba(0, 212, 255, 0.09);
 }
 
+/* ── Cells ── */
 .kmap-truth-table td {
-  padding: var(--spacing-md);
+  padding: 12px 16px;
   text-align: center;
   font-family: var(--font-mono);
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  color: #e8f0ff;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
 }
 
+/* Minterm index column */
 .kmap-truth-table .minterm-cell {
-  color: var(--text-secondary);
-  font-weight: 600;
+  color: #8b9dc3;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
 }
 
+/* Output 1 — green */
 .kmap-truth-table .output-1 {
-  color: var(--accent-primary);
+  color: #00ff88;
   font-weight: 800;
-  font-size: 1.1rem;
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  font-size: 1.05rem;
 }
 
+/* Output 0 — muted */
 .kmap-truth-table .output-0 {
-  color: var(--text-muted);
+  color: #8b9dc3;
+  font-weight: 500;
 }
 
+/* Output X — amber */
+.kmap-truth-table .output-x,
 .kmap-truth-table .output-dontcare {
-  color: var(--color-accent-amber);
+  color: #fbbf24;
   font-weight: 800;
-  font-size: 1.1rem;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  font-size: 1.05rem;
+}
+
+/* ── Light mode — explicit, no custom property tricks ── */
+[data-theme="light"] .kmap-truth-table {
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.07);
+}
+
+[data-theme="light"] .kmap-truth-table thead tr {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.09) 0%, rgba(2, 132, 199, 0.05) 100%);
+}
+
+[data-theme="light"] .kmap-truth-table th {
+  color: #2563eb;
+  border-bottom-color: rgba(37, 99, 235, 0.28);
+}
+
+[data-theme="light"] .kmap-truth-table tbody tr {
+  background: #f8fafc !important;
+}
+
+[data-theme="light"] .kmap-truth-table tbody tr:nth-child(even) {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .kmap-truth-table tbody tr:hover {
+  background: rgba(37, 99, 235, 0.05) !important;
+}
+
+[data-theme="light"] .kmap-truth-table td {
+  color: #0f172a !important;
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+}
+
+[data-theme="light"] .kmap-truth-table .minterm-cell {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-1 {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-0 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-x,
+[data-theme="light"] .kmap-truth-table .output-dontcare {
+  color: #d97706 !important;
 }
 
 /* Responsive Design */

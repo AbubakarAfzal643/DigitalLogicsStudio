@@ -144,3 +144,86 @@
 .gate {
   margin-bottom: 28px;
 }
+
+/* ─── Page shell ─────────────────────────────────────────────────────────────
+   Wraps the Navbar, the circuit tool, and the Footer in a full-height column.
+   Mirrors the same shell pattern used by Home.jsx and ProfilePage.jsx.
+   ─────────────────────────────────────────────────────────────────────────── */
+.boolforge-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-color);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* The sticky navbar from Home.css already handles .home-header — no override
+   needed. The grid background is shared via the existing .grid-background rule
+   in Home.css (fixed, pointer-events:none, z-index:0). */
+
+.boolforge-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+/* ── Override the full-screen body lock that was designed for the standalone
+   circuit tool. Now that the tool lives inside a page shell with a navbar and
+   footer, we need the body to scroll normally so the footer is reachable.
+   The circuit canvas area itself is still overflow:hidden via .canvas-container.
+   ────────────────────────────────────────────────────────────────────────── */
+body:has(.boolforge-page) {
+  overflow: auto !important;
+}
+
+/* Make the circuit maker fill all available space between navbar and footer.
+   The navbar is 64px tall (sticky). We subtract it from 100vh so the three-
+   column layout never overflows the viewport or hides behind the navbar. */
+.boolforge-main .container.circuit-maker {
+  height: calc(100vh - 64px);
+  min-height: 480px;
+  /* Remove the original 100vh that caused the tool to overflow off-screen */
+}
+
+/* Footer gets a solid background so the grid-background doesn't bleed through,
+   matching the same fix applied in ProfileDashboard.css */
+.boolforge-page .home-footer {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+/* ── Light-mode overrides for the circuit tool surfaces ──────────────────── */
+/* styles.css defines --bg-dark/medium/light with dark values only.
+   These overrides ensure the sidebars and canvas look correct in light mode. */
+[data-theme="light"] .boolforge-main .sidebar,
+[data-theme="light"] .boolforge-main .truth-table-panel {
+  background: var(--bg-medium);
+  border-color: var(--bg-light);
+}
+
+[data-theme="light"] .boolforge-main .canvas-container {
+  background: var(--bg-dark);
+}
+
+[data-theme="light"] .boolforge-main .gate {
+  background: var(--bg-light);
+  border-color: var(--accent-primary);
+}
+
+[data-theme="light"] .boolforge-main .gate-btn {
+  background: var(--bg-light);
+  border-color: var(--bg-light);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .boolforge-main .gate-btn:hover {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: var(--accent-primary);
+}

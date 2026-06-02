@@ -8,8 +8,12 @@ import { useKMapLogic } from '../hooks/useKMapLogic';
 import Boolforge from './Boolforge';
 import RelatedSeoLinks from '../components/seo/RelatedSeoLinks';
 import { trackToolInteraction } from '../utils/analytics';
+import { Navbar } from './Home/Navbar';
+import Footer from './Home/Footer';
+import { useTheme } from '../context/ThemeContext';
 
 const KMapGenerator = () => {
+    const { theme, toggle: toggleTheme } = useTheme();
     const [numVariables, setNumVariables] = useState(3);
     const [variables, setVariables] = useState(['A', 'B', 'C']);
     const [minterms, setMinterms] = useState('');
@@ -63,11 +67,16 @@ const KMapGenerator = () => {
     };
 
     return (
-        <div className="kmap-container">
-            <div className="kmap-header-gradient">
-                <h1 className="kmap-main-title">Karnaugh Map Generator</h1>
-                <p className="kmap-subtitle">Simplify Boolean expressions with interactive K-Maps</p>
-            </div>
+        <div className={`kmap-page theme-${theme}`}>
+            <div className="grid-background" />
+            <Navbar toggleTheme={toggleTheme} theme={theme} />
+
+            <main className="kmap-page-main">
+                <div className="kmap-container">
+                    <div className="kmap-header-gradient">
+                        <h1 className="kmap-main-title">Karnaugh Map Generator</h1>
+                        <p className="kmap-subtitle">Simplify Boolean expressions with interactive K-Maps</p>
+                    </div>
 
             <div className="kmap-content-wrapper">
                 <InputControls
@@ -171,6 +180,7 @@ const KMapGenerator = () => {
                         <Boolforge
                             simplifiedExpression={expression}
                             variables={variables}
+                            embedded={true}
                         />
                     </div>
                 </div>
@@ -247,6 +257,10 @@ const KMapGenerator = () => {
                 }
             `}</style>
             <RelatedSeoLinks />
+                </div>{/* end .kmap-container */}
+            </main>
+
+            <Footer />
         </div>
     );
 };

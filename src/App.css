@@ -1052,3 +1052,133 @@ summary:hover {
 .afhdl-section.premium-related-links {
   display: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   K-Map Truth Table — dark header + light cells
+   Defined here (App.css) so webpack processes and cache-busts it.
+   Rules use !important to override the static public/css/styles.css
+   which is not cache-busted and was blocking all previous fixes.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared table shell ── */
+.kmap-truth-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  margin-top: 1.25rem !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* ── DARK HEADER ── */
+.kmap-truth-table thead tr {
+  background: #0f172a !important;
+}
+
+.kmap-truth-table th {
+  padding: 13px 16px !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  text-align: center !important;
+  color: #00d4ff !important;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.3) !important;
+  background: transparent !important;
+}
+
+/* ── DARK MODE — body rows ── */
+.kmap-truth-table tbody tr {
+  background: rgba(15, 23, 42, 0.6) !important;
+  transition: background 0.15s ease !important;
+}
+
+.kmap-truth-table tbody tr:nth-child(even) {
+  background: rgba(22, 32, 56, 0.65) !important;
+}
+
+.kmap-truth-table tbody tr:hover {
+  background: rgba(0, 212, 255, 0.07) !important;
+}
+
+/* ── DARK MODE — cells ── */
+.kmap-truth-table td {
+  padding: 11px 16px !important;
+  text-align: center !important;
+  font-size: 0.9rem !important;
+  color: #cbd5e1 !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+}
+
+.kmap-truth-table .minterm-cell {
+  color: #64748b !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.4px !important;
+}
+
+.kmap-truth-table .output-1 {
+  color: #00ff88 !important;
+  font-weight: 800 !important;
+}
+
+.kmap-truth-table .output-0 {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.kmap-truth-table .output-x,
+.kmap-truth-table .output-dontcare {
+  color: #fbbf24 !important;
+  font-weight: 800 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LIGHT MODE — dark header stays dark, cells go bright white
+   ══════════════════════════════════════════════════════════════ */
+
+/* Header stays dark even in light mode — intentional contrast */
+[data-theme="light"] .kmap-truth-table thead tr {
+  background: #1e293b !important;
+}
+
+[data-theme="light"] .kmap-truth-table th {
+  color: #7dd3fc !important;
+  border-bottom-color: rgba(125, 211, 252, 0.3) !important;
+}
+
+/* ── LIGHT MODE — body rows: white/off-white ── */
+[data-theme="light"] .kmap-truth-table tbody tr {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .kmap-truth-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+[data-theme="light"] .kmap-truth-table tbody tr:hover {
+  background: #eff6ff !important;
+}
+
+/* ── LIGHT MODE — cells: dark readable text ── */
+[data-theme="light"] .kmap-truth-table td {
+  color: #1e293b !important;
+  border-bottom-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+[data-theme="light"] .kmap-truth-table .minterm-cell {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-1 {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-0 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .kmap-truth-table .output-x,
+[data-theme="light"] .kmap-truth-table .output-dontcare {
+  color: #d97706 !important;
+}

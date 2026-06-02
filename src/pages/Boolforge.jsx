@@ -4,6 +4,9 @@ import { TruthTableGenerator } from "../components/TruthTable";
 import { SaveAndLoad } from "../components/SaveAndLoad";
 import { parseExpressionToCircuit } from "../utils/expressionParser";
 import RelatedSeoLinks from "../components/seo/RelatedSeoLinks";
+import { Navbar } from "./Home/Navbar";
+import Footer from "./Home/Footer";
+import { useTheme } from "../context/ThemeContext";
 import "./../assets/css/Boolforge.css";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -28,7 +31,9 @@ const Boolforge = ({
   variables = [],
   onCircuitChange,
   portNames = null, // { inputs: string[], outputs: string[] } — from problem
+  embedded = false, // true when used inside a modal/host page — skips Navbar + Footer
 }) => {
+  const { theme, toggle: toggleTheme } = useTheme();
   const [gates, setGates] = useState([]);
   const [wires, setWires] = useState([]);
   const [selectedGate, setSelectedGate] = useState(null);
@@ -786,7 +791,8 @@ const Boolforge = ({
   }, [gates, wires, onCircuitChange]);
 
   // ── Render ─────────────────────────────────────────────────────────────────
-  return (
+  // The circuit tool itself
+  const circuitTool = (
     <div
       className="container circuit-maker"
       onMouseMove={(e) => {
@@ -1211,6 +1217,22 @@ const Boolforge = ({
         </div>
       )}
       <RelatedSeoLinks />
+      </div>
+  );
+
+  // When embedded inside a modal (e.g. K-Map circuit experiment), skip the
+  // page shell — just return the raw circuit tool.
+  if (embedded) return circuitTool;
+
+  // Standalone routed page — full shell with Navbar and Footer.
+  return (
+    <div className={`boolforge-page theme-${theme}`}>
+      <div className="grid-background" />
+      <Navbar toggleTheme={toggleTheme} theme={theme} />
+      <main className="boolforge-main">
+        {circuitTool}
+      </main>
+      <Footer />
     </div>
   );
 };
