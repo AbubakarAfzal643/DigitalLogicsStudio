@@ -19,6 +19,9 @@ const MULTI_INPUT_GATES = new Set(["AND", "OR", "NAND", "NOR", "XOR", "XNOR"]);
 // Gates that are always single-input
 const SINGLE_INPUT_GATES = new Set(["NOT", "BUFFER", "OUTPUT"]);
 
+const GRID_SIZE = 20;
+const SNAP_TO_GRID = true;
+
 // ─── Helper: compute input count for a gate type ──────────────────────────────
 function defaultInputCount(type) {
   if (type === "INPUT") return 0;
@@ -63,8 +66,7 @@ const Boolforge = ({
   // feedback circuits (SR latch, D latch, etc.) simulate correctly.
   const gateStateRef = useRef(new Map());
 
-  const GRID_SIZE = 20;
-  const SNAP_TO_GRID = true;
+  // SNAP_TO_GRID and GRID_SIZE are module-level constants (defined above the component)
 
   // ── History ────────────────────────────────────────────────────────────────
   const saveToHistory = useCallback(() => {
@@ -348,23 +350,6 @@ const Boolforge = ({
     };
   }, [drawWires]);
 
-  // ── Register touch listeners as non-passive so preventDefault works ────────
-  // React's synthetic onTouchStart/Move are passive by default in modern
-  // browsers; we need { passive: false } to call e.preventDefault() inside
-  // them (required to stop the page from scrolling while panning/dragging).
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    container.addEventListener("touchstart", handleTouchStart, { passive: false });
-    container.addEventListener("touchmove", handleTouchMove, { passive: false });
-    container.addEventListener("touchend", handleTouchEnd, { passive: false });
-    return () => {
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
-
   // ── Undo / Redo ────────────────────────────────────────────────────────────
   const undo = useCallback(() => {
     if (historyIndex > 0) {
@@ -522,6 +507,23 @@ const Boolforge = ({
     }
     touchStateRef.current = { type: null, id: null, startX: 0, startY: 0 };
   }, [dragging, saveToHistory]);
+
+  // ── Register touch listeners as non-passive so preventDefault works ────────
+  // React's synthetic onTouchStart/Move are passive by default in modern
+  // browsers; we need { passive: false } to call e.preventDefault() inside
+  // them (required to stop the page from scrolling while panning/dragging).
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.addEventListener("touchstart", handleTouchStart, { passive: false });
+    container.addEventListener("touchmove", handleTouchMove, { passive: false });
+    container.addEventListener("touchend", handleTouchEnd, { passive: false });
+    return () => {
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   // ── Fit all gates into view ────────────────────────────────────────────────
   const fitToView = useCallback(() => {
