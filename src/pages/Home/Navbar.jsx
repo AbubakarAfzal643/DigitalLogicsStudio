@@ -228,8 +228,8 @@ export function Navbar({ toggleTheme, theme, onHomeClick, onToggleNavbar, navbar
             <button
               onClick={onToggleNavbar}
               className="home-navbar-toggle-btn"
-              aria-label={navbarVisible ? "Hide navbar" : "Show navbar"}
-              title={navbarVisible ? "Hide navbar" : "Show navbar"}
+              aria-label="Hide navbar"
+              title="Hide navbar"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />

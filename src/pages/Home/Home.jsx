@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import HeroSection from "./HeroSection";
 import Footer from "./Footer";
-import ArticleSection from "./ArticleSection";
+import FeaturedToolsSection from "./FeaturedToolsSection";
 import homeData from "./HomeData";
 import { useTheme } from "../../context/ThemeContext";
 import CoreTopicsSection from "../../components/topics/CoreTopicsSection";
@@ -145,13 +145,7 @@ const Home = () => {
         <div className="home-sections" ref={resultsRef}>
           {hasResults ? (
             <>
-              <ArticleSection
-                title="Featured Tools"
-                description="Hands-on interactive tools to build circuits, simplify logic, and visualize boolean expressions."
-                data={featuredTools}
-                sectionClassName="home-featured-section"
-                gridClassName="home-featured-grid home-featured-box"
-              />
+              <FeaturedToolsSection data={featuredTools} />
               {filteredTopics.length > 0 ? <CoreTopicsSection topics={filteredTopics} /> : null}
 
               {/* ── Learning Resources ── */}

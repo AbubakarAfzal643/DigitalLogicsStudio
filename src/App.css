@@ -1447,7 +1447,6 @@ body {
   .home-card-link,
   .pd-btn,
   .pd-tab,
-  .problems-filter-chip,
   .problems-sidebar-link,
   .afhdl-hamburger,
   .afhdl-theme-btn,
@@ -1457,4 +1456,84 @@ body {
     min-height: 44px;
     min-width: 44px;
   }
+
+  /* Filter chips need tall tap targets but NOT a fixed min-width —
+     that turns short labels (e.g. "Seq") into circles with overflowing text. */
+  .problems-filter-chip {
+    min-height: 44px;
+  }
+}
+
+
+
+.navbar-restore-btn {
+  position: fixed;
+  top: 8px;
+  right: 16px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-medium, #1a2540);
+  border: 1px solid var(--border-color, #2a3550);
+  border-radius: 8px;
+  color: var(--secondary-text, #8899aa);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.navbar-restore-btn:hover {
+  color: var(--accent-secondary, #00d4ff);
+  background: rgba(0, 212, 255, 0.08);
+  border-color: var(--accent-secondary, #00d4ff);
+}
+
+/* ── Navbar hide toggle button — inside navbar (Circuit Forge only) ────────── */
+.home-navbar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-light, #1e2842);
+  border: 1px solid var(--border-color, #2a3550);
+  border-radius: 8px;
+  color: var(--secondary-text, #8899aa);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.home-navbar-toggle-btn:hover {
+  color: var(--accent-secondary, #00d4ff);
+  background: rgba(0, 212, 255, 0.08);
+  border-color: var(--accent-secondary, #00d4ff);
+}
+
+
+/* ── Navbar restore button — top-right when navbar is hidden ───────────────── */
+.navbar-restore-btn {
+  position: fixed;
+  top: 10px;
+  right: 16px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-medium, #1a2540);
+  border: 1px solid var(--border-color, #2a3550);
+  border-radius: 8px;
+  color: var(--secondary-text, #8899aa);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.navbar-restore-btn:hover {
+  color: var(--accent-secondary, #00d4ff);
+  background: rgba(0, 212, 255, 0.08);
+  border-color: var(--accent-secondary, #00d4ff);
 }

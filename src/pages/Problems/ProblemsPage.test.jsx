@@ -48,7 +48,9 @@ test("filters the problem table by search text", () => {
 test("marks a problem as attempted from the table", async () => {
   renderProblemsPage();
 
-  const row = screen.getAllByText("Half Adder")[0].closest("tr");
+  // Find the row that contains "Half Adder" using Testing Library role queries
+  const rows = screen.getAllByRole("row");
+  const row = rows.find((r) => within(r).queryByText("Half Adder"));
   const startButton = within(row).getByRole("button", { name: /start/i });
   fireEvent.click(startButton);
 

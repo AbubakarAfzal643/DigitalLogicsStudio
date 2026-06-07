@@ -19,6 +19,9 @@ const MULTI_INPUT_GATES = new Set(["AND", "OR", "NAND", "NOR", "XOR", "XNOR"]);
 // Gates that are always single-input
 const SINGLE_INPUT_GATES = new Set(["NOT", "BUFFER", "OUTPUT"]);
 
+const GRID_SIZE = 20;
+const SNAP_TO_GRID = true;
+
 // ─── Helper: compute input count for a gate type ──────────────────────────────
 function defaultInputCount(type) {
   if (type === "INPUT") return 0;
@@ -63,8 +66,7 @@ const Boolforge = ({
   // feedback circuits (SR latch, D latch, etc.) simulate correctly.
   const gateStateRef = useRef(new Map());
 
-  const GRID_SIZE = 20;
-  const SNAP_TO_GRID = true;
+  // SNAP_TO_GRID and GRID_SIZE are module-level constants (defined above the component)
 
   // ── History ────────────────────────────────────────────────────────────────
   const saveToHistory = useCallback(() => {
@@ -110,8 +112,10 @@ const Boolforge = ({
   );
 
   // ── Snap to grid ──────────────────────────────────────────────────────────
-  const snapToGrid = (value) =>
-    SNAP_TO_GRID ? Math.round(value / GRID_SIZE) * GRID_SIZE : value;
+  const snapToGrid = useCallback(
+    (value) => (SNAP_TO_GRID ? Math.round(value / GRID_SIZE) * GRID_SIZE : value),
+    [],
+  );
 
   // ── Gate map ───────────────────────────────────────────────────────────────
   const gateMap = React.useMemo(() => {
@@ -319,16 +323,30 @@ const Boolforge = ({
     const resizeCanvas = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-        drawWires();
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        if (w > 0 && h > 0) {
+          canvas.width = w;
+          canvas.height = h;
+          drawWires();
+        }
       }, 100);
     };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+
+    // ResizeObserver handles layout shifts (e.g. mobile stacking) that
+    // window resize events miss.
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(resizeCanvas);
+      ro.observe(container);
+    }
+
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       clearTimeout(resizeTimeout);
+      if (ro) ro.disconnect();
     };
   }, [drawWires]);
 
@@ -419,6 +437,127 @@ const Boolforge = ({
   };
   const handleMouseUp = () => setIsPanning(false);
 
+  // ── Touch support: pan canvas and drag gates ───────────────────────────────
+  const touchStateRef = useRef({ type: null, id: null, startX: 0, startY: 0 });
+
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const canvas = canvasRef.current;
+
+    // Check if touch is on a gate element
+    const gateEl = touch.target.closest?.(".gate");
+    if (gateEl) {
+      // Find which gate this corresponds to
+      const gateId = parseInt(gateEl.dataset.gateId, 10);
+      const gate = gates.find((g) => g.id === gateId);
+      if (gate) {
+        e.preventDefault();
+        touchStateRef.current = {
+          type: "drag",
+          id: gateId,
+          startX: touch.clientX,
+          startY: touch.clientY,
+        };
+        setDragging(true);
+        setSelectedGate(gate);
+        setDragOffset({
+          x: touch.clientX - gate.x * zoom - panOffset.x,
+          y: touch.clientY - gate.y * zoom - panOffset.y,
+        });
+      }
+      return;
+    }
+
+    // Touch on canvas — pan
+    if (touch.target === canvas || touch.target.classList.contains("gates-container")) {
+      e.preventDefault();
+      touchStateRef.current = { type: "pan", id: null, startX: 0, startY: 0 };
+      setIsPanning(true);
+      setPanStart({ x: touch.clientX - panOffset.x, y: touch.clientY - panOffset.y });
+    }
+  }, [gates, zoom, panOffset]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const state = touchStateRef.current;
+
+    if (state.type === "pan") {
+      e.preventDefault();
+      setPanOffset({ x: touch.clientX - panStart.x, y: touch.clientY - panStart.y });
+    } else if (state.type === "drag") {
+      e.preventDefault();
+      const x = snapToGrid((touch.clientX - dragOffset.x - panOffset.x) / zoom);
+      const y = snapToGrid((touch.clientY - dragOffset.y - panOffset.y) / zoom);
+      setGates((prev) =>
+        prev.map((g) => (g.id === state.id ? { ...g, x, y } : g)),
+      );
+    }
+  }, [panStart, dragOffset, zoom, panOffset, snapToGrid]);
+
+  const handleTouchEnd = useCallback(() => {
+    const state = touchStateRef.current;
+    if (state.type === "drag" && dragging) {
+      setDragging(false);
+      saveToHistory();
+    }
+    if (state.type === "pan") {
+      setIsPanning(false);
+    }
+    touchStateRef.current = { type: null, id: null, startX: 0, startY: 0 };
+  }, [dragging, saveToHistory]);
+
+  // ── Register touch listeners as non-passive so preventDefault works ────────
+  // React's synthetic onTouchStart/Move are passive by default in modern
+  // browsers; we need { passive: false } to call e.preventDefault() inside
+  // them (required to stop the page from scrolling while panning/dragging).
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.addEventListener("touchstart", handleTouchStart, { passive: false });
+    container.addEventListener("touchmove", handleTouchMove, { passive: false });
+    container.addEventListener("touchend", handleTouchEnd, { passive: false });
+    return () => {
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
+
+  // ── Fit all gates into view ────────────────────────────────────────────────
+  const fitToView = useCallback(() => {
+    const container = containerRef.current;
+    if (!container || gates.length === 0) return;
+
+    const GATE_W = 130;
+    const GATE_H = 100;
+    const PADDING = 40;
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    gates.forEach((g) => {
+      minX = Math.min(minX, g.x);
+      minY = Math.min(minY, g.y);
+      maxX = Math.max(maxX, g.x + GATE_W);
+      maxY = Math.max(maxY, g.y + GATE_H);
+    });
+
+    const contentW = maxX - minX + PADDING * 2;
+    const contentH = maxY - minY + PADDING * 2;
+    const containerW = container.clientWidth;
+    const containerH = container.clientHeight;
+
+    const scaleX = containerW / contentW;
+    const scaleY = containerH / contentH;
+    const newZoom = Math.min(scaleX, scaleY, 1.5);
+
+    setZoom(newZoom);
+    setPanOffset({
+      x: PADDING * newZoom - minX * newZoom,
+      y: PADDING * newZoom - minY * newZoom,
+    });
+  }, [gates]);
+
   // ── Add gate ───────────────────────────────────────────────────────────────
   const addGate = (type) => {
     const finalInputs = defaultInputCount(type);
@@ -433,12 +572,24 @@ const Boolforge = ({
       setOutputCounter((prev) => prev + 1);
     }
 
+    // Place new gates in a grid that fits within the visible canvas.
+    // Gate width ≈ 140px (120px gate + 20px gap).
+    // We ask the container for its actual width so on narrow mobile
+    // screens we only use 2–3 columns instead of spilling off-screen.
+    const container = containerRef.current;
+    const canvasW = container ? container.clientWidth : 600;
+    const GATE_STEP_X = 140;
+    const GATE_STEP_Y = 120;
+    const COLS = Math.max(1, Math.floor((canvasW - 60) / GATE_STEP_X));
+    const col = gates.length % COLS;
+    const row = Math.floor(gates.length / COLS);
+
     const newGate = {
       id: gateIdCounter,
       type,
       label,
-      x: 100 + (gates.length % 5) * 140,
-      y: 100 + Math.floor(gates.length / 5) * 120,
+      x: 30 + col * GATE_STEP_X,
+      y: 30 + row * GATE_STEP_Y,
       inputs: finalInputs,
       hasOutput,
       inputValues: type === "INPUT" ? [false] : [],
@@ -871,7 +1022,10 @@ const Boolforge = ({
       </div>
 
       {/* ── Canvas ── */}
-      <div className="canvas-container" ref={containerRef}>
+      <div
+        className="canvas-container"
+        ref={containerRef}
+      >
         <canvas
           ref={canvasRef}
           onContextMenu={handleCanvasContextMenu}
@@ -897,6 +1051,7 @@ const Boolforge = ({
             return (
               <div
                 key={gate.id}
+                data-gate-id={gate.id}
                 className={`gate ${gate.type === "OUTPUT" ? "output-gate" : ""} ${selectedGate?.id === gate.id ? "selected" : ""} ${gate.type === "OUTPUT" && evaluateGate(gate) ? "active" : ""}`}
                 style={{ left: gate.x, top: gate.y }}
                 onMouseDown={(e) => startDrag(e, gate)}
@@ -982,6 +1137,34 @@ const Boolforge = ({
               </div>
             );
           })}
+        </div>
+
+        {/* ── Floating canvas controls overlay (mobile-friendly) ── */}
+        <div className="canvas-overlay-controls">
+          <button
+            className="canvas-overlay-btn"
+            onClick={fitToView}
+            title="Fit all gates into view"
+            onTouchEnd={(e) => { e.preventDefault(); fitToView(); }}
+          >
+            ⊡
+          </button>
+          <button
+            className="canvas-overlay-btn"
+            onClick={() => setZoom((z) => Math.min(3, z * 1.2))}
+            title="Zoom In"
+            onTouchEnd={(e) => { e.preventDefault(); setZoom((z) => Math.min(3, z * 1.2)); }}
+          >
+            +
+          </button>
+          <button
+            className="canvas-overlay-btn"
+            onClick={() => setZoom((z) => Math.max(0.3, z * 0.8))}
+            title="Zoom Out"
+            onTouchEnd={(e) => { e.preventDefault(); setZoom((z) => Math.max(0.3, z * 0.8)); }}
+          >
+            −
+          </button>
         </div>
       </div>
 
@@ -1088,6 +1271,14 @@ const Boolforge = ({
             title="Reset Zoom"
           >
             ⟲
+          </button>
+          <button
+            className="btn zoom-btn"
+            onClick={fitToView}
+            title="Fit all gates into view"
+            style={{ flex: 1 }}
+          >
+            ⊡ Fit
           </button>
         </div>
 
@@ -1234,7 +1425,6 @@ const Boolforge = ({
           toggleTheme={toggleTheme}
           theme={theme}
           onToggleNavbar={() => setNavbarVisible(false)}
-          navbarVisible={navbarVisible}
         />
       )}
       {!navbarVisible && (
