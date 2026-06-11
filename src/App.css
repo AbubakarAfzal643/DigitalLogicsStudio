@@ -1465,32 +1465,7 @@ body {
 }
 
 
-
-.navbar-restore-btn {
-  position: fixed;
-  top: 8px;
-  right: 16px;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--bg-medium, #1a2540);
-  border: 1px solid var(--border-color, #2a3550);
-  border-radius: 8px;
-  color: var(--secondary-text, #8899aa);
-  cursor: pointer;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
-}
-
-.navbar-restore-btn:hover {
-  color: var(--accent-secondary, #00d4ff);
-  background: rgba(0, 212, 255, 0.08);
-  border-color: var(--accent-secondary, #00d4ff);
-}
-
-/* ── Navbar hide toggle button — inside navbar (Circuit Forge only) ────────── */
+/* ── Navbar hide toggle button — inside navbar (Circuit Forge only, desktop only) ── */
 .home-navbar-toggle-btn {
   display: flex;
   align-items: center;
@@ -1512,8 +1487,14 @@ body {
   border-color: var(--accent-secondary, #00d4ff);
 }
 
+@media (max-width: 860px) {
+  .home-navbar-toggle-btn {
+    display: none !important;
+  }
+}
 
-/* ── Navbar restore button — top-right when navbar is hidden ───────────────── */
+
+/* ── Navbar restore button — top-right when navbar is hidden (desktop only) ── */
 .navbar-restore-btn {
   position: fixed;
   top: 10px;
@@ -1536,6 +1517,12 @@ body {
   color: var(--accent-secondary, #00d4ff);
   background: rgba(0, 212, 255, 0.08);
   border-color: var(--accent-secondary, #00d4ff);
+}
+
+@media (max-width: 860px) {
+  .navbar-restore-btn {
+    display: none !important;
+  }
 }
 
 /* ── Footer hide toggle button — top-left corner inside footer (Circuit Forge only) ── */

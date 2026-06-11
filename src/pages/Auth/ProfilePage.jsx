@@ -1300,7 +1300,7 @@ export default function ProfilePage() {
                 {pieData.length === 0 ? (
                   <p className="pd-empty">Start topics to see the breakdown.</p>
                 ) : (
-                  <ResponsiveContainer width="100%" height={240}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
                         data={pieData}
@@ -1308,8 +1308,6 @@ export default function ProfilePage() {
                         cy="50%"
                         outerRadius={90}
                         dataKey="value"
-                        label={({ name, value }) => `${name}: ${value}%`}
-                        labelLine={false}
                       >
                         {pieData.map((_, i) => (
                           <Cell
@@ -1318,8 +1316,13 @@ export default function ProfilePage() {
                           />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(v) => `${v}%`} />
-                      <Legend wrapperStyle={{ fontSize: "0.82rem" }} />
+                      <Tooltip formatter={(v, name) => [`${v}%`, name]} />
+                      <Legend
+                        wrapperStyle={{ fontSize: "0.82rem" }}
+                        formatter={(value, entry) =>
+                          `${value}: ${entry.payload.value}%`
+                        }
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
