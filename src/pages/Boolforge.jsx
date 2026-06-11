@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { gateSymbols } from "../data/gates";
+import { gateSymbols, IC_META, IC_TYPES } from "../data/gates";
 import { TruthTableGenerator } from "../components/TruthTable";
 import { SaveAndLoad } from "../components/SaveAndLoad";
 import { parseExpressionToCircuit } from "../utils/expressionParser";
@@ -26,7 +26,43 @@ const SNAP_TO_GRID = true;
 function defaultInputCount(type) {
   if (type === "INPUT") return 0;
   if (SINGLE_INPUT_GATES.has(type)) return 1;
+  if (IC_TYPES.has(type)) return IC_META[type].inputs;
   return 2; // default for multi-input gates
+}
+
+// ── IC height lookup (module-level — used by helpers below) ──────────────────
+const IC_HEIGHTS = {
+  MUX2: 100, MUX4: 120, MUX8: 160,
+  DEMUX2: 100, DEMUX4: 120,
+  ENC4: 100, ENC8: 140,
+  DEC4: 100, DEC8: 140,
+};
+
+function getICHeight(type) {
+  return IC_HEIGHTS[type] ?? 100;
+}
+
+function getInputY(gate, inputIndex) {
+  if (IC_TYPES.has(gate.type)) {
+    const n = IC_META[gate.type].inputs;
+    const h = getICHeight(gate.type);
+    if (n === 1) return gate.y + h / 2;
+    return gate.y + (10 / 100) * h + (inputIndex / (n - 1)) * (0.80 * h);
+  }
+  const n = gate.inputs;
+  if (n === 1) return gate.y + 50;
+  if (n === 2) return gate.y + (inputIndex === 0 ? 35 : 65);
+  const gateTop = gate.y + 15;
+  const gateBottom = gate.y + 85;
+  return gateTop + (inputIndex / (n - 1)) * (gateBottom - gateTop);
+}
+
+function getOutputY(gate, outputIndex) {
+  if (!IC_TYPES.has(gate.type)) return gate.y + 50;
+  const n = IC_META[gate.type].outputs;
+  const h = getICHeight(gate.type);
+  if (n === 1) return gate.y + h / 2;
+  return gate.y + (10 / 100) * h + (outputIndex / (n - 1)) * (0.80 * h);
 }
 
 const Boolforge = ({
@@ -126,7 +162,7 @@ const Boolforge = ({
   }, [gates]);
 
   // ── Gate logic: compute a single gate's output from resolved inputs ──────────
-  const computeGateOutput = (gate, inputs) => {
+  const computeGateOutput = (gate, inputs, outputIndex = 0) => {
     const ci = inputs.filter((v) => v !== undefined);
     switch (gate.type) {
       case "INPUT":
@@ -148,108 +184,165 @@ const Boolforge = ({
       case "BUFFER":
       case "OUTPUT":
         return inputs[0] ?? false;
+
+      // ── Multiplexers ───────────────────────────────────────────────────────
+      case "MUX2": {
+        // inputs[0]=D0, inputs[1]=D1, inputs[2]=S
+        const s = inputs[2] ?? false;
+        return s ? (inputs[1] ?? false) : (inputs[0] ?? false);
+      }
+      case "MUX4": {
+        // inputs[0-3]=D0-D3, inputs[4]=S0, inputs[5]=S1
+        const s0 = inputs[4] ?? false;
+        const s1 = inputs[5] ?? false;
+        const sel = (s1 ? 2 : 0) + (s0 ? 1 : 0);
+        return inputs[sel] ?? false;
+      }
+      case "MUX8": {
+        // inputs[0-7]=D0-D7, inputs[8]=S0, inputs[9]=S1, inputs[10]=S2
+        const s0 = inputs[8] ?? false;
+        const s1 = inputs[9] ?? false;
+        const s2 = inputs[10] ?? false;
+        const sel = (s2 ? 4 : 0) + (s1 ? 2 : 0) + (s0 ? 1 : 0);
+        return inputs[sel] ?? false;
+      }
+
+      // ── Demultiplexers ─────────────────────────────────────────────────────
+      case "DEMUX2": {
+        // inputs[0]=D, inputs[1]=S  →  outputIndex 0=Y0, 1=Y1
+        const d = inputs[0] ?? false;
+        const s = inputs[1] ?? false;
+        if (outputIndex === 0) return !s && d;
+        if (outputIndex === 1) return  s && d;
+        return false;
+      }
+      case "DEMUX4": {
+        // inputs[0]=D, inputs[1]=S0, inputs[2]=S1  →  outputIndex 0-3
+        const d  = inputs[0] ?? false;
+        const s0 = inputs[1] ?? false;
+        const s1 = inputs[2] ?? false;
+        const sel = (s1 ? 2 : 0) + (s0 ? 1 : 0);
+        return sel === outputIndex && d;
+      }
+
+      // ── Encoders (priority encoder — highest active input wins) ───────────
+      case "ENC4": {
+        // inputs[0-3]=I0-I3  →  outputIndex 0=A(MSB) 1=B(LSB)
+        let code = 0;
+        for (let i = 3; i >= 0; i--) { if (inputs[i]) { code = i; break; } }
+        return outputIndex === 0 ? Boolean(code & 2) : Boolean(code & 1);
+      }
+      case "ENC8": {
+        // inputs[0-7]=I0-I7  →  outputIndex 0=A(MSB) 1=B 2=C(LSB)
+        let code = 0;
+        for (let i = 7; i >= 0; i--) { if (inputs[i]) { code = i; break; } }
+        return outputIndex === 0 ? Boolean(code & 4)
+             : outputIndex === 1 ? Boolean(code & 2)
+             :                     Boolean(code & 1);
+      }
+
+      // ── Decoders (active-high, enable assumed) ────────────────────────────
+      case "DEC4": {
+        // inputs[0]=A, inputs[1]=B  →  outputIndex 0-3 = Y0-Y3
+        const sel = ((inputs[1] ?? false) ? 2 : 0) + ((inputs[0] ?? false) ? 1 : 0);
+        return sel === outputIndex;
+      }
+      case "DEC8": {
+        // inputs[0]=A, inputs[1]=B, inputs[2]=C  →  outputIndex 0-7 = Y0-Y7
+        const sel = ((inputs[2] ?? false) ? 4 : 0)
+                  + ((inputs[1] ?? false) ? 2 : 0)
+                  + ((inputs[0] ?? false) ? 1 : 0);
+        return sel === outputIndex;
+      }
+
       default:
         return false;
     }
   };
 
   // ── Iterative double-buffered simulation (synchronous, runs during render) ──
-  //
-  // WHY useMemo, not useEffect:
-  //   evaluateGate is called during render (JSX). useEffect fires *after*
-  //   the render, so a ref updated there is always one frame stale.
-  //   useMemo runs synchronously before the JSX is produced, so the values
-  //   are ready when the render reads them.
-  //
-  // WHY double-buffering (prev → next):
-  //   Each pass reads exclusively from the *previous* pass's values and writes
-  //   to a *new* map. This is the correct way to simulate feedback loops:
-  //   gate A's new value depends on gate B's *old* value, not on B's
-  //   already-updated new value. Without this, a NOR-NOR SR latch collapses
-  //   to (false, false) because both gates see each other's updated outputs
-  //   within the same pass.
-  //
-  // HOW latches work with this approach:
-  //   The previous stable state lives in gateStateRef. When inputs change,
-  //   the first pass reads the old Q/Q̄ values from gateStateRef as the
-  //   initial "prev" map. The loop then converges to the new stable state
-  //   over a few passes (typically 2–4 for an SR latch).
   const gateValues = React.useMemo(() => {
-    // Build incoming-wire lookup: toId → [{ fromId, toIndex }]
+    // Build incoming-wire lookup: toId → [{ fromId, fromOutputIndex, toIndex }]
     const incomingWires = new Map();
     gates.forEach((g) => incomingWires.set(g.id, []));
     wires.forEach((w) => {
       if (incomingWires.has(w.toId)) incomingWires.get(w.toId).push(w);
     });
 
-    // Seed the initial "previous" map from:
-    //   - INPUT gates: their live toggle value
-    //   - all other gates: the last converged value stored in gateStateRef
-    //     (this is what carries latch memory across renders)
     let prev = new Map();
     gates.forEach((g) => {
       if (g.type === "INPUT") {
         prev.set(g.id, g.inputValues[0] || false);
+      } else if (IC_TYPES.has(g.type)) {
+        // multi-output ICs: store array of output values
+        const numOut = IC_META[g.type].outputs;
+        const cached = gateStateRef.current.get(g.id);
+        prev.set(g.id, Array.isArray(cached) ? cached : Array(numOut).fill(false));
       } else {
         prev.set(g.id, gateStateRef.current.get(g.id) ?? false);
       }
     });
 
-    // Double-buffered iteration: read from prev, write to next
     const MAX_ITER = 100;
     for (let iter = 0; iter < MAX_ITER; iter++) {
       const next = new Map(prev);
       let changed = false;
 
       for (const gate of gates) {
-        let newVal;
         if (gate.type === "INPUT") {
-          newVal = gate.inputValues[0] || false;
-        } else {
-          const inputs = [];
-          for (const w of incomingWires.get(gate.id) || []) {
-            inputs[w.toIndex] = prev.get(w.fromId) ?? false; // read from PREV
-          }
-          newVal = computeGateOutput(gate, inputs);
+          const v = gate.inputValues[0] || false;
+          if (prev.get(gate.id) !== v) { next.set(gate.id, v); changed = true; }
+          continue;
         }
 
-        next.set(gate.id, newVal); // write to NEXT
+        // Resolve inputs — for wires from multi-output ICs, read the correct
+        // output slot from the source gate's array value.
+        const inputs = [];
+        for (const w of incomingWires.get(gate.id) || []) {
+          const srcVal = prev.get(w.fromId);
+          if (IC_TYPES.has(gateMap.get(w.fromId)?.type) && Array.isArray(srcVal)) {
+            inputs[w.toIndex] = srcVal[w.fromOutputIndex ?? 0] ?? false;
+          } else {
+            inputs[w.toIndex] = srcVal ?? false;
+          }
+        }
 
-        if (prev.get(gate.id) !== newVal) changed = true;
+        if (IC_TYPES.has(gate.type)) {
+          const numOut = IC_META[gate.type].outputs;
+          const newVals = Array.from({ length: numOut }, (_, i) =>
+            computeGateOutput(gate, inputs, i)
+          );
+          const oldVals = prev.get(gate.id);
+          if (!Array.isArray(oldVals) || newVals.some((v, i) => v !== oldVals[i])) {
+            next.set(gate.id, newVals);
+            changed = true;
+          }
+        } else {
+          const newVal = computeGateOutput(gate, inputs);
+          next.set(gate.id, newVal);
+          if (prev.get(gate.id) !== newVal) changed = true;
+        }
       }
 
       prev = next;
       if (!changed) break;
     }
 
-    // Persist the converged state so the next render seeds from it
-    // (this is what gives latches their memory)
     gateStateRef.current = prev;
-
     return prev;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gates, wires]);
 
   // ── Gate evaluation — reads from the synchronously computed state map ──────
   const evaluateGate = useCallback(
-    (gate) => {
+    (gate, outputIndex = 0) => {
       if (!gate) return false;
-      return gateValues.get(gate.id) ?? false;
+      const val = gateValues.get(gate.id);
+      if (Array.isArray(val)) return val[outputIndex] ?? false;
+      return val ?? false;
     },
     [gateValues],
   );
-
-  // ── Wire Y position helper ─────────────────────────────────────────────────
-  // Returns the Y coordinate of an input slot for a gate, given the input index.
-  const getInputY = (gate, inputIndex) => {
-    const n = gate.inputs;
-    if (n === 1) return gate.y + 50;
-    if (n === 2) return gate.y + (inputIndex === 0 ? 35 : 65);
-    // N inputs spread evenly: 15% – 85% of gate height (100px)
-    const gateTop = gate.y + 15;
-    const gateBottom = gate.y + 85;
-    return gateTop + (inputIndex / (n - 1)) * (gateBottom - gateTop);
-  };
 
   // ── Draw wires ─────────────────────────────────────────────────────────────
   const drawWires = useCallback(() => {
@@ -270,11 +363,14 @@ const Boolforge = ({
           if (!fromGate || !toGate) return;
 
           const fromX = fromGate.x + 120;
-          const fromY = fromGate.y + 50;
+          const fromY = IC_TYPES.has(fromGate.type)
+            ? getOutputY(fromGate, wire.fromOutputIndex ?? 0)
+            : fromGate.y + 50;
           const toX = toGate.x;
           const toY = getInputY(toGate, wire.toIndex);
 
-          const isActive = evaluateGate(fromGate);
+          const outIdx = wire.fromOutputIndex ?? 0;
+          const isActive = evaluateGate(fromGate, outIdx);
           ctx.strokeStyle = isActive ? "#00ff88" : "#334155";
           ctx.lineWidth = 3 / zoom;
           ctx.shadowBlur = isActive ? 12 / zoom : 0;
@@ -289,12 +385,9 @@ const Boolforge = ({
           const controlDistance = Math.min(Math.abs(dx) / 2, distance / 3);
 
           ctx.bezierCurveTo(
-            fromX + controlDistance,
-            fromY,
-            toX - controlDistance,
-            toY,
-            toX,
-            toY,
+            fromX + controlDistance, fromY,
+            toX - controlDistance,  toY,
+            toX, toY,
           );
           ctx.stroke();
           ctx.shadowBlur = 0;
@@ -562,6 +655,7 @@ const Boolforge = ({
   // ── Add gate ───────────────────────────────────────────────────────────────
   const addGate = (type) => {
     const finalInputs = defaultInputCount(type);
+    const isIC = IC_TYPES.has(type);
     const hasOutput = type !== "OUTPUT";
 
     let label = type;
@@ -571,16 +665,14 @@ const Boolforge = ({
     } else if (type === "OUTPUT") {
       label = generateOutputLabel(outputCounter);
       setOutputCounter((prev) => prev + 1);
+    } else if (isIC) {
+      label = type; // e.g. "MUX4"
     }
 
-    // Place new gates in a grid that fits within the visible canvas.
-    // Gate width ≈ 140px (120px gate + 20px gap).
-    // We ask the container for its actual width so on narrow mobile
-    // screens we only use 2–3 columns instead of spilling off-screen.
     const container = containerRef.current;
     const canvasW = container ? container.clientWidth : 600;
-    const GATE_STEP_X = 140;
-    const GATE_STEP_Y = 120;
+    const GATE_STEP_X = 160;
+    const GATE_STEP_Y = isIC ? (getICHeight(type) + 40) : 120;
     const COLS = Math.max(1, Math.floor((canvasW - 60) / GATE_STEP_X));
     const col = gates.length % COLS;
     const row = Math.floor(gates.length / COLS);
@@ -592,6 +684,7 @@ const Boolforge = ({
       x: 30 + col * GATE_STEP_X,
       y: 30 + row * GATE_STEP_Y,
       inputs: finalInputs,
+      outputs: isIC ? IC_META[type].outputs : 1,
       hasOutput,
       inputValues: type === "INPUT" ? [false] : [],
     };
@@ -665,16 +758,19 @@ const Boolforge = ({
   };
 
   // ── Wire connections ───────────────────────────────────────────────────────
-  const startConnection = (gate) => {
+  const startConnection = (gate, outputIndex = 0) => {
     if (!gate.hasOutput) return;
-    setConnectingFrom(gate);
+    setConnectingFrom({ gate, outputIndex });
   };
 
   const completeConnection = (toGate, toIndex) => {
-    if (!connectingFrom || connectingFrom.id === toGate.id) {
+    if (!connectingFrom || connectingFrom.gate.id === toGate.id) {
       setConnectingFrom(null);
       return;
     }
+    const fromGate = connectingFrom.gate;
+    const fromOutputIndex = connectingFrom.outputIndex ?? 0;
+
     // Remove any existing wire to this specific input point
     const filteredWires = wires.filter(
       (w) => !(w.toId === toGate.id && w.toIndex === toIndex),
@@ -687,7 +783,8 @@ const Boolforge = ({
 
     const newWire = {
       id: wireIdCounter,
-      fromId: connectingFrom.id,
+      fromId: fromGate.id,
+      fromOutputIndex,
       toId: toGate.id,
       toIndex,
     };
@@ -698,7 +795,6 @@ const Boolforge = ({
   };
 
   // ── Right-click canvas to delete wires ───────────────────────────────────
-  // Samples points along the actual Bézier curve for accurate hit-testing.
   const handleCanvasContextMenu = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -713,7 +809,9 @@ const Boolforge = ({
       if (!fromGate || !toGate) continue;
 
       const fromX = fromGate.x + 120;
-      const fromY = fromGate.y + 50;
+      const fromY = IC_TYPES.has(fromGate.type)
+        ? getOutputY(fromGate, wire.fromOutputIndex ?? 0)
+        : fromGate.y + 50;
       const toX = toGate.x;
       const toY = getInputY(toGate, wire.toIndex);
 
@@ -799,21 +897,27 @@ const Boolforge = ({
   };
 
   const evaluateGateWithGates = useCallback(
-    (gate, gatesArray) => {
-      // Build wire lookup
+    (gate, gatesArray, outputIndex = 0) => {
+      const localGateMap = new Map();
+      gatesArray.forEach((g) => localGateMap.set(g.id, g));
+
       const incomingWires = new Map();
       gatesArray.forEach((g) => incomingWires.set(g.id, []));
       wires.forEach((w) => {
         if (incomingWires.has(w.toId)) incomingWires.get(w.toId).push(w);
       });
 
-      // Double-buffered: seed prev from INPUT values, non-inputs default false
       let prev = new Map();
       gatesArray.forEach((g) => {
-        prev.set(g.id, g.type === "INPUT" ? g.inputValues[0] || false : false);
+        if (g.type === "INPUT") {
+          prev.set(g.id, g.inputValues[0] || false);
+        } else if (IC_TYPES.has(g.type)) {
+          prev.set(g.id, Array(IC_META[g.type].outputs).fill(false));
+        } else {
+          prev.set(g.id, false);
+        }
       });
 
-      // Iterate to convergence using double-buffering (read prev, write next)
       for (let iter = 0; iter < 100; iter++) {
         const next = new Map(prev);
         let changed = false;
@@ -821,17 +925,33 @@ const Boolforge = ({
           if (g.type === "INPUT") continue;
           const inputs = [];
           for (const w of incomingWires.get(g.id) || []) {
-            inputs[w.toIndex] = prev.get(w.fromId) ?? false; // read from PREV
+            const srcVal = prev.get(w.fromId);
+            if (IC_TYPES.has(localGateMap.get(w.fromId)?.type) && Array.isArray(srcVal)) {
+              inputs[w.toIndex] = srcVal[w.fromOutputIndex ?? 0] ?? false;
+            } else {
+              inputs[w.toIndex] = srcVal ?? false;
+            }
           }
-          const newVal = computeGateOutput(g, inputs);
-          next.set(g.id, newVal); // write to NEXT
-          if (prev.get(g.id) !== newVal) changed = true;
+          if (IC_TYPES.has(g.type)) {
+            const numOut = IC_META[g.type].outputs;
+            const newVals = Array.from({ length: numOut }, (_, i) => computeGateOutput(g, inputs, i));
+            const oldVals = prev.get(g.id);
+            if (!Array.isArray(oldVals) || newVals.some((v, i) => v !== oldVals[i])) {
+              next.set(g.id, newVals); changed = true;
+            }
+          } else {
+            const newVal = computeGateOutput(g, inputs);
+            next.set(g.id, newVal);
+            if (prev.get(g.id) !== newVal) changed = true;
+          }
         }
         prev = next;
         if (!changed) break;
       }
 
-      return prev.get(gate.id) ?? false;
+      const val = prev.get(gate.id);
+      if (Array.isArray(val)) return val[outputIndex] ?? false;
+      return val ?? false;
     },
     [wires],
   );
@@ -972,7 +1092,7 @@ const Boolforge = ({
     >
       {/* ── Sidebar ── */}
       <div className="sidebar">
-        <h2>Logic Gates</h2>
+        <h2>Circuit Forge</h2>
 
         {simplifiedExpression && (
           <div className="simplified-expression-display">
@@ -982,57 +1102,89 @@ const Boolforge = ({
           </div>
         )}
 
-        <div className="gate-palette">
-          {[
-            "INPUT",
-            "OUTPUT",
-            "AND",
-            "OR",
-            "NOT",
-            "NAND",
-            "NOR",
-            "XOR",
-            "XNOR",
-            "BUFFER",
-          ].map((type) => (
-            <button
-              key={type}
-              className="gate-btn"
-              onClick={() => addGate(type)}
-            >
-              {type}
-            </button>
-          ))}
+        <div className="palette-section">
+          <div className="palette-section-title">Logic Gates</div>
+          <div className="gate-palette">
+            {["INPUT","OUTPUT","AND","OR","NOT","NAND","NOR","XOR","XNOR","BUFFER"].map((type) => (
+              <button key={type} className="gate-btn" onClick={() => addGate(type)}>
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="palette-section">
+          <div className="palette-section-title">Multiplexers</div>
+          <div className="gate-palette">
+            {[
+              { type: "MUX2",  label: "MUX 2:1" },
+              { type: "MUX4",  label: "MUX 4:1" },
+              { type: "MUX8",  label: "MUX 8:1" },
+            ].map(({ type, label }) => (
+              <button key={type} className="gate-btn gate-btn--ic" onClick={() => addGate(type)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="palette-section">
+          <div className="palette-section-title">Demultiplexers</div>
+          <div className="gate-palette">
+            {[
+              { type: "DEMUX2", label: "DEMUX 1:2" },
+              { type: "DEMUX4", label: "DEMUX 1:4" },
+            ].map(({ type, label }) => (
+              <button key={type} className="gate-btn gate-btn--ic" onClick={() => addGate(type)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="palette-section">
+          <div className="palette-section-title">Encoders</div>
+          <div className="gate-palette">
+            {[
+              { type: "ENC4", label: "ENC 4:2" },
+              { type: "ENC8", label: "ENC 8:3" },
+            ].map(({ type, label }) => (
+              <button key={type} className="gate-btn gate-btn--ic" onClick={() => addGate(type)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="palette-section">
+          <div className="palette-section-title">Decoders</div>
+          <div className="gate-palette">
+            {[
+              { type: "DEC4", label: "DEC 2:4" },
+              { type: "DEC8", label: "DEC 3:8" },
+            ].map(({ type, label }) => (
+              <button key={type} className="gate-btn gate-btn--ic" onClick={() => addGate(type)}>
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="instructions">
-          <p>
-            <strong>Controls:</strong>
-          </p>
-          <p>• Click gate buttons to add gates</p>
+          <p><strong>Controls:</strong></p>
+          <p>• Click buttons to add components</p>
           <p>• Drag gates to move them</p>
           <p>• Drag canvas background to pan</p>
-          <p>• Click output → input to connect</p>
+          <p>• Click output dot → input dot to wire</p>
+          <p>• ICs: click a numbered output dot</p>
           <p>• Right-click wire to delete it</p>
           <p>• Right-click gate to delete</p>
           <p>• Double-click gate to rename it</p>
           <p>• Scroll to zoom in/out</p>
-          {/* ← NEW instructions for multi-input */}
-          <p>
-            • Click <strong>+</strong> on a gate to add an input (max{" "}
-            {MAX_GATE_INPUTS})
-          </p>
-          <p>
-            • Click <strong>−</strong> on a gate to remove an input (min{" "}
-            {MIN_GATE_INPUTS})
-          </p>
-          <p>
-            <strong>Keyboard Shortcuts:</strong>
-          </p>
-          <p>• Ctrl+Z: Undo</p>
-          <p>• Ctrl+Shift+Z: Redo</p>
-          <p>• Delete: Remove selected gate</p>
-          <p>• Escape: Cancel connection</p>
+          <p>• Click <strong>+</strong> / <strong>−</strong> to resize gate inputs</p>
+          <p><strong>Shortcuts:</strong></p>
+          <p>• Ctrl+Z: Undo &nbsp; Ctrl+Shift+Z: Redo</p>
+          <p>• Delete: Remove selected &nbsp; Esc: Cancel wire</p>
         </div>
       </div>
 
@@ -1069,13 +1221,18 @@ const Boolforge = ({
             const canExpand = MULTI_INPUT_GATES.has(gate.type);
             const canAddInput = canExpand && gate.inputs < MAX_GATE_INPUTS;
             const canRemoveInput = canExpand && gate.inputs > MIN_GATE_INPUTS;
+            const isIC = IC_TYPES.has(gate.type);
+            const icMeta = isIC ? IC_META[gate.type] : null;
+            const icH = isIC ? getICHeight(gate.type) : 100;
+            // connectingFrom is now { gate, outputIndex } for ICs, or gate for legacy
+            const cfGateId = connectingFrom?.gate?.id ?? connectingFrom?.id;
 
             return (
               <div
                 key={gate.id}
                 data-gate-id={gate.id}
-                className={`gate ${gate.type === "OUTPUT" ? "output-gate" : ""} ${selectedGate?.id === gate.id ? "selected" : ""} ${gate.type === "OUTPUT" && evaluateGate(gate) ? "active" : ""}`}
-                style={{ left: gate.x, top: gate.y }}
+                className={`gate ${gate.type === "OUTPUT" ? "output-gate" : ""} ${isIC ? "gate--ic" : ""} ${selectedGate?.id === gate.id ? "selected" : ""} ${gate.type === "OUTPUT" && evaluateGate(gate) ? "active" : ""}`}
+                style={{ left: gate.x, top: gate.y, height: isIC ? icH : undefined }}
                 onMouseDown={(e) => startDrag(e, gate)}
                 onTouchStart={(e) => {
                   if (e.touches.length === 1) {
@@ -1091,60 +1248,78 @@ const Boolforge = ({
               >
                 <div className="gate-content">
                   {gateSymbols[gate.type]}
-                  <div className="gate-label">{gate.label || gate.type}</div>
+                  {!isIC && <div className="gate-label">{gate.label || gate.type}</div>}
                 </div>
 
-                {/* ── Input-count controls (+ / −) shown on multi-input gates ── */}
+                {/* ── Input-count controls (+ / −) — only for expandable gates ── */}
                 {canExpand && (
                   <div className="gate-input-controls">
                     <button
                       className="gate-input-btn"
-                      title={
-                        canRemoveInput
-                          ? `Remove input (${gate.inputs - 1} inputs)`
-                          : `Minimum ${MIN_GATE_INPUTS} inputs`
-                      }
+                      title={canRemoveInput ? `Remove input (${gate.inputs - 1} inputs)` : `Minimum ${MIN_GATE_INPUTS} inputs`}
                       disabled={!canRemoveInput}
                       onMouseDown={(e) => e.stopPropagation()}
                       onClick={(e) => removeInputSlot(e, gate)}
-                    >
-                      −
-                    </button>
+                    >−</button>
                     <span className="gate-input-count">{gate.inputs}</span>
                     <button
                       className="gate-input-btn"
-                      title={
-                        canAddInput
-                          ? `Add input (${gate.inputs + 1} inputs)`
-                          : `Maximum ${MAX_GATE_INPUTS} inputs`
-                      }
+                      title={canAddInput ? `Add input (${gate.inputs + 1} inputs)` : `Maximum ${MAX_GATE_INPUTS} inputs`}
                       disabled={!canAddInput}
                       onMouseDown={(e) => e.stopPropagation()}
                       onClick={(e) => addInputSlot(e, gate)}
-                    >
-                      +
-                    </button>
+                    >+</button>
                   </div>
                 )}
 
-                {/* ── Output connection point ── */}
-                {gate.hasOutput && (
+                {/* ── IC: multiple output dots on right side ── */}
+                {isIC && Array.from({ length: icMeta.outputs }).map((_, outIdx) => {
+                  const n = icMeta.outputs;
+                  const topPct = n === 1 ? 50 : 10 + (outIdx / (n - 1)) * 80;
+                  const isConnecting = cfGateId === gate.id && connectingFrom?.outputIndex === outIdx;
+                  return (
+                    <div
+                      key={`out-${outIdx}`}
+                      className={`connection-point output-point ic-output-point ${isConnecting ? "active" : ""} ${evaluateGate(gate, outIdx) ? "ic-output-point--high" : ""}`}
+                      style={{ top: `${topPct}%` }}
+                      title={icMeta.outputLabels[outIdx]}
+                      onClick={() => startConnection(gate, outIdx)}
+                    >
+                      <span className="ic-pin-label">{icMeta.outputLabels[outIdx]}</span>
+                    </div>
+                  );
+                })}
+
+                {/* ── Single output dot for regular gates ── */}
+                {!isIC && gate.hasOutput && (
                   <div
-                    className={`connection-point output-point ${connectingFrom?.id === gate.id ? "active" : ""}`}
-                    onClick={() => startConnection(gate)}
+                    className={`connection-point output-point ${cfGateId === gate.id ? "active" : ""}`}
+                    onClick={() => startConnection(gate, 0)}
                   />
                 )}
 
-                {/* ── Input connection points — N evenly-spaced slots ── */}
-                {gate.inputs >= 2 &&
+                {/* ── IC: input dots on left side with pin labels ── */}
+                {isIC && Array.from({ length: icMeta.inputs }).map((_, idx) => {
+                  const n = icMeta.inputs;
+                  const topPct = n === 1 ? 50 : 10 + (idx / (n - 1)) * 80;
+                  return (
+                    <div
+                      key={`in-${idx}`}
+                      className={`connection-point input-point ic-input-point ${connectingFrom ? "active" : ""}`}
+                      style={{ top: `${topPct}%` }}
+                      title={icMeta.inputLabels[idx]}
+                      onClick={() => completeConnection(gate, idx)}
+                    >
+                      <span className="ic-pin-label ic-pin-label--left">{icMeta.inputLabels[idx]}</span>
+                    </div>
+                  );
+                })}
+
+                {/* ── Regular gate: N evenly-spaced input dots ── */}
+                {!isIC && gate.inputs >= 2 &&
                   Array.from({ length: gate.inputs }).map((_, idx) => {
                     const n = gate.inputs;
-                    const topPct =
-                      n === 2
-                        ? idx === 0
-                          ? 35
-                          : 65
-                        : 15 + (idx / (n - 1)) * 70;
+                    const topPct = n === 2 ? (idx === 0 ? 35 : 65) : 15 + (idx / (n - 1)) * 70;
                     return (
                       <div
                         key={idx}
@@ -1155,7 +1330,7 @@ const Boolforge = ({
                     );
                   })}
 
-                {gate.inputs === 1 && (
+                {!isIC && gate.inputs === 1 && (
                   <div
                     className={`connection-point input-point ${connectingFrom ? "active" : ""}`}
                     style={{ top: "50%" }}
