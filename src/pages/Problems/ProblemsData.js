@@ -1237,8 +1237,8 @@ const problemsData = [
       { A: 1, B: 1, C: 0, F: 1 },
       { A: 1, B: 1, C: 1, F: 1 },
     ],
-    equations: ["F = (A' + B)(A + C')"],
-    hint: "Group the 0-cells: maxterms 4 and 5 (A=1,B=0) form a pair → sum term (A'+B). Maxterm 1 and 4 pair — but 4 is already used. Maxterms 1 alone: (A+B+C'). The minimal POS is F = (A'+B)(A+C').",
+    equations: ["F = (A' + B)(B + C')"],
+    hint: "Group the 0-cells: maxterms 4 and 5 (A=1,B=0) form a pair → sum term (A'+B). Maxterm 1 and 4 pair — but 4 is already used. Maxterms 1 and 5 pair → sum term (B+C'). The minimal POS is F = (A'+B)(B+C').",
     inputs: ["A", "B", "C"],
     outputs: ["F"],
   },
@@ -1450,5 +1450,139 @@ const problemsData = [
     isSynthetic: true,
   },
 ];
+
+function generateTruthTableForProblem(problem) {
+  const id = problem.id;
+  const inputs = problem.inputs || [];
+  const outputs = problem.outputs || [];
+
+  // Sequential latch problems need their custom deterministic test cases
+  const sequentialIds = new Set([7, 13, 14, 15, 16]);
+  if (sequentialIds.has(id)) {
+    return problem.truthTable;
+  }
+
+  // Conceptual/synthetic problems do not need dynamically generated truth tables
+  if (problem.isSynthetic || id >= 25) {
+    return problem.truthTable;
+  }
+
+
+
+  // Generate complete truth table for combinational problems
+  const numInputs = inputs.length;
+  const numRows = Math.pow(2, numInputs);
+  const table = [];
+
+  for (let i = 0; i < numRows; i++) {
+    const row = {};
+    // Insert inputs first to guarantee column display order in the UI
+    inputs.forEach((inputName, j) => {
+      row[inputName] = (i >> (numInputs - 1 - j)) & 1;
+    });
+
+    // Compute expected outputs using Boolean logic specification
+    switch (id) {
+      case 1: { // Half Adder
+        row.S = row.A ^ row.B;
+        row.C = row.A & row.B;
+        break;
+      }
+      case 2: { // Full Adder
+        row.S = row.A ^ row.B ^ row.Cin;
+        row.Cout = (row.A & row.B) | (row.B & row.Cin) | (row.A & row.Cin);
+        break;
+      }
+      case 17: { // Half Subtractor
+        row.D = row.A ^ row.B;
+        row.Bout = (!row.A & row.B) ? 1 : 0;
+        break;
+      }
+      case 18: { // Full Subtractor
+        row.D = row.A ^ row.B ^ row.Bin;
+        row.Bout = ((!row.A & row.B) | (!row.A & row.Bin) | (row.B & row.Bin)) ? 1 : 0;
+        break;
+      }
+      case 3: { // 2-to-1 Multiplexer
+        row.Y = row.S ? row.I1 : row.I0;
+        break;
+      }
+      case 4: { // 4-to-1 Multiplexer
+        const sel = (row.S1 ? 2 : 0) + (row.S0 ? 1 : 0);
+        row.Y = [row.I0, row.I1, row.I2, row.I3][sel];
+        break;
+      }
+      case 9: { // 8-to-1 Multiplexer
+        const sel = (row.S2 ? 4 : 0) + (row.S1 ? 2 : 0) + (row.S0 ? 1 : 0);
+        row.Y = row[`I${sel}`];
+        break;
+      }
+      case 5: { // 1-to-2 Demultiplexer
+        row.Y0 = (row.D && !row.S) ? 1 : 0;
+        row.Y1 = (row.D && row.S) ? 1 : 0;
+        break;
+      }
+      case 11: { // 1-to-4 Demultiplexer
+        const sel = (row.S1 ? 2 : 0) + (row.S0 ? 1 : 0);
+        row.Y0 = (row.D && sel === 0) ? 1 : 0;
+        row.Y1 = (row.D && sel === 1) ? 1 : 0;
+        row.Y2 = (row.D && sel === 2) ? 1 : 0;
+        row.Y3 = (row.D && sel === 3) ? 1 : 0;
+        break;
+      }
+      case 12: { // 1-to-8 Demultiplexer
+        const sel = (row.S2 ? 4 : 0) + (row.S1 ? 2 : 0) + (row.S0 ? 1 : 0);
+        for (let k = 0; k < 8; k++) {
+          row[`Y${k}`] = (row.D && sel === k) ? 1 : 0;
+        }
+        break;
+      }
+      case 6: { // 2-to-4 Decoder
+        const sel = (row.A1 ? 2 : 0) + (row.A0 ? 1 : 0);
+        row.D0 = (row.E && sel === 0) ? 1 : 0;
+        row.D1 = (row.E && sel === 1) ? 1 : 0;
+        row.D2 = (row.E && sel === 2) ? 1 : 0;
+        row.D3 = (row.E && sel === 3) ? 1 : 0;
+        break;
+      }
+      case 8: { // Odd Parity Generator (3-bit)
+        row.P = (row.A ^ row.B ^ row.C) ? 0 : 1;
+        break;
+      }
+      case 19: { // K-Map: 2-Variable SOP Minimization
+        row.F = (row.A || row.B) ? 1 : 0;
+        break;
+      }
+      case 20: { // K-Map: 3-Variable SOP Minimization
+        row.F = (!row.C) ? 1 : 0;
+        break;
+      }
+      case 21: { // K-Map: 3-Variable with Don't-Cares
+        row.F = (row.A === 0 || (row.B === 0 && row.C === 1)) ? 1 : 0;
+        break;
+      }
+      case 22: { // K-Map: 4-Variable SOP Minimization
+        row.F = ((row.B && row.D) || (!row.B && !row.D)) ? 1 : 0;
+        break;
+      }
+      case 23: { // K-Map: POS Minimization
+        row.F = ((!row.A || row.B) && (row.A || !row.C)) ? 1 : 0;
+        break;
+      }
+      case 24: { // K-Map: 4-Variable with Don't-Cares
+        row.F = ((!row.A && !row.C) || (row.A && row.C)) ? 1 : 0;
+        break;
+      }
+      default:
+        return problem.truthTable;
+    }
+    table.push(row);
+  }
+  return table;
+}
+
+problemsData.forEach((problem) => {
+  problem.truthTable = generateTruthTableForProblem(problem);
+});
 
 export default problemsData;
