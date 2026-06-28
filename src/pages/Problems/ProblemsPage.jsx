@@ -276,7 +276,7 @@ const problemTopicLandingMap = {
     ],
   },
   "flip-flops": {
-    group: "Sequential Circuits",
+    group: "Flip Flops",
     title: "Flip-Flop Problems",
     description:
       "Review SR, JK, D, and T flip-flop truth tables, excitation behavior, and exam-style practice questions.",
