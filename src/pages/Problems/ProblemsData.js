@@ -1847,7 +1847,7 @@ function generateTruthTableForProblem(problem) {
   }
 
   // Conceptual/synthetic problems do not need dynamically generated truth tables
-  if (problem.isSynthetic || id >= 25) {
+  if (problem.isSynthetic) {
     return problem.truthTable;
   }
 
