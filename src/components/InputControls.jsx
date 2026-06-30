@@ -16,8 +16,8 @@ export const InputControls = ({
     onReset,
     expression,
     onExperiment,
-    showGroupingGuide,  
-    onToggleGroupingGuide
+    showGroupingGuide
+    // onToggleGroupingGuide
 }) => {
     const handleVariableNameChange = (index, value) => {
         const newVars = [...variables];
@@ -106,7 +106,7 @@ export const InputControls = ({
                     </select>
                 </div>
 
-                <div className="kmap-control-group">
+                {/* <div className="kmap-control-group">
                     <label className="kmap-label">Grouping Guide</label>
                     <label className="kmap-toggle">
                         <input
@@ -116,7 +116,7 @@ export const InputControls = ({
                         />
                         <span className="kmap-toggle-slider"></span>
                     </label>
-                </div>
+                </div> */}
 
                 <div className="kmap-btn-row">
                     <button

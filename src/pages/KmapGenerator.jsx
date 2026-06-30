@@ -99,7 +99,7 @@ const KMapGenerator = () => {
                         onExample={handleExample}
                         onReset={handleReset}
                         showGroupingGuide={showGroupingGuide}
-                        onToggleGroupingGuide={() => setShowGroupingGuide(!showGroupingGuide)}
+                        // onToggleGroupingGuide={() => setShowGroupingGuide(!showGroupingGuide)}
                         expression={expression}
                         onExperiment={() => setShowCircuitModal(true)}  
                     />
