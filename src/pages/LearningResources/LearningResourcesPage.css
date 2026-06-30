@@ -14,6 +14,7 @@
   margin: 0 auto;
 }
 
+/* see here first */
 .learning-resources-hero {
   display: grid;
   grid-template-columns: 1.4fr 0.9fr;
