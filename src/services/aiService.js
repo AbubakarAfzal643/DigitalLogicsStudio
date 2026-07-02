@@ -1,13 +1,17 @@
 import axios from "axios";
 
-const LOCAL_AI_URL = "http://localhost:5100/api/ai";
+const LOCAL_API_URL = "http://localhost:5000/api";
+
+function resolveApiBaseUrl() {
+  const configured = process.env.REACT_APP_API_URL?.trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  return LOCAL_API_URL;
+}
 
 function resolveAiBaseUrl() {
-  const configured = process.env.REACT_APP_AI_URL?.trim();
-  if (configured) {
-    return configured.replace(/\/+$/, "");
-  }
-  return LOCAL_AI_URL;
+  const configuredAi = process.env.REACT_APP_AI_URL?.trim();
+  if (configuredAi) return configuredAi.replace(/\/+$/, "");
+  return `${resolveApiBaseUrl()}/ai`;
 }
 
 const aiClient = axios.create({
@@ -24,9 +28,10 @@ aiClient.interceptors.response.use(
   (error) => {
     if (error.response?.data?.error) {
       error.message = error.response.data.error;
+    } else if (error.response?.status === 401) {
+      error.message = "Please log in to use DLS Mentor.";
     } else if (!error.response) {
-      error.message =
-        "Cannot reach DLS Mentor. Make sure the AI server is running on port 5100 (npm run dev in Dls-AI-Chatbot).";
+      error.message = "Cannot reach DLS Mentor. Make sure the backend server is running.";
     }
     return Promise.reject(error);
   },
