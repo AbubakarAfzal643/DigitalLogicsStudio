@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import {
   ArrowRight,
+  ArrowLeft,
   Binary,
   BookOpen,
   BrainCircuit,
@@ -59,11 +60,13 @@ const trackConfig = {
     concepts: [
       {
         title: "Logic Gates",
-        description: "Understand AND, OR, NOT, NAND, NOR, XOR, and XNOR behavior.",
+        description:
+          "Understand AND, OR, NOT, NAND, NOR, XOR, and XNOR behavior.",
       },
       {
         title: "Boolean Algebra",
-        description: "Practice simplification, duality, and algebraic identities.",
+        description:
+          "Practice simplification, duality, and algebraic identities.",
       },
       {
         title: "Karnaugh Maps",
@@ -71,7 +74,8 @@ const trackConfig = {
       },
       {
         title: "Sequential Logic",
-        description: "Explore latches, flip-flops, counters, and memory basics.",
+        description:
+          "Explore latches, flip-flops, counters, and memory basics.",
       },
     ],
     studyPlan: [
@@ -105,35 +109,42 @@ const trackConfig = {
     concepts: [
       {
         title: "COAL Syntax Basics",
-        description: "Learn how instructions, labels, and comments are structured.",
+        description:
+          "Learn how instructions, labels, and comments are structured.",
       },
       {
         title: "Registers and Memory",
-        description: "Understand how values are stored and moved in a simple machine.",
+        description:
+          "Understand how values are stored and moved in a simple machine.",
       },
       {
         title: "Control Flow",
-        description: "Practice branching, jumps, and decision-making instructions.",
+        description:
+          "Practice branching, jumps, and decision-making instructions.",
       },
       {
         title: "Instruction Logic",
-        description: "Build confidence with basic arithmetic and data movement tasks.",
+        description:
+          "Build confidence with basic arithmetic and data movement tasks.",
       },
     ],
     visualConcepts: [
       {
         title: "Fetch → Decode → Execute",
-        description: "See how the CPU steps through each instruction and updates the program flow.",
+        description:
+          "See how the CPU steps through each instruction and updates the program flow.",
         icon: MonitorPlay,
       },
       {
         title: "Registers in Action",
-        description: "Understand how AX, BX, CX, and DX hold temporary values during computation.",
+        description:
+          "Understand how AX, BX, CX, and DX hold temporary values during computation.",
         icon: Cpu,
       },
       {
         title: "Control Flow Logic",
-        description: "Learn how jumps and comparisons guide the program from one instruction to another.",
+        description:
+          "Learn how jumps and comparisons guide the program from one instruction to another.",
         icon: Zap,
       },
     ],
@@ -155,22 +166,26 @@ const trackConfig = {
       {
         difficulty: "Beginner",
         title: "What does MOV do?",
-        prompt: "Explain the purpose of a MOV instruction and give one example.",
+        prompt:
+          "Explain the purpose of a MOV instruction and give one example.",
       },
       {
         difficulty: "Beginner",
         title: "Register understanding",
-        prompt: "Name two registers and describe what each is commonly used for.",
+        prompt:
+          "Name two registers and describe what each is commonly used for.",
       },
       {
         difficulty: "Intermediate",
         title: "Branch logic",
-        prompt: "How does a jump instruction change the order of execution in a program?",
+        prompt:
+          "How does a jump instruction change the order of execution in a program?",
       },
       {
         difficulty: "Intermediate",
         title: "Flag awareness",
-        prompt: "What happens when a comparison instruction is executed before a conditional jump?",
+        prompt:
+          "What happens when a comparison instruction is executed before a conditional jump?",
       },
     ],
     courseTopics: [
@@ -205,7 +220,8 @@ const trackConfig = {
       {
         id: "assembly",
         icon: Binary,
-        title: "Topic 3: Illustrating Computer Organization via Assembly Language Programming",
+        title:
+          "Topic 3: Illustrating Computer Organization via Assembly Language Programming",
         summary:
           "Use assembly as a direct view into registers, flags, memory access, and control flow at the hardware level.",
         points: [
@@ -233,7 +249,8 @@ const trackConfig = {
       {
         id: "directives",
         icon: Code2,
-        title: "Topic 5: Assembly Language Directives, Macros, Operators, and Program Structure",
+        title:
+          "Topic 5: Assembly Language Directives, Macros, Operators, and Program Structure",
         summary:
           "Learn how assemblers organize code, data, and procedures into a complete executable program.",
         points: [
@@ -303,31 +320,46 @@ const trackConfig = {
         phase: "Phase 2",
         title: "Number Systems",
         duration: "3–4 Days",
-        points: ["Binary, decimal, hexadecimal, octal", "1's and 2's complement, signed vs unsigned"],
+        points: [
+          "Binary, decimal, hexadecimal, octal",
+          "1's and 2's complement, signed vs unsigned",
+        ],
       },
       {
         phase: "Phase 3",
         title: "Boolean Algebra & Logic Gates",
         duration: "1 Week",
-        points: ["AND, OR, NOT, XOR, NAND, NOR", "Truth tables, De Morgan's law, K-maps"],
+        points: [
+          "AND, OR, NOT, XOR, NAND, NOR",
+          "Truth tables, De Morgan's law, K-maps",
+        ],
       },
       {
         phase: "Phase 4",
         title: "Digital Logic Circuits",
         duration: "1 Week",
-        points: ["Half/full adder", "Decoder, encoder, multiplexer, demultiplexer"],
+        points: [
+          "Half/full adder",
+          "Decoder, encoder, multiplexer, demultiplexer",
+        ],
       },
       {
         phase: "Phase 5",
         title: "Computer Organization",
         duration: "4–5 Days",
-        points: ["ALU, control unit, registers", "Cache, main memory, secondary memory"],
+        points: [
+          "ALU, control unit, registers",
+          "Cache, main memory, secondary memory",
+        ],
       },
       {
         phase: "Phase 6",
         title: "Instruction Cycle",
         duration: "3 Days",
-        points: ["Fetch, decode, execute, store", "Program counter and instruction register"],
+        points: [
+          "Fetch, decode, execute, store",
+          "Program counter and instruction register",
+        ],
       },
       {
         phase: "Phase 7",
@@ -339,19 +371,28 @@ const trackConfig = {
         phase: "Phase 8",
         title: "Assembly Instructions",
         duration: "1 Week",
-        points: ["Data transfer, arithmetic, logic, shift", "Control flow and loops"],
+        points: [
+          "Data transfer, arithmetic, logic, shift",
+          "Control flow and loops",
+        ],
       },
       {
         phase: "Phase 9",
         title: "Flags Register",
         duration: "3 Days",
-        points: ["Zero, carry, overflow, sign flags", "How comparisons affect flags"],
+        points: [
+          "Zero, carry, overflow, sign flags",
+          "How comparisons affect flags",
+        ],
       },
       {
         phase: "Phase 10",
         title: "Addressing Modes",
         duration: "4 Days",
-        points: ["Immediate, register, direct, indirect", "Indexed and base-indexed addressing"],
+        points: [
+          "Immediate, register, direct, indirect",
+          "Indexed and base-indexed addressing",
+        ],
       },
       {
         phase: "Phase 11",
@@ -363,7 +404,10 @@ const trackConfig = {
         phase: "Phase 12",
         title: "Arrays, Strings & Interrupts",
         duration: "1 Week",
-        points: ["Array access and string instructions", "Interrupt-driven input/output"],
+        points: [
+          "Array access and string instructions",
+          "Interrupt-driven input/output",
+        ],
       },
     ],
   },
@@ -376,10 +420,16 @@ const LearningResourcesPage = () => {
   const resolvedTrack = track === "coal" ? "coal" : "dld";
   const content = trackConfig[resolvedTrack];
   const glowRootRef = usePointerGlow({ color: content.accent, alpha: 0.2 });
+  const courseTopics = content?.courseTopics ?? [];
   const [expandedTopic, setExpandedTopic] = useState("basics");
 
-  const activeTopicIndex = content.courseTopics.findIndex((topic) => topic.id === expandedTopic);
-  const progressPercent = activeTopicIndex >= 0 ? ((activeTopicIndex + 1) / content.courseTopics.length) * 100 : 0;
+  const activeTopicIndex = courseTopics.findIndex(
+    (topic) => topic.id === expandedTopic,
+  );
+  const progressPercent =
+    activeTopicIndex >= 0 && courseTopics.length > 0
+      ? ((activeTopicIndex + 1) / courseTopics.length) * 100
+      : 0;
 
   useEffect(() => {
     if (location.hash) {
@@ -392,8 +442,13 @@ const LearningResourcesPage = () => {
   }, [location.hash]);
 
   useEffect(() => {
-    setExpandedTopic("basics");
-  }, [resolvedTrack]);
+    if (resolvedTrack === "coal" && courseTopics.length > 0) {
+      setExpandedTopic((current) => (current ? current : "basics"));
+      return;
+    }
+
+    setExpandedTopic("");
+  }, [resolvedTrack, courseTopics.length]);
 
   if (track && !trackConfig[track]) {
     return <Navigate to="/resources/dld" replace />;
@@ -414,7 +469,6 @@ const LearningResourcesPage = () => {
     }
   };
 
-
   return (
     <div className="learning-resources-page" ref={glowRootRef}>
       <div className="grid-background" />
@@ -433,19 +487,32 @@ const LearningResourcesPage = () => {
 
             <div className="learning-resources-hero-actions">
               <Link to="/" className="learning-resources-btn primary">
+                <ArrowLeft size={16} />
                 Back to home
               </Link>
               <Link
-                to={resolvedTrack === "dld" ? "/resources/coal" : "/resources/dld"}
+                to={
+                  resolvedTrack === "dld" ? "/resources/coal" : "/resources/dld"
+                }
                 className="learning-resources-btn secondary"
               >
                 Explore {resolvedTrack === "dld" ? "COAL" : "DLD"}
+                <ArrowRight size={16} />
               </Link>
             </div>
           </div>
 
-          <div className="learning-resources-hero-card" style={{ borderColor: `${content.accent}40` }}>
-            <div className="learning-resources-hero-icon" style={{ background: `${content.accent}16`, color: content.accent }}>
+          <div
+            className="learning-resources-hero-card"
+            style={{ borderColor: `${content.accent}40` }}
+          >
+            <div
+              className="learning-resources-hero-icon"
+              style={{
+                background: `${content.accent}16`,
+                color: content.accent,
+              }}
+            >
               <Icon size={30} />
             </div>
             <h2>Study focus</h2>
@@ -460,7 +527,9 @@ const LearningResourcesPage = () => {
         <section className="learning-resources-section">
           <div className="learning-resources-section-header">
             <h2>Start with these resources</h2>
-            <p>Choose a path that matches your current level and learning goal.</p>
+            <p>
+              Choose a path that matches your current level and learning goal.
+            </p>
           </div>
 
           <div className="learning-resources-grid">
@@ -475,18 +544,23 @@ const LearningResourcesPage = () => {
                   className="learning-resources-card learning-resources-card-button learning-resources-glow-card"
                   onClick={() => handleAnchorClick(item.to)}
                 >
-                  <div className="learning-resources-card-meta">
-                    <div className="learning-resources-card-icon" style={{ color: content.accent }}>
-                      <ItemIcon size={20} />
+                  <div className="learning-resources-card-top">
+                    <div className="learning-resources-card-meta">
+                      <div
+                        className="learning-resources-card-icon"
+                        style={{ color: content.accent }}
+                      >
+                        <ItemIcon size={24} />
+                      </div>
+                      <div className="learning-resources-card-copy">
+                        <h3>{item.title}</h3>
+                        <p>{item.description}</p>
+                      </div>
                     </div>
-                    <div className="learning-resources-card-copy">
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                    </div>
+                    <span className="learning-resources-card-link">
+                      Open <ArrowRight size={16} />
+                    </span>
                   </div>
-                  <span className="learning-resources-card-link">
-                    Open <ArrowRight size={16} />
-                  </span>
                 </button>
               ) : (
                 <Link
@@ -494,18 +568,23 @@ const LearningResourcesPage = () => {
                   to={item.to}
                   className="learning-resources-card learning-resources-glow-card"
                 >
-                  <div className="learning-resources-card-meta">
-                    <div className="learning-resources-card-icon" style={{ color: content.accent }}>
-                      <ItemIcon size={20} />
+                  <div className="learning-resources-card-top">
+                    <div className="learning-resources-card-meta">
+                      <div
+                        className="learning-resources-card-icon"
+                        style={{ color: content.accent }}
+                      >
+                        <ItemIcon size={24} />
+                      </div>
+                      <div className="learning-resources-card-copy">
+                        <h3>{item.title}</h3>
+                        <p>{item.description}</p>
+                      </div>
                     </div>
-                    <div className="learning-resources-card-copy">
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                    </div>
+                    <span className="learning-resources-card-link">
+                      Open <ArrowRight size={16} />
+                    </span>
                   </div>
-                  <span className="learning-resources-card-link">
-                    Open <ArrowRight size={16} />
-                  </span>
                 </Link>
               );
             })}
@@ -515,12 +594,18 @@ const LearningResourcesPage = () => {
         <section id="concepts" className="learning-resources-section">
           <div className="learning-resources-section-header">
             <h2>Beginner concepts</h2>
-            <p>Core ideas to study first before moving on to more advanced material.</p>
+            <p>
+              Core ideas to study first before moving on to more advanced
+              material.
+            </p>
           </div>
 
           <div className="learning-resources-concepts-grid">
             {content.concepts.map((concept) => (
-              <article key={concept.title} className="learning-resources-concept-card">
+              <article
+                key={concept.title}
+                className="learning-resources-concept-card"
+              >
                 <h3>{concept.title}</h3>
                 <p>{concept.description}</p>
               </article>
@@ -533,19 +618,31 @@ const LearningResourcesPage = () => {
             <section className="learning-resources-section">
               <div className="learning-resources-section-header">
                 <h2>Visual concept highlights</h2>
-                <p>Quick mental models to connect machine behavior with assembly concepts.</p>
+                <p>
+                  Quick mental models to connect machine behavior with assembly
+                  concepts.
+                </p>
               </div>
 
               <div className="learning-resources-visual-grid">
                 {content.visualConcepts.map((item) => {
                   const VisualIcon = item.icon;
                   return (
-                    <article key={item.title} className="learning-resources-visual-card">
-                      <div className="learning-resources-visual-icon">
-                        <VisualIcon size={20} />
+                    <article
+                      key={item.title}
+                      className="learning-resources-visual-card"
+                    >
+                      <div className="learning-resources-card-top">
+                        <div className="learning-resources-card-meta">
+                          <div className="learning-resources-card-icon">
+                            <VisualIcon size={24} />
+                          </div>
+                          <div className="learning-resources-card-copy">
+                            <h3>{item.title}</h3>
+                            <p>{item.description}</p>
+                          </div>
+                        </div>
                       </div>
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
                     </article>
                   );
                 })}
@@ -555,14 +652,29 @@ const LearningResourcesPage = () => {
             <section className="learning-resources-section">
               <div className="learning-resources-section-header">
                 <h2>Mini demo code</h2>
-                <p>Small examples that help you see how assembly instructions look in practice.</p>
+                <p>
+                  Small examples that help you see how assembly instructions
+                  look in practice.
+                </p>
               </div>
 
               <div className="learning-resources-demo-grid">
                 {content.demoCode.map((item) => (
-                  <article key={item.title} className="learning-resources-demo-card">
-                    <h3>{item.title}</h3>
-                    <pre>{item.code}</pre>
+                  <article
+                    key={item.title}
+                    className="learning-resources-demo-card"
+                  >
+                    <div className="learning-resources-card-top">
+                      <div className="learning-resources-card-meta">
+                        <div className="learning-resources-card-icon">
+                          <Code2 size={24} />
+                        </div>
+                        <div className="learning-resources-card-copy">
+                          <h3>{item.title}</h3>
+                          <pre>{item.code}</pre>
+                        </div>
+                      </div>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -571,59 +683,102 @@ const LearningResourcesPage = () => {
             <section id="practice" className="learning-resources-section">
               <div className="learning-resources-section-header">
                 <h2>Practice questions</h2>
-                <p>Try these beginner-friendly questions and grade yourself by difficulty.</p>
+                <p>
+                  Try these beginner-friendly questions and grade yourself by
+                  difficulty.
+                </p>
               </div>
 
               <div className="learning-resources-practice-grid">
                 {content.practiceQuestions.map((question) => (
-                  <article key={question.title} className="learning-resources-practice-card">
+                  <article
+                    key={question.title}
+                    className="learning-resources-practice-card"
+                  >
                     <div className="learning-resources-practice-top">
-                      <span className="learning-resources-difficulty">{question.difficulty}</span>
+                      <span className="learning-resources-difficulty">
+                        {question.difficulty}
+                      </span>
                       <span className="learning-resources-idea">
                         <ListChecks size={15} /> Practice
                       </span>
                     </div>
-                    <h3>{question.title}</h3>
-                    <p>{question.prompt}</p>
+                    <div className="learning-resources-card-meta">
+                      <div className="learning-resources-card-icon">
+                        <ListChecks size={24} />
+                      </div>
+                      <div className="learning-resources-card-copy">
+                        <h3>{question.title}</h3>
+                        <p>{question.prompt}</p>
+                      </div>
+                    </div>
                   </article>
                 ))}
               </div>
             </section>
 
-            <section id="course-content" className="learning-resources-section learning-resources-course-section">
+            <section
+              id="course-content"
+              className="learning-resources-section learning-resources-course-section"
+            >
               <div className="learning-resources-section-header">
                 <h2>Complete COAL course content</h2>
-                <p>A polished, topic-by-topic study guide designed for quick navigation and deeper revision.</p>
+                <p>
+                  A polished, topic-by-topic study guide designed for quick
+                  navigation and deeper revision.
+                </p>
               </div>
 
               <div className="learning-resources-course-shell">
                 <aside className="learning-resources-course-nav">
                   <div className="learning-resources-course-nav-card">
-                    <p className="learning-resources-course-nav-label">Study path</p>
+                    <p className="learning-resources-course-nav-label">
+                      Study path
+                    </p>
                     <h3>Topic overview</h3>
                     <div className="learning-resources-course-progress">
-                      <div className="learning-resources-course-progress-track" aria-hidden="true">
-                        <span className="learning-resources-course-progress-fill" style={{ width: `${progressPercent}%` }} />
+                      <div
+                        className="learning-resources-course-progress-track"
+                        aria-hidden="true"
+                      >
+                        <span
+                          className="learning-resources-course-progress-fill"
+                          style={{ width: `${progressPercent}%` }}
+                        />
                       </div>
                       <div className="learning-resources-course-progress-meta">
-                        <span>{activeTopicIndex >= 0 ? activeTopicIndex + 1 : 0}/{content.courseTopics.length}</span>
-                        <span>{activeTopicIndex >= 0 ? "Active topic" : "Select a topic"}</span>
+                        <span>
+                          {activeTopicIndex >= 0 ? activeTopicIndex + 1 : 0}/
+                          {courseTopics.length}
+                        </span>
+                        <span>
+                          {activeTopicIndex >= 0
+                            ? "Active topic"
+                            : "Select a topic"}
+                        </span>
                       </div>
                     </div>
                     <nav className="learning-resources-course-nav-list">
-                      {content.courseTopics.map((topic, index) => {
+                      {courseTopics.map((topic, index) => {
                         const isActive = expandedTopic === topic.id;
                         return (
                           <button
                             key={topic.id}
                             type="button"
                             className={`learning-resources-course-nav-item ${isActive ? "active" : ""}`}
-                            onClick={() => setExpandedTopic(isActive ? "" : topic.id)}
+                            onClick={() =>
+                              setExpandedTopic(isActive ? "" : topic.id)
+                            }
                           >
-                            <span className="learning-resources-course-nav-index">{index + 1}</span>
+                            <span className="learning-resources-course-nav-index">
+                              {index + 1}
+                            </span>
                             <span className="learning-resources-course-nav-copy">
                               <strong>{topic.title.split(":")[0]}</strong>
-                              <small>{topic.title.split(":")[1] || "Core study module"}</small>
+                              <small>
+                                {topic.title.split(":")[1] ||
+                                  "Core study module"}
+                              </small>
                             </span>
                           </button>
                         );
@@ -633,27 +788,38 @@ const LearningResourcesPage = () => {
                 </aside>
 
                 <div className="learning-resources-course-topics">
-                  {content.courseTopics.map((topic) => {
+                  {courseTopics.map((topic) => {
                     const TopicIcon = topic.icon;
                     const isOpen = expandedTopic === topic.id;
 
                     return (
-                      <article key={topic.id} className={`learning-resources-course-card ${isOpen ? "open" : ""}`}>
+                      <article
+                        key={topic.id}
+                        className={`learning-resources-course-card ${isOpen ? "open" : ""}`}
+                      >
                         <button
                           className="learning-resources-course-card-toggle"
                           type="button"
-                          onClick={() => setExpandedTopic(isOpen ? "" : topic.id)}
+                          onClick={() =>
+                            setExpandedTopic(isOpen ? "" : topic.id)
+                          }
                         >
                           <div className="learning-resources-course-card-heading">
                             <div className="learning-resources-course-icon">
                               <TopicIcon size={18} />
                             </div>
                             <div>
-                              <p className="learning-resources-course-eyebrow">COAL module</p>
+                              <p className="learning-resources-course-eyebrow">
+                                COAL module
+                              </p>
                               <h3>{topic.title}</h3>
                             </div>
                           </div>
-                          {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                          {isOpen ? (
+                            <ChevronDown size={18} />
+                          ) : (
+                            <ChevronRight size={18} />
+                          )}
                         </button>
 
                         {isOpen ? (
@@ -675,11 +841,15 @@ const LearningResourcesPage = () => {
 
               <div className="learning-resources-course-footer">
                 <div>
-                  <p className="learning-resources-course-eyebrow">Suggested practical work</p>
+                  <p className="learning-resources-course-eyebrow">
+                    Suggested practical work
+                  </p>
                   <h3>Build confidence with guided labs</h3>
                 </div>
                 <p>
-                  Use NASM, MASM, TASM, or an x86 emulator to practice data representation, I/O handling, interrupts, and full assembly mini-projects.
+                  Use NASM, MASM, TASM, or an x86 emulator to practice data
+                  representation, I/O handling, interrupts, and full assembly
+                  mini-projects.
                 </p>
               </div>
             </section>

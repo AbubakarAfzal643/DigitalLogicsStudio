@@ -159,6 +159,7 @@
   box-shadow: 0 20px 46px rgba(15, 23, 42, 0.1);
   overflow: hidden;
   transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  text-align: left;
 }
 
 .learning-resources-card:hover {
@@ -182,10 +183,18 @@
   transition: opacity 250ms ease, background-position 80ms ease;
 }
 
+.learning-resources-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .learning-resources-card-meta {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+  flex: 1;
 }
 
 .learning-resources-card-copy {
@@ -193,6 +202,7 @@
   display: grid;
   gap: 0.35rem;
   width: 100%;
+  text-align: left;
 }
 
 .learning-resources-card-copy h3 {
@@ -210,12 +220,12 @@
 }
 
 .learning-resources-card-icon {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 18px;
+  border-radius: 20px;
   background: rgba(59, 130, 246, 0.12);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
@@ -236,9 +246,15 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  margin-top: auto;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.2);
   color: var(--accent-color, #60a5fa);
   font-weight: 600;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-left: auto;
 }
 
 .learning-resources-concepts-grid {
@@ -288,10 +304,14 @@
 .learning-resources-visual-card,
 .learning-resources-demo-card,
 .learning-resources-practice-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
   padding: 1rem;
   border-radius: 1rem;
   background: var(--surface-elevated);
   border: 1px solid var(--border-color);
+  text-align: left;
 }
 
 .learning-resources-visual-icon {
@@ -322,6 +342,7 @@
 }
 
 .learning-resources-demo-card pre {
+  margin: 0;
   white-space: pre-wrap;
   background: var(--surface-inset);
   border-radius: 0.8rem;
