@@ -958,11 +958,14 @@
   }
 }
 
-/* ─── Light theme ─────────────────────────────────────────────────────── */
+/* ─── Light theme — uses global blue-frost tokens from index.css ─────── */
 [data-theme='light'] .learning-resources-section {
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.1), transparent 45%),
+    var(--light-glass-strong);
   border-color: var(--card-border);
   box-shadow: var(--card-shadow);
+  backdrop-filter: blur(12px);
 }
 
 [data-theme='light'] .learning-resources-section-header h2 {
@@ -978,16 +981,17 @@
 [data-theme='light'] .learning-resources-roadmap-cell,
 [data-theme='light'] .learning-resources-course-nav-card,
 [data-theme='light'] .learning-resources-course-card {
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: var(--light-glass);
   border-color: var(--card-border);
   box-shadow: var(--card-shadow);
   color: var(--text-color);
+  backdrop-filter: blur(8px);
 }
 
 [data-theme='light'] .learning-resources-card:hover,
 [data-theme='light'] .learning-resources-roadmap-cell:hover {
-  background: linear-gradient(145deg, #ffffff, #f1f5f9);
-  border-color: rgba(37, 99, 235, 0.28);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(224, 236, 255, 0.92));
+  border-color: rgba(37, 99, 235, 0.32);
   box-shadow: var(--card-shadow-hover);
 }
 
