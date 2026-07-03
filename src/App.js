@@ -49,6 +49,8 @@ const RegSyncBinaryCounters = lazy(
 const ProblemSolver = lazy(() => import("./pages/Book/Ch1"));
 const Ch2ProblemSolver = lazy(() => import("./pages/Book/Ch2"));
 const LearningResourcesPage = lazy(() => import("./pages/LearningResources/LearningResourcesPage"));
+const CoalCoursePage = lazy(() => import("./pages/Coal/CoalCoursePage"));
+const CoalTopicPage = lazy(() => import("./pages/Coal/CoalTopicPage"));
 const ParityBitCalculator = lazy(() => import("./pages/ParityBitCalculator"));
 const KMapGenerator = lazy(() => import("./pages/KmapGenerator"));
 const GateExplanation = lazy(() => import("./pages/GateExplanation"));
@@ -244,6 +246,8 @@ const AppContent = () => {
           />
           <Route path="/problems" element={<ProblemsPage />} />
           <Route path="/problems/:topicSlug" element={<ProblemsPage />} />
+          <Route path="/resources/coal" element={<CoalCoursePage />} />
+          <Route path="/coal/:slug" element={<CoalTopicPage />} />
           <Route path="/resources/:track?" element={<LearningResourcesPage />} />
           <Route path="/boolforge" element={<Boolforge />} />
 

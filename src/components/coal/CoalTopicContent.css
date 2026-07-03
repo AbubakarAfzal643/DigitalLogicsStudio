@@ -1,0 +1,26 @@
+.coal-topic-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.coal-topic-content__intro {
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: var(--secondary-text, #94a3b8);
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.coal-section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  color: #ede9fe;
+}
+
+.coal-section p {
+  margin: 0 0 0.7rem;
+  line-height: 1.7;
+  color: var(--secondary-text, #94a3b8);
+}

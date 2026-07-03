@@ -25,7 +25,9 @@ export function topicFromPath(pathname = "") {
   const path = pathname.toLowerCase();
 
   if (courseFromPath(pathname) === "coal") {
-    return "computer-organization";
+    const coalSlug = path.match(/\/coal\/([a-z0-9-]+)/)?.[1];
+    if (coalSlug) return coalSlug;
+    return "intro-computer-organization";
   }
 
   if (
