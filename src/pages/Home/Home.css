@@ -238,11 +238,12 @@
 
 [data-theme="light"] .hero-stat-card {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(241, 245, 249, 0.6));
-  border-color: rgba(148, 163, 184, 0.12);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(224, 236, 255, 0.72));
+  border-color: rgba(59, 130, 246, 0.2);
   box-shadow:
-    0 8px 18px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    0 8px 22px rgba(37, 99, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
 }
 
 [data-theme="light"] .hero-stat-value {
@@ -781,14 +782,24 @@
 }
 
 [data-theme="light"] .recommended-resource-pill {
-  background: #ffffff;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.07);
+  backdrop-filter: blur(8px);
 }
 
 [data-theme="light"] .recommended-resource-pill:hover {
-  background: #f8fafc;
-  border-color: rgba(37, 99, 235, 0.22);
+  background: rgba(239, 246, 255, 0.95);
+  border-color: rgba(37, 99, 235, 0.32);
+}
+
+[data-theme="light"] .boolforge-spotlight {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 50%),
+    var(--light-glass-strong);
+  border-color: var(--card-border);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(12px);
 }
 
 [data-theme="light"] .recommended-resource-pill strong {
@@ -806,12 +817,6 @@
 [data-theme="light"] .recommended-course-card p,
 [data-theme="light"] .home-section-description {
   color: #334155;
-}
-
-[data-theme="light"] .boolforge-spotlight {
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
-  border-color: var(--card-border);
-  box-shadow: var(--card-shadow);
 }
 
 [data-theme="light"] .recommended-resource-link,
@@ -1179,14 +1184,10 @@
 
 /* Light Mode Specific Adjustments */
 [data-theme="light"] .home-card {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95), 
-    rgba(248, 250, 252, 0.95)
-  ) !important;
+  background: var(--light-glass) !important;
   border: 1px solid var(--card-border) !important;
-  box-shadow: 
-    0 4px 16px rgba(15, 23, 42, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: blur(10px);
 }
 
 [data-theme="light"] .home-card::before {
@@ -1206,14 +1207,13 @@
 }
 
 [data-theme="light"] .feature-card {
-  border: 1px solid rgba(37, 99, 235, 0.2) !important;
-  box-shadow: 
-    0 8px 24px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  background: linear-gradient(135deg, 
-    rgba(37, 99, 235, 0.02), 
-    rgba(139, 92, 246, 0.01)
+  border: 1px solid rgba(59, 130, 246, 0.22) !important;
+  box-shadow: var(--card-shadow) !important;
+  background: linear-gradient(135deg,
+    rgba(239, 246, 255, 0.85),
+    rgba(224, 236, 255, 0.65)
   ) !important;
+  backdrop-filter: blur(10px);
 }
 
 [data-theme="light"] .feature-card::before {
@@ -1294,8 +1294,8 @@
 
 [data-theme="light"] .grid-background {
   background-image:
-    linear-gradient(to right, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
 }
 
 /* ── Tablet (769px – 1024px) ── */
