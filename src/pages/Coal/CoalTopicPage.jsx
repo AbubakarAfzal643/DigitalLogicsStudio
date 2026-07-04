@@ -74,33 +74,53 @@ function CoalTopicPage() {
         <footer className="coal-topic-nav">
           {prev ? (
             <Link to={getCoalTopicPath(prev.slug)} className="coal-topic-nav__link">
-              <ArrowLeft size={16} />
-              <span>
+              <span className="coal-topic-nav__icon" aria-hidden="true">
+                <ArrowLeft size={18} />
+              </span>
+              <span className="coal-topic-nav__copy">
                 <small>Previous</small>
                 <strong>{prev.title}</strong>
               </span>
             </Link>
           ) : (
-            <span />
+            <Link to="/resources/coal" className="coal-topic-nav__link">
+              <span className="coal-topic-nav__icon" aria-hidden="true">
+                <ArrowLeft size={18} />
+              </span>
+              <span className="coal-topic-nav__copy">
+                <small>Course path</small>
+                <strong>Back to full course</strong>
+              </span>
+            </Link>
           )}
           {next ? (
             <Link
               to={getCoalTopicPath(next.slug)}
               className="coal-topic-nav__link coal-topic-nav__link--next"
             >
-              <span>
-                <small>Next</small>
+              <span className="coal-topic-nav__copy">
+                <small>Next lesson</small>
                 <strong>{next.title}</strong>
               </span>
-              <ArrowRight size={16} />
+              <span className="coal-topic-nav__icon" aria-hidden="true">
+                <ArrowRight size={18} />
+              </span>
             </Link>
-          ) : null}
+          ) : (
+            <Link
+              to="/resources/coal"
+              className="coal-topic-nav__link coal-topic-nav__link--next"
+            >
+              <span className="coal-topic-nav__copy">
+                <small>Finished</small>
+                <strong>Back to course path</strong>
+              </span>
+              <span className="coal-topic-nav__icon" aria-hidden="true">
+                <ArrowRight size={18} />
+              </span>
+            </Link>
+          )}
         </footer>
-
-        <Link to="/resources/coal" className="coal-btn coal-btn--ghost coal-back-link">
-          <ArrowLeft size={16} />
-          Back to full course path
-        </Link>
       </main>
 
       <Footer />

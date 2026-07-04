@@ -131,7 +131,7 @@ export function AddressingModesDiagram() {
           <div key={card.title} className="coal-address-card">
             <strong>{card.title}</strong>
             <span>{card.text}</span>
-            <span style={{ marginTop: "0.35rem", color: "#c4b5fd" }}>{card.code}</span>
+            <code className="coal-address-card__code">{card.code}</code>
           </div>
         ))}
       </div>

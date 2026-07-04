@@ -146,7 +146,9 @@
 
 .coal-diagram--cards {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.9rem;
 }
 
 .coal-isa-grid,
@@ -194,6 +196,14 @@
   font-size: 0.88rem;
   line-height: 1.5;
   color: #cbd5e1;
+}
+
+.coal-address-card__code {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  font-size: 0.82rem;
+  color: #c4b5fd;
 }
 
 .coal-isa-card--transfer {
@@ -280,10 +290,19 @@
 
 .coal-diagram figcaption,
 .coal-diagram--steps figcaption {
-  margin-top: 0.75rem;
-  font-size: 0.82rem;
-  color: #a78bfa;
-  text-align: center;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #c4b5fd;
+  text-align: left;
+}
+
+.coal-diagram--cards figcaption {
+  width: 100%;
 }
 
 .coal-bit-row {
@@ -438,8 +457,109 @@
 }
 
 [data-theme='light'] .coal-diagram {
-  background: var(--surface-inset);
-  border-color: rgba(124, 58, 237, 0.18);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(224, 236, 255, 0.88));
+  border-color: rgba(59, 130, 246, 0.22);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+}
+
+[data-theme='light'] .coal-isa-card,
+[data-theme='light'] .coal-address-card,
+[data-theme='light'] .coal-flag-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06);
+}
+
+[data-theme='light'] .coal-isa-card strong,
+[data-theme='light'] .coal-address-card strong,
+[data-theme='light'] .coal-flag-card strong {
+  color: #0f172a;
+}
+
+[data-theme='light'] .coal-isa-card span,
+[data-theme='light'] .coal-address-card span,
+[data-theme='light'] .coal-flag-card span {
+  color: #334155;
+}
+
+[data-theme='light'] .coal-address-card__code {
+  color: #1d4ed8;
+}
+
+[data-theme='light'] .coal-isa-card--transfer {
+  background: linear-gradient(145deg, #ffffff, #eff6ff);
+  border-color: rgba(37, 99, 235, 0.28);
+}
+
+[data-theme='light'] .coal-isa-card--arithmetic {
+  background: linear-gradient(145deg, #ffffff, #ecfdf5);
+  border-color: rgba(5, 150, 105, 0.28);
+}
+
+[data-theme='light'] .coal-isa-card--logic {
+  background: linear-gradient(145deg, #ffffff, #fffbeb);
+  border-color: rgba(217, 119, 6, 0.28);
+}
+
+[data-theme='light'] .coal-isa-card--control {
+  background: linear-gradient(145deg, #ffffff, #fdf2f8);
+  border-color: rgba(219, 39, 119, 0.24);
+}
+
+[data-theme='light'] .coal-flag-card--active {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.32);
+}
+
+[data-theme='light'] .coal-diagram figcaption,
+[data-theme='light'] .coal-diagram--steps figcaption {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #1e293b;
+  font-weight: 500;
+}
+
+[data-theme='light'] .coal-diagram__label {
+  fill: #0f172a;
+}
+
+[data-theme='light'] .coal-diagram__sublabel,
+[data-theme='light'] .coal-diagram__bus-label {
+  fill: #475569;
+}
+
+[data-theme='light'] .coal-diagram__box {
+  fill: rgba(37, 99, 235, 0.1);
+  stroke: rgba(37, 99, 235, 0.4);
+}
+
+[data-theme='light'] .coal-diagram__box--cpu {
+  fill: rgba(37, 99, 235, 0.14);
+  stroke: rgba(37, 99, 235, 0.5);
+}
+
+[data-theme='light'] .coal-diagram__box--mem {
+  fill: rgba(5, 150, 105, 0.12);
+  stroke: rgba(5, 150, 105, 0.45);
+}
+
+[data-theme='light'] .coal-diagram__box--io {
+  fill: rgba(217, 119, 6, 0.1);
+  stroke: rgba(217, 119, 6, 0.4);
+}
+
+[data-theme='light'] .coal-diagram__box--bus {
+  fill: rgba(124, 58, 237, 0.1);
+  stroke: rgba(124, 58, 237, 0.4);
+}
+
+[data-theme='light'] .coal-diagram__line,
+[data-theme='light'] .coal-diagram__arrow {
+  stroke: rgba(37, 99, 235, 0.45);
+}
+
+[data-theme='light'] .coal-diagram__arrowhead {
+  fill: rgba(37, 99, 235, 0.55);
 }
 
 [data-theme='light'] .coal-steps strong {

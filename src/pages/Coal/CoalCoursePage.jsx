@@ -22,7 +22,6 @@ import "./CoalPages.css";
 function CoalCoursePage() {
   const { theme, toggle: toggleTheme } = useTheme();
   const modules = getAllCoalModules();
-  const availableCount = modules.filter((m) => m.hasContent).length;
 
   return (
     <div className="coal-page">
@@ -52,35 +51,6 @@ function CoalCoursePage() {
             </span>
           </div>
         </section>
-
-        {availableCount > 0 ? (
-          <section className="coal-home-start">
-            <h2>Start here</h2>
-            <p>
-              {availableCount === 1
-                ? "One topic is ready. Open it and learn at your own pace."
-                : `${availableCount} topics are ready. Open one and learn at your own pace.`}
-            </p>
-            <div className="coal-home-start__grid">
-              {modules
-                .filter((m) => m.hasContent)
-                .map((module, i) => (
-                  <Link
-                    key={module.slug}
-                    to={getCoalTopicPath(module.slug)}
-                    className="coal-home-start__card"
-                  >
-                    <span className="coal-home-start__num">Topic {i + 1}</span>
-                    <h3>{module.title}</h3>
-                    <p>{module.summaryLine}</p>
-                    <span className="coal-home-start__cta">
-                      Start learning <ArrowRight size={16} />
-                    </span>
-                  </Link>
-                ))}
-            </div>
-          </section>
-        ) : null}
 
         <section className="coal-home-path">
           <div className="coal-home-path__header">
