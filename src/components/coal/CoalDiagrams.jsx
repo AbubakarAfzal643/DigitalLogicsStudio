@@ -583,53 +583,62 @@ export function StackFrameLayoutDiagram() {
   );
 }
 
-export function LogicGatesDiagram() {
+export function IOMappingComparisonDiagram() {
   return (
-    <figure className="coal-diagram coal-diagram--cards" aria-label="Logic gates in CPU context">
-      <div className="coal-isa-grid">
-        {[
-          { title: "AND", text: "Output 1 only when both inputs are 1 — used in masking bits", accent: "logic" },
-          { title: "OR", text: "Output 1 when any input is 1 — combines enable signals", accent: "transfer" },
-          { title: "NOT", text: "Flips the bit — inverts a signal in the datapath", accent: "arithmetic" },
-          { title: "XOR", text: "Output 1 when inputs differ — used in adders and parity checks", accent: "control" },
-        ].map((card) => (
-          <div key={card.title} className={`coal-isa-card coal-isa-card--${card.accent}`}>
-            <strong>{card.title}</strong>
-            <span>{card.text}</span>
-          </div>
-        ))}
-      </div>
-      <figcaption>Every ALU operation is built from these primitive gates — millions of them on one chip.</figcaption>
-    </figure>
-  );
-}
+    <figure className="coal-diagram" aria-label="I/O mapping: Memory-Mapped vs Isolated I/O">
+      <svg viewBox="0 0 540 240" role="img" className="coal-diagram__svg">
+        {/* Left Side: Memory-Mapped I/O */}
+        <text x="135" y="25" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "14px" }}>Memory-Mapped I/O</text>
+        
+        <rect x="25" y="45" width="80" height="40" rx="6" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="65" y="70" textAnchor="middle" className="coal-diagram__label">CPU</text>
 
-export function HalfAdderDiagram() {
-  return (
-    <figure className="coal-diagram" aria-label="Half adder block">
-      <svg viewBox="0 0 420 160" role="img" className="coal-diagram__svg">
-        <rect x="20" y="50" width="50" height="30" rx="4" className="coal-diagram__box coal-diagram__box--io" />
-        <text x="45" y="70" textAnchor="middle" className="coal-diagram__label">A</text>
-        <rect x="20" y="95" width="50" height="30" rx="4" className="coal-diagram__box coal-diagram__box--io" />
-        <text x="45" y="115" textAnchor="middle" className="coal-diagram__label">B</text>
+        {/* Single Memory Bar */}
+        <rect x="150" y="45" width="90" height="150" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
+        {/* Memory Space partitions */}
+        <line x1="150" y1="135" x2="240" y2="135" stroke="rgba(52, 211, 153, 0.4)" strokeWidth="1.5" strokeDasharray="3 3" />
+        
+        <text x="195" y="90" textAnchor="middle" className="coal-diagram__label">RAM Area</text>
+        <text x="195" y="105" textAnchor="middle" className="coal-diagram__sublabel">0x0000 - 0x7FFF</text>
 
-        <rect x="120" y="55" width="80" height="65" rx="6" className="coal-diagram__box coal-diagram__box--cpu" />
-        <text x="160" y="82" textAnchor="middle" className="coal-diagram__label">Half</text>
-        <text x="160" y="100" textAnchor="middle" className="coal-diagram__label">Adder</text>
+        <text x="195" y="160" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#fbbf24" }}>I/O Ports</text>
+        <text x="195" y="175" textAnchor="middle" className="coal-diagram__sublabel" style={{ fill: "#fbbf24" }}>0x8000 - 0xFFFF</text>
 
-        <line x1="70" y1="65" x2="118" y2="75" className="coal-diagram__line" />
-        <line x1="70" y1="110" x2="118" y2="100" className="coal-diagram__line" />
+        {/* Unified Bus Arrow */}
+        <line x1="105" y1="65" x2="142" y2="65" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="105" y1="65" x2="125" y2="155" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        
+        <text x="125" y="125" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "9px" }}>Shared Bus</text>
 
-        <rect x="260" y="45" width="70" height="30" rx="4" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="295" y="65" textAnchor="middle" className="coal-diagram__label">Sum</text>
-        <line x1="200" y1="75" x2="258" y2="60" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <text x="135" y="215" textAnchor="middle" className="coal-diagram__sublabel">Unified Address Space. Uses normal MOV instruction.</text>
 
-        <rect x="260" y="100" width="70" height="30" rx="4" className="coal-diagram__box coal-diagram__box--bus" />
-        <text x="295" y="120" textAnchor="middle" className="coal-diagram__label">Carry</text>
-        <line x1="200" y1="100" x2="258" y2="115" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        {/* Divider */}
+        <line x1="270" y1="15" x2="270" y2="225" stroke="rgba(167, 139, 250, 0.25)" strokeWidth="1.5" strokeDasharray="4 4" />
 
-        <text x="360" y="65" className="coal-diagram__sublabel">Sum = A XOR B</text>
-        <text x="360" y="120" className="coal-diagram__sublabel">Carry = A AND B</text>
+        {/* Right Side: Isolated I/O */}
+        <text x="405" y="25" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "14px" }}>Isolated (Port-Mapped) I/O</text>
+        
+        <rect x="295" y="45" width="80" height="40" rx="6" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="335" y="70" textAnchor="middle" className="coal-diagram__label">CPU</text>
+
+        {/* Memory Box */}
+        <rect x="420" y="45" width="90" height="65" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="465" y="80" textAnchor="middle" className="coal-diagram__label">RAM Space</text>
+        <text x="465" y="95" textAnchor="middle" className="coal-diagram__sublabel">0x0000 - 0xFFFF</text>
+
+        {/* I/O Box */}
+        <rect x="420" y="130" width="90" height="65" rx="6" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="465" y="165" textAnchor="middle" className="coal-diagram__label">I/O Ports</text>
+        <text x="465" y="180" textAnchor="middle" className="coal-diagram__sublabel">Port 0 - 65535</text>
+
+        {/* Separate Bus Arrows */}
+        <line x1="375" y1="60" x2="412" y2="60" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="375" y1="70" x2="412" y2="155" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+
+        <text x="395" y="52" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "8px" }}>Memory Bus</text>
+        <text x="395" y="135" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "8px", fill: "#fbbf24" }}>I/O Bus</text>
+
+        <text x="405" y="215" textAnchor="middle" className="coal-diagram__sublabel">Separate Address Space. Uses IN/OUT instructions.</text>
 
         <defs>
           <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -637,32 +646,46 @@ export function HalfAdderDiagram() {
           </marker>
         </defs>
       </svg>
-      <figcaption>A half adder adds two bits and produces a sum plus a carry — the seed of every ALU.</figcaption>
+      <figcaption>Memory-Mapped I/O shares the same address lines with RAM, while Isolated I/O uses dedicated hardware address buses and special assembly instructions.</figcaption>
     </figure>
   );
 }
 
-export function FlipFlopDiagram() {
+export function InterruptLifecycleDiagram() {
   return (
-    <figure className="coal-diagram" aria-label="D flip-flop stores one bit on clock edge">
-      <svg viewBox="0 0 440 180" role="img" className="coal-diagram__svg">
-        <rect x="140" y="50" width="160" height="80" rx="8" className="coal-diagram__box coal-diagram__box--cpu" />
-        <text x="220" y="82" textAnchor="middle" className="coal-diagram__label">D Flip-Flop</text>
-        <text x="220" y="102" textAnchor="middle" className="coal-diagram__sublabel">stores 1 bit</text>
+    <figure className="coal-diagram" aria-label="Interrupt lifecycle flow">
+      <svg viewBox="0 0 540 240" role="img" className="coal-diagram__svg">
+        {/* Main execution timeline */}
+        <line x1="20" y1="60" x2="520" y2="60" stroke="rgba(167, 139, 250, 0.4)" strokeWidth="3" />
+        
+        {/* Normal flow */}
+        <rect x="25" y="20" width="110" height="28" rx="4" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="80" y="38" textAnchor="middle" className="coal-diagram__label">Main Program</text>
 
-        <rect x="20" y="60" width="70" height="28" rx="4" className="coal-diagram__box coal-diagram__box--io" />
-        <text x="55" y="79" textAnchor="middle" className="coal-diagram__label">D (data)</text>
-        <line x1="90" y1="74" x2="138" y2="80" className="coal-diagram__line" />
+        {/* Interrupt occurs point */}
+        <circle cx="160" cy="60" r="6" fill="#ef4444" />
+        <line x1="160" y1="120" x2="160" y2="66" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" style={{ stroke: "#ef4444" }} />
+        <text x="160" y="135" textAnchor="middle" className="coal-diagram__sublabel" style={{ fill: "#f87171", fontWeight: "bold" }}>1. Hardware Interrupt</text>
 
-        <rect x="20" y="110" width="70" height="28" rx="4" className="coal-diagram__box coal-diagram__box--bus" />
-        <text x="55" y="129" textAnchor="middle" className="coal-diagram__label">CLK</text>
-        <line x1="90" y1="124" x2="138" y2="110" className="coal-diagram__line" />
+        {/* State Saved (Stack) */}
+        <line x1="160" y1="60" x2="210" y2="105" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <rect x="210" y="90" width="110" height="32" rx="4" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="265" y="110" textAnchor="middle" className="coal-diagram__label">2. Push State</text>
+        <text x="265" y="138" textAnchor="middle" className="coal-diagram__sublabel">Flags, CS, EIP → Stack</text>
 
-        <rect x="350" y="75" width="70" height="28" rx="4" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="385" y="94" textAnchor="middle" className="coal-diagram__label">Q (out)</text>
-        <line x1="300" y1="90" x2="348" y2="89" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        {/* ISR lookup & execute */}
+        <line x1="320" y1="106" x2="350" y2="106" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <rect x="350" y="90" width="120" height="32" rx="4" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="410" y="110" textAnchor="middle" className="coal-diagram__label">3. Run ISR</text>
+        <text x="410" y="138" textAnchor="middle" className="coal-diagram__sublabel">Interrupt Vector / IDT</text>
 
-        <text x="220" y="155" textAnchor="middle" className="coal-diagram__sublabel">On each clock tick, Q captures the value on D</text>
+        {/* IRET return */}
+        <line x1="470" y1="106" x2="495" y2="66" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <text x="480" y="110" textAnchor="middle" className="coal-diagram__sublabel">4. IRET</text>
+
+        {/* Resumed flow */}
+        <rect x="390" y="20" width="120" height="28" rx="4" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="450" y="38" textAnchor="middle" className="coal-diagram__label">Program Resumes</text>
 
         <defs>
           <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -670,154 +693,156 @@ export function FlipFlopDiagram() {
           </marker>
         </defs>
       </svg>
-      <figcaption>Flip-flops are the storage cells inside registers — one bit per flip-flop, updated on the clock.</figcaption>
+      <figcaption>When an interrupt is triggered, the CPU completes its current instruction, pushes its state to the stack, jumps to the ISR address using the vector table, and restores state via IRET to resume execution.</figcaption>
     </figure>
   );
 }
 
-export function RegisterFileDiagram() {
+export function SystemBusSplitDiagram() {
   return (
-    <figure className="coal-diagram coal-diagram--cards" aria-label="Register file concept">
-      <div className="coal-address-grid">
-        {[
-          { title: "R0", text: "General-purpose storage slot", code: "AX / EAX" },
-          { title: "R1", text: "Second operand or result", code: "BX / EBX" },
-          { title: "R2", text: "Loop counter or shift amount", code: "CX / ECX" },
-          { title: "R3", text: "I/O port or overflow helper", code: "DX / EDX" },
-        ].map((card) => (
-          <div key={card.title} className="coal-address-card">
-            <strong>{card.title}</strong>
-            <span>{card.text}</span>
-            <code className="coal-address-card__code">{card.code}</code>
-          </div>
-        ))}
-      </div>
-      <figcaption>A register file is a bank of fast flip-flop arrays — the CPU's scratchpad, not main RAM.</figcaption>
-    </figure>
-  );
-}
+    <figure className="coal-diagram" aria-label="System Bus: Address, Data, and Control buses">
+      <svg viewBox="0 0 520 220" role="img" className="coal-diagram__svg">
+        {/* CPU */}
+        <rect x="20" y="55" width="80" height="110" rx="8" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="60" y="110" textAnchor="middle" className="coal-diagram__label">CPU</text>
+        <text x="60" y="125" textAnchor="middle" className="coal-diagram__sublabel">Controller</text>
 
-export function CpuDatapathDiagram() {
-  return (
-    <figure className="coal-diagram" aria-label="Simplified CPU datapath">
-      <svg viewBox="0 0 520 260" role="img" className="coal-diagram__svg">
-        <rect x="180" y="20" width="160" height="56" rx="8" className="coal-diagram__box coal-diagram__box--cpu" />
-        <text x="260" y="44" textAnchor="middle" className="coal-diagram__label">Control Unit</text>
-        <text x="260" y="62" textAnchor="middle" className="coal-diagram__sublabel">decodes instructions</text>
+        {/* Buses */}
+        {/* Address Bus (Unidirectional) */}
+        <rect x="140" y="45" width="240" height="24" rx="4" fill="rgba(59, 130, 246, 0.15)" stroke="rgba(96, 165, 250, 0.6)" strokeWidth="1.5" />
+        <text x="260" y="61" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#60a5fa", fontSize: "11px" }}>ADDRESS BUS (Unidirectional)</text>
 
-        <rect x="40" y="110" width="100" height="44" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="90" y="132" textAnchor="middle" className="coal-diagram__label">PC</text>
-        <text x="90" y="148" textAnchor="middle" className="coal-diagram__sublabel">next address</text>
+        {/* Data Bus (Bidirectional) */}
+        <rect x="140" y="98" width="240" height="24" rx="4" fill="rgba(16, 185, 129, 0.15)" stroke="rgba(52, 211, 153, 0.6)" strokeWidth="1.5" />
+        <text x="260" y="114" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#34d399", fontSize: "11px" }}>DATA BUS (Bidirectional)</text>
 
-        <rect x="160" y="110" width="100" height="44" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="210" y="132" textAnchor="middle" className="coal-diagram__label">IR</text>
-        <text x="210" y="148" textAnchor="middle" className="coal-diagram__sublabel">current instr.</text>
+        {/* Control Bus (Bidirectional/Control) */}
+        <rect x="140" y="151" width="240" height="24" rx="4" fill="rgba(251, 191, 36, 0.15)" stroke="rgba(251, 191, 36, 0.6)" strokeWidth="1.5" />
+        <text x="260" y="167" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#fbbf24", fontSize: "11px" }}>CONTROL BUS (System Signals)</text>
 
-        <rect x="280" y="100" width="120" height="64" rx="8" className="coal-diagram__box coal-diagram__box--bus" />
-        <text x="340" y="128" textAnchor="middle" className="coal-diagram__label">ALU</text>
-        <text x="340" y="148" textAnchor="middle" className="coal-diagram__sublabel">add / logic / compare</text>
+        {/* RAM */}
+        <rect x="420" y="30" width="80" height="65" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="460" y="62" textAnchor="middle" className="coal-diagram__label">RAM</text>
+        <text x="460" y="77" textAnchor="middle" className="coal-diagram__sublabel">Memory</text>
 
-        <rect x="420" y="110" width="80" height="44" rx="6" className="coal-diagram__box coal-diagram__box--io" />
-        <text x="460" y="132" textAnchor="middle" className="coal-diagram__label">GPRs</text>
-        <text x="460" y="148" textAnchor="middle" className="coal-diagram__sublabel">AX, BX…</text>
+        {/* I/O Controller */}
+        <rect x="420" y="125" width="80" height="65" rx="6" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="460" y="157" textAnchor="middle" className="coal-diagram__label">I/O Device</text>
+        <text x="460" y="172" textAnchor="middle" className="coal-diagram__sublabel">Keyboard/Disk</text>
 
-        <rect x="120" y="200" width="280" height="44" rx="8" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="260" y="228" textAnchor="middle" className="coal-diagram__label">System Bus → Memory & I/O</text>
+        {/* Connections from CPU */}
+        <line x1="100" y1="57" x2="140" y2="57" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="100" y1="110" x2="140" y2="110" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="100" y1="163" x2="140" y2="163" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
 
-        <line x1="260" y1="76" x2="210" y2="108" className="coal-diagram__line" />
-        <line x1="260" y1="76" x2="340" y2="98" className="coal-diagram__line" />
-        <line x1="140" y1="154" x2="140" y2="200" className="coal-diagram__line" />
-        <line x1="340" y1="164" x2="340" y2="200" className="coal-diagram__line" />
-        <line x1="460" y1="154" x2="400" y2="200" className="coal-diagram__line" />
-      </svg>
-      <figcaption>PC finds the next instruction, IR holds it, the control unit directs the ALU and registers over the bus.</figcaption>
-    </figure>
-  );
-}
+        {/* Connections to RAM */}
+        <line x1="380" y1="50" x2="420" y2="50" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="380" y1="105" x2="420" y2="75" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="380" y1="155" x2="420" y2="85" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
 
-export function InstructionCycleDiagram() {
-  return (
-    <figure className="coal-diagram" aria-label="Instruction cycle stages">
-      <svg viewBox="0 0 560 120" role="img" className="coal-diagram__svg">
-        {[
-          { x: 10, label: "Fetch", sub: "PC → Memory → IR" },
-          { x: 150, label: "Decode", sub: "IR → Control signals" },
-          { x: 290, label: "Execute", sub: "ALU / data move" },
-          { x: 430, label: "Store", sub: "Result → reg / RAM" },
-        ].map((stage, i) => (
-          <g key={stage.label}>
-            <rect x={stage.x} y="30" width="110" height="50" rx="8" className="coal-diagram__box coal-diagram__box--cpu" />
-            <text x={stage.x + 55} y="52" textAnchor="middle" className="coal-diagram__label">{stage.label}</text>
-            <text x={stage.x + 55} y="68" textAnchor="middle" className="coal-diagram__sublabel">{stage.sub}</text>
-            {i < 3 ? (
-              <line
-                x1={stage.x + 110}
-                y1="55"
-                x2={stage.x + 138}
-                y2="55"
-                className="coal-diagram__arrow"
-                markerEnd="url(#arrowhead)"
-              />
-            ) : null}
-          </g>
-        ))}
-        <text x="280" y="105" textAnchor="middle" className="coal-diagram__sublabel">Then PC advances → repeat for next instruction</text>
+        {/* Connections to I/O */}
+        <line x1="380" y1="62" x2="420" y2="135" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="380" y1="115" x2="420" y2="145" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+        <line x1="380" y1="170" x2="420" y2="170" className="coal-diagram__arrow" markerEnd="url(#arrowhead)" />
+
         <defs>
           <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
             <polygon points="0 0, 8 3, 0 6" className="coal-diagram__arrowhead" />
           </marker>
         </defs>
       </svg>
-      <figcaption>The classic fetch–decode–execute–store loop runs billions of times per second.</figcaption>
+      <figcaption>The System Bus is divided into three functional lines: Address Bus (selecting the destination), Data Bus (carrying information), and Control Bus (transmitting synchronization signals).</figcaption>
     </figure>
   );
 }
 
-export function MemoryHierarchyDiagram() {
+export function RaidComparisonDiagram() {
   return (
-    <figure className="coal-diagram" aria-label="Memory hierarchy pyramid">
-      <svg viewBox="0 0 400 240" role="img" className="coal-diagram__svg">
-        {[
-          { y: 20, w: 120, label: "Registers", sub: "~1 ns · KB", cls: "cpu" },
-          { y: 65, w: 180, label: "L1 / L2 Cache", sub: "~10 ns · MB", cls: "mem" },
-          { y: 110, w: 240, label: "Main Memory (RAM)", sub: "~100 ns · GB", cls: "bus" },
-          { y: 155, w: 300, label: "SSD / HDD", sub: "~ms · TB", cls: "io" },
-        ].map((tier) => (
-          <g key={tier.label}>
-            <rect
-              x={(400 - tier.w) / 2}
-              y={tier.y}
-              width={tier.w}
-              height="36"
-              rx="6"
-              className={`coal-diagram__box coal-diagram__box--${tier.cls}`}
-            />
-            <text x="200" y={tier.y + 16} textAnchor="middle" className="coal-diagram__label">{tier.label}</text>
-            <text x="200" y={tier.y + 30} textAnchor="middle" className="coal-diagram__sublabel">{tier.sub}</text>
-          </g>
-        ))}
-        <text x="200" y="215" textAnchor="middle" className="coal-diagram__sublabel">Faster & smaller at top · slower & larger at bottom</text>
-      </svg>
-      <figcaption>Data lives at different speeds and sizes — the CPU tries to keep hot data near the top.</figcaption>
-    </figure>
-  );
-}
+    <figure className="coal-diagram" aria-label="RAID levels 0, 1, and 5 comparison">
+      <svg viewBox="0 0 540 260" role="img" className="coal-diagram__svg">
+        {/* RAID 0 (Striping) */}
+        <text x="90" y="25" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "13px" }}>RAID 0 (Striping)</text>
+        {/* Disk 0 */}
+        <rect x="25" y="45" width="60" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="55" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 1</text>
+        <rect x="30" y="55" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="55" y="72" textAnchor="middle" className="coal-diagram__label">Block 1</text>
+        <rect x="30" y="85" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="55" y="102" textAnchor="middle" className="coal-diagram__label">Block 3</text>
+        <rect x="30" y="115" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="55" y="132" textAnchor="middle" className="coal-diagram__label">Block 5</text>
+        
+        {/* Disk 1 */}
+        <rect x="95" y="45" width="60" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="125" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 2</text>
+        <rect x="100" y="55" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="125" y="72" textAnchor="middle" className="coal-diagram__label">Block 2</text>
+        <rect x="100" y="85" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="125" y="102" textAnchor="middle" className="coal-diagram__label">Block 4</text>
+        <rect x="100" y="115" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="125" y="132" textAnchor="middle" className="coal-diagram__label">Block 6</text>
 
-export function MemoryLayoutDiagram() {
-  return (
-    <figure className="coal-diagram" aria-label="Simplified memory layout">
-      <svg viewBox="0 0 300 220" role="img" className="coal-diagram__svg">
-        <text x="150" y="18" textAnchor="middle" className="coal-diagram__sublabel">High addresses</text>
-        <rect x="60" y="28" width="180" height="32" rx="6" className="coal-diagram__box coal-diagram__box--io" />
-        <text x="150" y="49" textAnchor="middle" className="coal-diagram__label">Stack ↓ grows down</text>
-        <rect x="60" y="90" width="180" height="32" rx="6" className="coal-diagram__box coal-diagram__box--bus" />
-        <text x="150" y="111" textAnchor="middle" className="coal-diagram__label">Free / heap area</text>
-        <rect x="60" y="152" width="180" height="32" rx="6" className="coal-diagram__box coal-diagram__box--mem" />
-        <text x="150" y="173" textAnchor="middle" className="coal-diagram__label">Data / globals ↑ grows up</text>
-        <rect x="60" y="194" width="180" height="22" rx="4" className="coal-diagram__box coal-diagram__box--cpu" />
-        <text x="150" y="209" textAnchor="middle" className="coal-diagram__sublabel">Program code</text>
+        <text x="90" y="215" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "9px" }}>Fast speed. No redundancy.</text>
+
+        {/* RAID 1 (Mirroring) */}
+        <text x="270" y="25" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "13px" }}>RAID 1 (Mirroring)</text>
+        {/* Disk 0 */}
+        <rect x="205" y="45" width="60" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="235" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 1</text>
+        <rect x="210" y="55" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="235" y="72" textAnchor="middle" className="coal-diagram__label">Block 1</text>
+        <rect x="210" y="85" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="235" y="102" textAnchor="middle" className="coal-diagram__label">Block 2</text>
+        <rect x="210" y="115" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="235" y="132" textAnchor="middle" className="coal-diagram__label">Block 3</text>
+        
+        {/* Disk 1 */}
+        <rect x="275" y="45" width="60" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="305" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 2</text>
+        <rect x="280" y="55" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="305" y="72" textAnchor="middle" className="coal-diagram__label">Block 1</text>
+        <rect x="280" y="85" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="305" y="102" textAnchor="middle" className="coal-diagram__label">Block 2</text>
+        <rect x="280" y="115" width="50" height="25" rx="2" className="coal-diagram__box coal-diagram__box--mem" />
+        <text x="305" y="132" textAnchor="middle" className="coal-diagram__label">Block 3</text>
+
+        <text x="270" y="215" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "9px" }}>Full backup. Half capacity.</text>
+
+        {/* RAID 5 (Parity) */}
+        <text x="450" y="25" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "13px" }}>RAID 5 (Distributed Parity)</text>
+        {/* Disk 0 */}
+        <rect x="385" y="45" width="40" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="405" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 1</text>
+        <rect x="390" y="55" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="405" y="72" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 1</text>
+        <rect x="390" y="85" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="405" y="102" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 3</text>
+        <rect x="390" y="115" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="405" y="132" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#fbbf24", fontSize: "10px" }}>P (5-6)</text>
+        
+        {/* Disk 1 */}
+        <rect x="430" y="45" width="40" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="450" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 2</text>
+        <rect x="435" y="55" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="450" y="72" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 2</text>
+        <rect x="435" y="85" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="450" y="102" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#fbbf24", fontSize: "10px" }}>P (3-4)</text>
+        <rect x="435" y="115" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="450" y="132" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 5</text>
+
+        {/* Disk 2 */}
+        <rect x="475" y="45" width="40" height="150" rx="4" fill="rgba(15, 23, 42, 0.4)" stroke="rgba(167, 139, 250, 0.3)" />
+        <text x="495" y="180" textAnchor="middle" className="coal-diagram__sublabel">Disk 3</text>
+        <rect x="480" y="55" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--io" />
+        <text x="495" y="72" textAnchor="middle" className="coal-diagram__label" style={{ fill: "#fbbf24", fontSize: "10px" }}>P (1-2)</text>
+        <rect x="480" y="85" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="495" y="102" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 4</text>
+        <rect x="480" y="115" width="30" height="25" rx="2" className="coal-diagram__box coal-diagram__box--cpu" />
+        <text x="495" y="132" textAnchor="middle" className="coal-diagram__label" style={{ fontSize: "10px" }}>Block 6</text>
+
+        <text x="450" y="215" textAnchor="middle" className="coal-diagram__sublabel" style={{ fontSize: "9px" }}>Survives 1 failure. Balances speed & size.</text>
       </svg>
-      <figcaption>Typical process layout: code at bottom, data and stack grow toward each other from opposite ends.</figcaption>
+      <figcaption>RAID 0 stripes data for maximum speed. RAID 1 mirrors data on two disks for simple redundancy. RAID 5 distributes data and parity blocks across three or more disks to balance speed, capacity, and failure recovery.</figcaption>
     </figure>
   );
 }
@@ -843,14 +868,10 @@ const DIAGRAM_MAP = {
   "build-pipeline": BuildPipelineDiagram,
   "demo-program-template": DemoProgramTemplateDiagram,
   "stack-frame-layout": StackFrameLayoutDiagram,
-  "logic-gates-co": LogicGatesDiagram,
-  "half-adder": HalfAdderDiagram,
-  "flip-flop": FlipFlopDiagram,
-  "register-file": RegisterFileDiagram,
-  "cpu-datapath": CpuDatapathDiagram,
-  "instruction-cycle": InstructionCycleDiagram,
-  "memory-hierarchy": MemoryHierarchyDiagram,
-  "memory-layout": MemoryLayoutDiagram,
+  "io-mapping-comparison": IOMappingComparisonDiagram,
+  "interrupt-lifecycle": InterruptLifecycleDiagram,
+  "system-bus-split": SystemBusSplitDiagram,
+  "raid-comparison": RaidComparisonDiagram,
 };
 
 export function CoalDiagram({ type }) {
@@ -858,3 +879,4 @@ export function CoalDiagram({ type }) {
   if (!Component) return null;
   return <Component />;
 }
+
