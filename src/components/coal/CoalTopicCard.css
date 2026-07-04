@@ -144,6 +144,87 @@
   margin: 0 auto;
 }
 
+.coal-diagram--cards {
+  display: flex;
+  justify-content: center;
+}
+
+.coal-isa-grid,
+.coal-address-grid,
+.coal-flag-grid {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 620px;
+}
+
+.coal-isa-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.coal-address-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.coal-flag-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.coal-isa-card,
+.coal-address-card,
+.coal-flag-card {
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: rgba(15, 23, 42, 0.72);
+}
+
+.coal-isa-card strong,
+.coal-address-card strong,
+.coal-flag-card strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #f5f3ff;
+}
+
+.coal-isa-card span,
+.coal-address-card span,
+.coal-flag-card span {
+  display: block;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.coal-isa-card--transfer {
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.coal-isa-card--arithmetic {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.coal-isa-card--logic {
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.coal-isa-card--control {
+  border-color: rgba(236, 72, 153, 0.35);
+}
+
+.coal-flag-card--active {
+  border-color: rgba(139, 92, 246, 0.6);
+  background: rgba(139, 92, 246, 0.15);
+}
+
+@media (max-width: 640px) {
+  .coal-isa-grid,
+  .coal-address-grid,
+  .coal-flag-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .coal-diagram__box {
   fill: rgba(139, 92, 246, 0.15);
   stroke: rgba(167, 139, 250, 0.55);

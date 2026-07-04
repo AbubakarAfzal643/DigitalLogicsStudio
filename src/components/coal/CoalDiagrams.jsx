@@ -97,6 +97,70 @@ export function DecToBinDiagram() {
   );
 }
 
+export function IsaOverviewDiagram() {
+  return (
+    <figure className="coal-diagram coal-diagram--cards" aria-label="Instruction set categories">
+      <div className="coal-isa-grid">
+        {[
+          { title: "Data Transfer", text: "Moves values between registers, memory, and I/O", accent: "transfer" },
+          { title: "Arithmetic", text: "Adds, subtracts, multiplies, and divides operands", accent: "arithmetic" },
+          { title: "Logic", text: "Applies bitwise operations such as AND and OR", accent: "logic" },
+          { title: "Control", text: "Changes program flow with jumps and branches", accent: "control" },
+        ].map((card) => (
+          <div key={card.title} className={`coal-isa-card coal-isa-card--${card.accent}`}>
+            <strong>{card.title}</strong>
+            <span>{card.text}</span>
+          </div>
+        ))}
+      </div>
+      <figcaption>ISA instructions are grouped by purpose so the CPU has a clear vocabulary for each job.</figcaption>
+    </figure>
+  );
+}
+
+export function AddressingModesDiagram() {
+  return (
+    <figure className="coal-diagram coal-diagram--cards" aria-label="Addressing modes overview">
+      <div className="coal-address-grid">
+        {[
+          { title: "Immediate", text: "Uses the literal value inside the instruction", code: "MOV AX, 5" },
+          { title: "Register", text: "Uses an internal register as the source or target", code: "MOV AX, BX" },
+          { title: "Direct", text: "Uses the exact memory address written in the instruction", code: "MOV AX, [1000]" },
+          { title: "Indirect", text: "Uses a register that holds the memory address", code: "MOV AX, [BX]" },
+        ].map((card) => (
+          <div key={card.title} className="coal-address-card">
+            <strong>{card.title}</strong>
+            <span>{card.text}</span>
+            <span style={{ marginTop: "0.35rem", color: "#c4b5fd" }}>{card.code}</span>
+          </div>
+        ))}
+      </div>
+      <figcaption>Each mode answers a different question: where is the operand, and how does the CPU find it?</figcaption>
+    </figure>
+  );
+}
+
+export function FlagsRegisterDiagram() {
+  return (
+    <figure className="coal-diagram coal-diagram--cards" aria-label="Flags register diagram">
+      <div className="coal-flag-grid">
+        {[
+          { label: "ZF", text: "Zero Flag" },
+          { label: "CF", text: "Carry Flag" },
+          { label: "SF", text: "Sign Flag" },
+          { label: "OF", text: "Overflow Flag" },
+        ].map((flag, index) => (
+          <div key={flag.label} className={`coal-flag-card ${index === 0 ? "coal-flag-card--active" : ""}`}>
+            <strong>{flag.label}</strong>
+            <span>{flag.text}</span>
+          </div>
+        ))}
+      </div>
+      <figcaption>Flags are status bits that report what happened after arithmetic or logic instructions run.</figcaption>
+    </figure>
+  );
+}
+
 export function TranslationPipelineDiagram() {
   return (
     <figure className="coal-diagram" aria-label="Translation pipeline">
@@ -525,6 +589,9 @@ const DIAGRAM_MAP = {
   "system-bus": SystemBusDiagram,
   "binary-byte": BinaryByteDiagram,
   "dec-to-bin": DecToBinDiagram,
+  "isa-overview": IsaOverviewDiagram,
+  "addressing-modes": AddressingModesDiagram,
+  "flags-register": FlagsRegisterDiagram,
   "translation-pipeline": TranslationPipelineDiagram,
   "ia32-gpr-layout": IA32GPRLayoutDiagram,
   "ia32-stack-frame": IA32StackFrameDiagram,

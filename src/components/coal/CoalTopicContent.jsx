@@ -2,8 +2,54 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, Lightbulb } from "lucide-react";
 import { CoalDiagram } from "./CoalDiagrams";
+import AluFlagsSimulator from "./AluFlagsSimulator";
+import AssemblyStackSimulator from "./AssemblyStackSimulator";
 import "./CoalTopicCard.css";
 import "./CoalTopicContent.css";
+
+function CoalBody({ body }) {
+  if (!body?.length) return null;
+
+  return (
+    <>
+      {body.map((block, index) => {
+        if (typeof block === "string") {
+          return <p key={`${block.slice(0, 24)}-${index}`}>{block}</p>;
+        }
+
+        if (block?.type === "subheading") {
+          return (
+            <h3 key={`subheading-${index}`} className="coal-section__subhead">
+              {block.text}
+            </h3>
+          );
+        }
+
+        if (block?.type === "list") {
+          return (
+            <ul key={`list-${index}`} className="coal-bullets">
+              {block.items.map((item, itemIndex) => (
+                <li key={`${item}-${itemIndex}`} className="coal-bullets__item">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (block?.type === "code") {
+          return (
+            <pre key={`code-${index}`} className="coal-code-block">
+              <code>{block.code}</code>
+            </pre>
+          );
+        }
+
+        return null;
+      })}
+    </>
+  );
+}
 
 function CoalContentTable({ table }) {
   if (!table) return null;
@@ -55,10 +101,15 @@ function CoalTopicContent({ content }) {
       {content.sections.map((section) => (
         <section key={section.id} className="coal-section">
           <h2>{section.title}</h2>
-          {section.body?.map((para) => (
-            <p key={para.slice(0, 48)}>{para}</p>
-          ))}
+          <CoalBody body={section.body} />
+          {section.code ? (
+            <pre className="coal-code-block">
+              <code>{section.code.code}</code>
+            </pre>
+          ) : null}
           {section.diagram ? <CoalDiagram type={section.diagram} /> : null}
+          {section.component === "alu-flags-simulator" ? <AluFlagsSimulator /> : null}
+          {section.component === "assembly-stack-simulator" ? <AssemblyStackSimulator /> : null}
           <CoalContentTable table={section.table} />
           <CoalRealLife example={section.realLife} />
         </section>

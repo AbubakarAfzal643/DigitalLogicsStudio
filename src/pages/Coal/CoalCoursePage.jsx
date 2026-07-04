@@ -56,7 +56,11 @@ function CoalCoursePage() {
         {availableCount > 0 ? (
           <section className="coal-home-start">
             <h2>Start here</h2>
-            <p>Two topics are ready. Open one and learn at your own pace.</p>
+            <p>
+              {availableCount === 1
+                ? "One topic is ready. Open it and learn at your own pace."
+                : `${availableCount} topics are ready. Open one and learn at your own pace.`}
+            </p>
             <div className="coal-home-start__grid">
               {modules
                 .filter((m) => m.hasContent)
