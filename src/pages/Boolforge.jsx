@@ -34,7 +34,7 @@ function defaultInputCount(type) {
 // ── IC height lookup (module-level — used by helpers below) ──────────────────
 const IC_HEIGHTS = {
   MUX2: 100, MUX4: 120, MUX8: 160,
-  DEMUX2: 100, DEMUX4: 120,
+  DEMUX2: 100, DEMUX4: 120, DEMUX8: 160,
   ENC4: 100, ENC8: 140,
   DEC4: 100, DEC8: 140,
 };
@@ -265,6 +265,15 @@ const Boolforge = ({
         const sel = (s1 ? 2 : 0) + (s0 ? 1 : 0);
         return sel === outputIndex && d;
       }
+      case "DEMUX8": {
+      // inputs[0] = D, inputs[1] = S0, inputs[2] = S1, inputs[3] = S2
+      const d  = inputs[0] ?? false;
+      const s0 = inputs[1] ?? false;
+      const s1 = inputs[2] ?? false;
+      const s2 = inputs[3] ?? false;
+      const sel = (s2 ? 4 : 0) + (s1 ? 2 : 0) + (s0 ? 1 : 0); // 0..7
+      return sel === outputIndex && d;
+    }
 
       // ── Encoders (priority encoder — highest active input wins) ───────────
       case "ENC4": {
@@ -1524,6 +1533,7 @@ const Boolforge = ({
             {[
               { type: "DEMUX2", label: "DEMUX 1:2" },
               { type: "DEMUX4", label: "DEMUX 1:4" },
+              { type: "DEMUX8", label: "DEMUX 1:8" },
             ].map(({ type, label }) => (
               <button key={type} className="gate-btn gate-btn--ic" onClick={() => addGate(type)}>
                 {label}
