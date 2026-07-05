@@ -1393,11 +1393,92 @@ const Boolforge = ({
   );
 
   // ── Truth table generation ─────────────────────────────────────────────────
+  // ── Derive a boolean expression string by walking wires back from a gate ──
+  const deriveExpression = useCallback(
+    (gate, gatesArray, depth = 0, visited = new Set()) => {
+      if (!gate || depth > 20 || visited.has(gate.id)) return "?";
+      const newVisited = new Set(visited);
+      newVisited.add(gate.id);
+
+      if (gate.type === "INPUT") return gate.label;
+
+      // Collect expressions for each input slot, in slot order
+      const incomingForGate = wires.filter((w) => w.toId === gate.id);
+      const slotExprs = {};
+      incomingForGate.forEach((w) => {
+        const src = gatesArray.find((g) => g.id === w.fromId);
+        slotExprs[w.toIndex] = deriveExpression(src, gatesArray, depth + 1, newVisited);
+      });
+
+      const slots = Object.keys(slotExprs)
+        .sort((a, b) => Number(a) - Number(b))
+        .map((k) => slotExprs[k]);
+
+      if (slots.length === 0) return gate.label || gate.type;
+
+      const wrap = (expr) => (expr.includes("+") || expr.includes("⊕") ? `(${expr})` : expr);
+
+      switch (gate.type) {
+        case "OUTPUT":
+        case "BUFFER":
+          return slots[0];
+        case "NOT":
+          return `${wrap(slots[0])}'`;
+        case "AND":
+          return slots.map(wrap).join(".");
+        case "NAND":
+          return `(${slots.map(wrap).join(".")})'`;
+        case "OR":
+          return slots.join("+");
+        case "NOR":
+          return `(${slots.join("+")})'`;
+        case "XOR":
+          return slots.join("⊕");
+        case "XNOR":
+          return `(${slots.join("⊕")})'`;
+        default:
+          // IC types — just show the type name with inputs
+          return `${gate.type}(${slots.join(",")})`;
+      }
+    },
+    [wires],
+  );
+
   const generateTruthTable = useCallback(() => {
     const inputs = gates.filter((g) => g.type === "INPUT");
     const outputs = gates.filter((g) => g.type === "OUTPUT");
     if (inputs.length === 0 || outputs.length === 0)
       return { headers: [], rows: [] };
+
+    // Intermediate gates: everything that isn't INPUT or OUTPUT, sorted by x
+    // position so columns read left-to-right as wired on canvas.
+    const intermediates = gates
+      .filter((g) => g.type !== "INPUT" && g.type !== "OUTPUT")
+      .sort((a, b) => a.x - b.x);
+
+    // Only show an intermediate gate if it has at least one outgoing wire that
+    // goes to a non-OUTPUT gate. Gates that feed directly into OUTPUT are already
+    // captured by the output column — showing them would be redundant.
+    const visibleIntermediates = intermediates.filter((g) => {
+      const outgoingWires = wires.filter((w) => w.fromId === g.id);
+      if (outgoingWires.length === 0) return false; // dangling, skip
+      return outgoingWires.some((w) => !outputs.some((o) => o.id === w.toId));
+    });
+
+    // Generate a readable column label for an intermediate gate.
+    // If multiple gates share the same label, append a 1-based counter to each.
+    const rawLabels = visibleIntermediates.map((g) => g.label || g.type);
+    const labelCount = {};
+    rawLabels.forEach((l) => { labelCount[l] = (labelCount[l] || 0) + 1; });
+    const labelSeen = {};
+    const getIntermediateLabel = (gate) => {
+      const base = gate.label || gate.type;
+      if (labelCount[base] > 1) {
+        labelSeen[base] = (labelSeen[base] || 0) + 1;
+        return `${base}${labelSeen[base]}`;
+      }
+      return base;
+    };
 
     const numCombinations = Math.pow(2, inputs.length);
     const rows = [];
@@ -1412,17 +1493,44 @@ const Boolforge = ({
         }
         return g;
       });
+
+      // Evaluate all intermediate gate outputs for this combination.
+      const intermediateValues = visibleIntermediates.map((intGate) => {
+        const gate = tempGates.find((g) => g.id === intGate.id);
+        if (IC_TYPES.has(intGate.type)) {
+          // For multi-output ICs, show all outputs joined by "/"
+          const numOut = IC_META[intGate.type].outputs;
+          const vals = Array.from({ length: numOut }, (_, oi) =>
+            evaluateGateWithGates(gate, tempGates, oi) ? 1 : 0,
+          );
+          return vals.join("/");
+        }
+        return evaluateGateWithGates(gate, tempGates) ? 1 : 0;
+      });
+
       const outputValues = outputs.map((outGate) => {
         const gate = tempGates.find((g) => g.id === outGate.id);
         return evaluateGateWithGates(gate, tempGates) ? 1 : 0;
       });
-      rows.push([...inputValues.map((v) => (v ? 1 : 0)), ...outputValues]);
+      rows.push([
+        ...inputValues.map((v) => (v ? 1 : 0)),
+        ...intermediateValues,
+        ...outputValues,
+      ]);
     }
     return {
-      headers: [...inputs.map((g) => g.label), ...outputs.map((g) => g.label)],
+      headers: [
+        ...inputs.map((g) => g.label),
+        ...visibleIntermediates.map(getIntermediateLabel),
+        ...outputs.map((g) => {
+          const expr = deriveExpression(g, gates);
+          // expr for an OUTPUT gate is the expression of what feeds into it
+          return expr && expr !== g.label ? `${g.label}=${expr}` : g.label;
+        }),
+      ],
       rows,
     };
-  }, [gates, evaluateGateWithGates]);
+  }, [gates, wires, evaluateGateWithGates, deriveExpression]);
 
   // ── Clear circuit ──────────────────────────────────────────────────────────
   const clearCircuit = () => {
