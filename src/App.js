@@ -16,6 +16,7 @@ import DlsMentorWidget from "./components/DlsMentorWidget/DlsMentorWidget";
 import InstructionTraceLabPage from "./pages/Coal/InstructionTraceLabPage";
 import StackMemorySimulatorPage from "./pages/Coal/StackMemorySimulatorPage";
 import AddressingModePlaygroundPage from "./pages/Coal/AddressingModePlaygroundPage";
+import InstructionLaboratoryPage from "./pages/Coal/InstructionLaboratoryPage";
 // UTILS / OTHER TOOLS:
 import ScrollToTop from "./utils/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -500,6 +501,11 @@ const AppContent = () => {
           <Route
             path="/resources/coal/practical/addressing-mode-playground"
             element={<AddressingModePlaygroundPage />}
+          />
+
+          <Route
+            path="/resources/coal/practical/instruction-laboratory"
+            element={<InstructionLaboratoryPage />}
           />
         </Routes>
       </Suspense>
