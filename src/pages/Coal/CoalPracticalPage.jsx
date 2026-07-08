@@ -37,11 +37,12 @@ const PLANNED_PRACTICALS = [
     ready: false,
   },
   {
-    key: "stack-frame-exercises",
-    title: "Stack frame exercises",
+    key: "stack-memory-simulator",
+    title: "Stack & Memory Simulator",
     description: "Trace PUSH, POP, CALL, and RET with visual stack diagrams.",
     icon: FlaskConical,
-    ready: false,
+    ready: true,
+    path: "/resources/coal/practical/stack-memory-simulator",
   },
   {
     key: "assembly-drills",
