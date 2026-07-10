@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import {
-  ArrowLeft,
   Play,
   SkipForward,
   RotateCcw,
@@ -14,7 +12,6 @@ import {
   Save,
   Trash2,
   CheckCircle,
-  HelpCircle,
   Code
 } from "lucide-react";
 import { Navbar } from "../Home/Navbar";
@@ -298,6 +295,7 @@ export default function AssemblyDrillsPage() {
 
   // Scroll active log to bottom
   const logsEndRef = useRef(null);
+  const executeStepRef = useRef(null);
   useEffect(() => {
     if (logsEndRef.current) {
       logsEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -353,7 +351,7 @@ export default function AssemblyDrillsPage() {
       if (!cleanLine) return; // skip empty lines
 
       // Check for labels (e.g. "label_name:")
-      const labelMatch = cleanLine.match(/^([a-zA-Z0-9_\$]+)\s*:/);
+      const labelMatch = cleanLine.match(/^([a-zA-Z0-9_$]+)\s*:/);
       if (labelMatch) {
         const label = labelMatch[1].toLowerCase();
         labels[label] = parsedIndex;
@@ -465,10 +463,10 @@ export default function AssemblyDrillsPage() {
   // --- RESOLVE MEMORY ADDRESSES ---
   const resolveAddress = (addrExpr, regs) => {
     // Strips brackets and whitespace
-    const cleanExpr = addrExpr.replace(/[\[\]\s]/g, "");
+    const cleanExpr = addrExpr.replace(/[[\]\s]/g, "");
 
     // Reg + Offset, e.g. SI+1 or SI-2
-    const dispMatch = cleanExpr.match(/^([a-zA-Z]+)([\+\-])(\d+|0x[0-9a-fA-F]+)$/);
+    const dispMatch = cleanExpr.match(/^([a-zA-Z]+)([+-])(\d+|0x[0-9a-fA-F]+)$/);
     if (dispMatch) {
       const regName = dispMatch[1];
       const op = dispMatch[2];
@@ -704,7 +702,7 @@ export default function AssemblyDrillsPage() {
           updatedFlags.ZF = diff === 0 ? 1 : 0;
           updatedFlags.SF = diff < 0 ? 1 : 0;
           updatedFlags.CF = destVal < srcVal ? 1 : 0;
-          updatedFlags.OF = (destVal < 0 !== srcVal < 0) && (diff < 0 !== destVal < 0) ? 1 : 0;
+          updatedFlags.OF = ((destVal < 0) !== (srcVal < 0)) && ((diff < 0) !== (destVal < 0)) ? 1 : 0;
           break;
         }
 
@@ -922,6 +920,8 @@ export default function AssemblyDrillsPage() {
     }
   };
 
+  executeStepRef.current = executeStep;
+
   // Explanation builder for "Learning Mode"
   const updateInstructionExplanation = (instr) => {
     const opcode = instr.opcode;
@@ -996,7 +996,7 @@ export default function AssemblyDrillsPage() {
     let timer;
     if (isRunning) {
       timer = setInterval(() => {
-        const hasNext = executeStep();
+        const hasNext = executeStepRef.current?.();
         if (!hasNext) {
           setIsRunning(false);
         }

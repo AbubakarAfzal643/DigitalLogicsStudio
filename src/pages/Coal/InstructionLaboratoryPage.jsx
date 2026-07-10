@@ -276,13 +276,6 @@ function InstructionLaboratoryPage() {
         return isHex ? `0x${num.toString(16).toUpperCase()}` : num.toString(10);
     };
 
-    const parseInputValue = (val) => {
-        if (typeof val === "string" && val.startsWith("0x")) {
-            return parseInt(val.substring(2), 16) || 0;
-        }
-        return parseInt(val, 10) || 0;
-    };
-
     const filteredInstructions = INSTRUCTION_DATABASE.filter((item) => {
         const matchesSearch = item.instruction.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.function.toLowerCase().includes(searchQuery.toLowerCase());
