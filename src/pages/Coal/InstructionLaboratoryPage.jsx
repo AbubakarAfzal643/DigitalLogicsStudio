@@ -234,7 +234,22 @@ const COMPARISON_DATA = {
         desc1: "JMP simply overwrites the Instruction Pointer (IP) to change execution paths. It does not track execution history.",
         desc2: "CALL pushes the current return address onto the Stack before updating the Instruction Pointer, enabling a safe return path.",
         verdict: "Use JMP for infinite loops, loop structures, and localized conditional branches; use CALL for modular, reusable functions and procedures."
+    },
+    mov_pushpop: {
+        title: "MOV vs PUSH/POP",
+        metric: "Direct Copying vs Stack Memory",
+        desc1: "MOV copies data directly between registers or memory locations without altering stack structures or pointer registers.",
+        desc2: "PUSH and POP explicitly interact with Stack Memory, reducing or increasing the Stack Pointer (SP) by 2 bytes with every operation.",
+        verdict: "Use MOV for general variable assignments and quick data copying; use PUSH/POP to temporarily preserve register states before calling functions."
+    },
+    and_xor: {
+        title: "AND vs XOR",
+        metric: "Bit Masking vs Register Clearing",
+        desc1: "AND performs logical multiplication bit-by-bit, commonly used as a 'mask' to turn specific bits off or isolate them.",
+        desc2: "XOR performs exclusive OR logic. Executing 'XOR AX, AX' cancels all matching bits, clearing the entire register to 0.",
+        verdict: "While both clear the Carry Flag, 'XOR AX, AX' is a highly optimized x86 idiom that executes faster and uses fewer machine bytes than 'MOV AX, 0'."
     }
+
 };
 
 
@@ -357,7 +372,7 @@ function InstructionLaboratoryPage() {
 
         // CMP ke case mein graphical UI pe AX ki real value revert karne ke liye check
         const displayAX = selectedInstruction.id === "cmp" ? valAX : finalAX;
-       setSimOutput({ finalAX: displayAX, finalBX, finalCX, finalDX, flags, explanation });
+        setSimOutput({ finalAX: displayAX, finalBX, finalCX, finalDX, flags, explanation });
     };
 
     const currentCompare = COMPARISON_DATA[activeCompareTab];
@@ -594,6 +609,8 @@ function InstructionLaboratoryPage() {
                     <button onClick={() => setActiveCompareTab("inc_add")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "inc_add" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>INC vs ADD 1</button>
                     <button onClick={() => setActiveCompareTab("shl_sal")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "shl_sal" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>SHL vs SAL</button>
                     <button onClick={() => setActiveCompareTab("jmp_call")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "jmp_call" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>JMP vs CALL</button>
+                    <button onClick={() => setActiveCompareTab("mov_pushpop")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "mov_pushpop" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>MOV vs PUSH/POP</button>
+                    <button onClick={() => setActiveCompareTab("and_xor")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "and_xor" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>AND vs XOR</button>
                 </div> {/* End of TAB SWITCHERS */}
 
                 {/* COMPARISON RESULTS VIEWER CONTAINER */}
