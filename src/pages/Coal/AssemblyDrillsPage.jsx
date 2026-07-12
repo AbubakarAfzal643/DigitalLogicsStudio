@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useCallback, useEffect, useRef, useState } from "react";
-=======
-import React, { useState, useEffect, useRef } from "react";
->>>>>>> 645711190d460ed64dd131e3295ba34b6ae2a84e
 import {
   Play,
   SkipForward,
@@ -467,14 +463,7 @@ export default function AssemblyDrillsPage() {
   // --- RESOLVE MEMORY ADDRESSES ---
   const resolveAddress = useCallback((addrExpr, regs) => {
     // Strips brackets and whitespace
-<<<<<<< HEAD
-    const cleanExpr = addrExpr
-      .replace(/\[/g, "")
-      .replace(/\]/g, "")
-      .replace(/\s/g, "");
-=======
     const cleanExpr = addrExpr.replace(/[[\]\s]/g, "");
->>>>>>> 645711190d460ed64dd131e3295ba34b6ae2a84e
 
     // Reg + Offset, e.g. SI+1 or SI-2
     const dispMatch = cleanExpr.match(/^([a-zA-Z]+)([+-])(\d+|0x[0-9a-fA-F]+)$/);
@@ -782,14 +771,10 @@ export default function AssemblyDrillsPage() {
           updatedFlags.ZF = diff === 0 ? 1 : 0;
           updatedFlags.SF = diff < 0 ? 1 : 0;
           updatedFlags.CF = destVal < srcVal ? 1 : 0;
-<<<<<<< HEAD
           const destSigned = destVal < 0;
           const srcSigned = srcVal < 0;
           const diffSigned = diff < 0;
           updatedFlags.OF = (destSigned !== srcSigned && diffSigned !== destSigned) ? 1 : 0;
-=======
-          updatedFlags.OF = ((destVal < 0) !== (srcVal < 0)) && ((diff < 0) !== (destVal < 0)) ? 1 : 0;
->>>>>>> 645711190d460ed64dd131e3295ba34b6ae2a84e
           break;
         }
 
@@ -1006,80 +991,6 @@ export default function AssemblyDrillsPage() {
       return false;
     }
   }, [addLog, flags, labelMap, lineMappings, memory, parsedLines, parseCode, registers, resolveOperand, stack, updateInstructionExplanation, writeOperand]);
-
-<<<<<<< HEAD
-=======
-  executeStepRef.current = executeStep;
-
-  // Explanation builder for "Learning Mode"
-  const updateInstructionExplanation = (instr) => {
-    const opcode = instr.opcode;
-    const ops = instr.operands;
-    
-    let desc = "";
-    switch (opcode) {
-      case "MOV":
-        desc = `MOV sets the destination operand '${ops[0]}' to the source value of '${ops[1]}'. The value is copied and stored. Registers AX, BX, etc. or target RAM cells are updated directly.`;
-        break;
-      case "ADD":
-        desc = `ADD adds the value of '${ops[1]}' into '${ops[0]}'. The sum is calculated and stored in '${ops[0]}'. Flags ZF, SF, CF, and OF are updated depending on the result value.`;
-        break;
-      case "SUB":
-        desc = `SUB subtracts the value of '${ops[1]}' from '${ops[0]}'. The difference is stored in '${ops[0]}'. If the subtraction results in exactly zero, the Zero Flag (ZF) is set to 1.`;
-        break;
-      case "INC":
-        desc = `INC increments '${ops[0]}' by 1. The result is stored back into '${ops[0]}'. This is equivalent to ADD ${ops[0]}, 1 but does not modify the Carry Flag.`;
-        break;
-      case "DEC":
-        desc = `DEC decrements '${ops[0]}' by 1. The result is stored back into '${ops[0]}'. Commonly used for loop counters and index registers.`;
-        break;
-      case "MUL":
-        desc = `MUL performs unsigned multiplication. It multiplies the AL register by '${ops[0]}', and stores the 16-bit result inside AX. CF and OF are set if the upper half is non-zero.`;
-        break;
-      case "DIV":
-        desc = `DIV performs unsigned division. It divides AX by '${ops[0]}'. The quotient is stored in AL, and the division remainder is stored in AH.`;
-        break;
-      case "CMP":
-        desc = `CMP compares '${ops[0]}' and '${ops[1]}' by subtracting '${ops[1]}' from '${ops[0]}'. Operands are unaffected; only status flags (ZF, CF, SF, OF) are modified based on the comparison result.`;
-        break;
-      case "JMP":
-        desc = `JMP performs an unconditional jump, changing the Instruction Pointer (EIP) directly to the address designated by label '${ops[0]}'.`;
-        break;
-      case "JE":
-      case "JZ":
-        desc = `JE/JZ (Jump if Equal / Jump if Zero) checks the Zero Flag (ZF). If ZF = 1 (last comparison resulted in equal values), EIP jumps to label '${ops[0]}'; otherwise it continues sequentially.`;
-        break;
-      case "JNE":
-      case "JNZ":
-        desc = `JNE/JNZ (Jump if Not Equal / Jump if Not Zero) checks the Zero Flag (ZF). If ZF = 0 (last comparison resulted in non-equal values), EIP jumps to label '${ops[0]}'.`;
-        break;
-      case "JG":
-        desc = `JG (Jump if Greater) evaluates the status flags. If ZF = 0 and SF = OF, EIP jumps to label '${ops[0]}'. Used for signed comparisons.`;
-        break;
-      case "JL":
-        desc = `JL (Jump if Less) checks status flags. If SF is not equal to OF (signed overflow did not match sign), EIP jumps to label '${ops[0]}'.`;
-        break;
-      case "LOOP":
-        desc = `LOOP decrements the CX register by 1. If CX is still greater than 0, it jumps to label '${ops[0]}' to execute the loop block again.`;
-        break;
-      case "PUSH":
-        desc = `PUSH decrements the Stack Pointer (ESP) by 2 and saves the 16-bit value of '${ops[0]}' onto the stack memory.`;
-        break;
-      case "POP":
-        desc = `POP copies the top value of the stack into '${ops[0]}' and increments the Stack Pointer (ESP) by 2.`;
-        break;
-      case "XCHG":
-        desc = `XCHG exchanges the content of '${ops[0]}' and '${ops[1]}'. Both targets exchange values simultaneously without utilizing temporary variables.`;
-        break;
-      case "XOR":
-        desc = `XOR performs a bitwise exclusive OR on '${ops[0]}' and '${ops[1]}', storing the result in '${ops[0]}'. Often used with 'XOR AX, AX' to clear registers.`;
-        break;
-      default:
-        desc = `${opcode} is executed with operands: ${ops.join(", ")}. CPU states, flags, or memory spaces are modified accordingly.`;
-    }
-    setExplanation(desc);
-  };
->>>>>>> 645711190d460ed64dd131e3295ba34b6ae2a84e
 
   // --- CONTINUOUS AUTO RUN TIMER ---
   useEffect(() => {
