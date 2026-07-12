@@ -23,8 +23,7 @@ import "../Home/Home.css";
 import "../LearningResources/LearningResourcesPage.css";
 import { useTheme } from "../../context/ThemeContext";
 import usePointerGlow from "../../hooks/usePointerGlow";
-import { coalCourseMeta } from "../../data/coalCourseOutline";
-
+import { coalCourseMeta } from "../../data/coalCourseOutline"; 
 // Custom inline Tooltip Component
 const InfoTooltip = ({ text }) => (
   <div className="smp-tooltip">
@@ -308,7 +307,7 @@ export default function StackMemoryPlayground() {
           <div className="grid-background" />
           <Navbar toggleTheme={toggleTheme} theme={theme} />
 
-    <main className="smp-root">
+    <main className="smp-root" data-theme={theme} >
 
       {/* Header Banner */}
       <div className="smp-header">
