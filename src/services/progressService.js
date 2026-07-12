@@ -90,8 +90,9 @@ const calculateTopicCompletion = (topic, topicState) => {
     1,
   );
   const completedCount = topicState.completedSubtopics.length;
-  const completionPercentage = Math.round(
-    (completedCount / totalSubtopics) * 100,
+  const completionPercentage = Math.min(
+    Math.round((completedCount / totalSubtopics) * 100),
+    100,
   );
   return {
     totalSubtopics,

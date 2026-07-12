@@ -437,9 +437,9 @@ function ChartTooltip({ active, payload, label }) {
 const isCoalTopic   = (id) => /^part-\d+$/.test(id);
 const isCoalProblem = (p)  => p.subject === "coal" || isCoalTopic(p.topicId || "");
 
-// ─── Build subject-split daily buckets from state.problems + state.topics ─────
+// ─── Build subject-split daily buckets from state.problems + state.topics + state.activity ─
 // Returns a Map: dateKey → { dld: {solved,attempts,topics}, coal: {solved,attempts,topics} }
-function buildSubjectDayBuckets(problems, topics) {
+function buildSubjectDayBuckets(problems, topics, activity) {
   const buckets = {};
 
   const getOrCreate = (dateKey) => {
@@ -466,16 +466,32 @@ function buildSubjectDayBuckets(problems, topics) {
     }
   });
 
-  // Topics → completedAt
+  // Topics → completedAt (full topic completion)
   Object.entries(topics || {}).forEach(([id, t]) => {
     const subj = isCoalTopic(id) ? "coal" : "dld";
     if (t.completedAt) {
       const key = t.completedAt.slice(0, 10);
       getOrCreate(key)[subj].topics += 1;
-    } else if (t.openedAt && t.status === "in_progress") {
-      // count in-progress topics as partial activity on their open date
-      const key = t.openedAt.slice(0, 10);
-      getOrCreate(key)[subj].topics += 0; // don't count opens to avoid inflation
+    }
+  });
+
+  // Activity fallback — picks up partial reads (subtopics marked as read)
+  // that never triggered a full topic completedAt. Since activity doesn't
+  // distinguish subject, add to whichever bucket hasn't already counted it.
+  // We split proportionally: COAL topics use "part-X" ids, so we credit
+  // activity days that have no topics yet from the topics loop above.
+  Object.entries(activity || {}).forEach(([dateKey, day]) => {
+    const topicsCount = (day.topicsCompleted || 0) + (day.topicsOpened || 0);
+    if (topicsCount <= 0) return;
+    // Only add if topics loop didn't already add data for this day
+    const existing = buckets[dateKey];
+    const alreadyCounted =
+      existing && (existing.dld.topics > 0 || existing.coal.topics > 0);
+    if (!alreadyCounted) {
+      // We can't tell subject from raw activity — credit DLD as the primary
+      // subject (most users start with DLD). Coal users who only do COAL will
+      // see this in the DLD bucket but the overall "topics" bar still shows.
+      getOrCreate(dateKey).dld.topics += day.topicsCompleted || 0;
     }
   });
 
@@ -483,8 +499,8 @@ function buildSubjectDayBuckets(problems, topics) {
 }
 
 // ─── Build weekly trend — subject-aware, last 8 weeks ─────────────────────────
-function buildWeeklyTrend(problems, topics, subject) {
-  const buckets = buildSubjectDayBuckets(problems, topics);
+function buildWeeklyTrend(problems, topics, subject, activity) {
+  const buckets = buildSubjectDayBuckets(problems, topics, activity);
   const subj = subject === "COAL" ? "coal" : "dld";
 
   const today = new Date();
@@ -516,8 +532,8 @@ function buildWeeklyTrend(problems, topics, subject) {
 }
 
 // ─── Build daily activity — subject-aware, last 7 days ────────────────────────
-function buildDailyActivity(problems, topics, subject) {
-  const buckets = buildSubjectDayBuckets(problems, topics);
+function buildDailyActivity(problems, topics, subject, activity) {
+  const buckets = buildSubjectDayBuckets(problems, topics, activity);
   const subj = subject === "COAL" ? "coal" : "dld";
 
   const today = new Date();
@@ -566,8 +582,8 @@ function buildRadarData(topicStats) {
 }
 
 // ─── Most active day (subject-aware, from problems+topics) ───────────────────
-function getMostActiveDay(problems, topics, subject) {
-  const buckets = buildSubjectDayBuckets(problems, topics);
+function getMostActiveDay(problems, topics, subject, activity) {
+  const buckets = buildSubjectDayBuckets(problems, topics, activity);
   const subj = subject === "COAL" ? "coal" : "dld";
   const byDay = {};
   Object.entries(buckets).forEach(([dateKey, data]) => {
@@ -582,8 +598,8 @@ function getMostActiveDay(problems, topics, subject) {
 }
 
 // ─── Week-over-week comparison (subject-aware) ────────────────────────────────
-function getWeekComparison(problems, topics, subject) {
-  const buckets = buildSubjectDayBuckets(problems, topics);
+function getWeekComparison(problems, topics, subject, activity) {
+  const buckets = buildSubjectDayBuckets(problems, topics, activity);
   const subj = subject === "COAL" ? "coal" : "dld";
 
   const today = new Date();
@@ -837,12 +853,12 @@ export default function ProfilePage() {
   ];
 
   // ── Chart data ──────────────────────────────────────────────────────────────
-  const weeklyTrend   = buildWeeklyTrend(state.problems || {}, state.topics || {}, activeSubject);
-  const dailyActivity = buildDailyActivity(state.problems || {}, state.topics || {}, activeSubject);
+  const weeklyTrend   = buildWeeklyTrend(state.problems || {}, state.topics || {}, activeSubject, state.activity || {});
+  const dailyActivity = buildDailyActivity(state.problems || {}, state.topics || {}, activeSubject, state.activity || {});
   const pieData = buildPieData(topicStats);
   const radarData = buildRadarData(topicStats);
-  const weekComp = getWeekComparison(state.problems || {}, state.topics || {}, activeSubject);
-  const mostActiveDay = getMostActiveDay(state.problems || {}, state.topics || {}, activeSubject);
+  const weekComp = getWeekComparison(state.problems || {}, state.topics || {}, activeSubject, state.activity || {});
+  const mostActiveDay = getMostActiveDay(state.problems || {}, state.topics || {}, activeSubject, state.activity || {});
 
   // COAL chart data
   const coalRadarData = [
