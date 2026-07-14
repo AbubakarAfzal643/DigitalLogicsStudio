@@ -668,10 +668,11 @@
 }
 
 .problems-banner-card {
-  flex: 0 0 320px; /* fixed width matching the screenshot */
+  flex: 0 0 220px; /* fixed width matching the screenshot */
   min-height: 155px;
+  width: 220px;
   border-radius: 1.25rem; /* rounder corners */
-  padding: 1.5rem; /* increased spacing */
+  padding: 1.1rem; /* increased spacing */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -717,7 +718,7 @@
   max-width: 100%;
   color: rgba(255, 255, 255, 0.88);
   line-height: 1.5;
-  font-size: 0.88rem; /* clean description text */
+  font-size: 0.98rem; /* clean description text */
 }
 
 .problems-filter-chip-row {

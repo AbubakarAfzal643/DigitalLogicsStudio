@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Navbar } from "../Home/Navbar";
 import Footer from "../Home/Footer";
+import { useTheme } from "../../context/ThemeContext";
+import "./InstructionLaboratoryPage.css";
 
 const INSTRUCTION_DATABASE = [
     {
@@ -254,6 +256,7 @@ const COMPARISON_DATA = {
 
 
 function InstructionLaboratoryPage() {
+    const { theme, toggle: toggleTheme } = useTheme();
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedDifficulty, setSelectedDifficulty] = useState("All");
@@ -392,17 +395,17 @@ function InstructionLaboratoryPage() {
     const currentCompare = COMPARISON_DATA[activeCompareTab];
 
     return (
-        <div style={{ padding: "40px", color: "#f3f4f6", background: "#0b0f19", minHeight: "100vh", fontFamily: "sans-serif" }}>
+        <div className="il-page" style={{ padding: "40px", color: "var(--text-color)", background: "var(--bg-color)", minHeight: "100vh", fontFamily: "sans-serif" }}>
 
             {/* 1. NAVBAR ADDED HERE */}
-            <Navbar />
+            <Navbar toggleTheme={toggleTheme} theme={theme} />
 
             {/* HEADER SECTION */}
             <div style={{ marginBottom: "30px" }}>
-                <h1 style={{ fontSize: "32px", fontWeight: "700", margin: "0 0 10px 0", color: "#ffffff" }}>
+                <h1 style={{ fontSize: "32px", fontWeight: "700", margin: "0 0 10px 0", color: "var(--text-color)" }}>
                     Instruction Laboratory
                 </h1>
-                <p style={{ color: "#9ca3af", margin: "0 0 20px 0", fontSize: "15px" }}>A complete searchable database for interactive x86 architectures.</p>
+                <p style={{ color: "var(--secondary-text)", margin: "0 0 20px 0", fontSize: "15px" }}>A complete searchable database for interactive x86 architectures.</p>
 
                 {/* GLOBAL BACK NAVIGATION BUTTON */}
                 <button
@@ -412,7 +415,7 @@ function InstructionLaboratoryPage() {
                         alignItems: "center",
                         gap: "8px",
                         background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
-                        color: "#fff",
+                        color: "var(--text-color)",
                         border: "none",
                         padding: "10px 18px",
                         borderRadius: "20px",
@@ -432,23 +435,23 @@ function InstructionLaboratoryPage() {
 
                 {/* LEFT COLUMN (60%) */}
                 <div style={{ flex: "3", display: "flex", flexDirection: "column", gap: "20px" }}>
-                    <div style={{ display: "flex", gap: "15px", background: "rgba(255, 255, 255, 0.03)", padding: "20px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+                    <div style={{ display: "flex", gap: "15px", background: "rgba(var(--il-glass-rgb), 0.03)", padding: "20px", borderRadius: "12px", border: "1px solid rgba(var(--il-glass-rgb), 0.08)" }}>
                         <div style={{ flex: 1 }}>
-                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "#9ca3af" }}>Search Fields</label>
+                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "var(--secondary-text)" }}>Search Fields</label>
                             <input
                                 type="text"
                                 placeholder="Type opcode or action..."
                                 value={searchQuery}
                                 onChange={(e) => { setSearchQuery(e.target.value); setShowDemo(false); setSimOutput(null); }}
-                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b", background: "#111827", color: "#fff", boxSizing: "border-box" }}
+                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid var(--il-border-solid)", background: "var(--il-surface-soft)", color: "var(--text-color)", boxSizing: "border-box" }}
                             />
                         </div>
                         <div style={{ width: "160px" }}>
-                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "#9ca3af" }}>Category</label>
+                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "var(--secondary-text)" }}>Category</label>
                             <select
                                 value={selectedCategory}
                                 onChange={(e) => { setSelectedCategory(e.target.value); setShowDemo(false); setSimOutput(null); }}
-                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b", background: "#111827", color: "#fff" }}
+                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid var(--il-border-solid)", background: "var(--il-surface-soft)", color: "var(--text-color)" }}
                             >
                                 <option value="All">All Categories</option>
                                 <option value="Arithmetic">Arithmetic</option>
@@ -458,11 +461,11 @@ function InstructionLaboratoryPage() {
                             </select>
                         </div>
                         <div style={{ width: "160px" }}>
-                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "#9ca3af" }}>Difficulty</label>
+                            <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: "600", color: "var(--secondary-text)" }}>Difficulty</label>
                             <select
                                 value={selectedDifficulty}
                                 onChange={(e) => { setSelectedDifficulty(e.target.value); setShowDemo(false); setSimOutput(null); }}
-                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b", background: "#111827", color: "#fff" }}
+                                style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid var(--il-border-solid)", background: "var(--il-surface-soft)", color: "var(--text-color)" }}
                             >
                                 <option value="All">All Levels</option>
                                 <option value="Beginner">Beginner</option>
@@ -482,7 +485,7 @@ function InstructionLaboratoryPage() {
                         }}
                     >
 
-                        <h3 style={{ margin: "5px 0", fontSize: "16px", color: "#9ca3af" }}>Search Results ({filteredInstructions.length})</h3>
+                        <h3 style={{ margin: "5px 0", fontSize: "16px", color: "var(--secondary-text)" }}>Search Results ({filteredInstructions.length})</h3>
                         {filteredInstructions.map((item) => {
                             const isSelected = selectedInstruction?.id === item.id;
                             return (
@@ -490,23 +493,23 @@ function InstructionLaboratoryPage() {
                                     key={item.id}
                                     onClick={() => { setSelectedInstruction(item); setShowDemo(false); setSimOutput(null); }}
                                     style={{
-                                        background: isSelected ? "rgba(59, 130, 246, 0.1)" : "rgba(255, 255, 255, 0.02)",
+                                        background: isSelected ? "rgba(59, 130, 246, 0.1)" : "rgba(var(--il-glass-rgb), 0.02)",
                                         padding: "20px",
                                         borderRadius: "10px",
-                                        border: isSelected ? "1px solid #3b82f6" : "1px solid rgba(255, 255, 255, 0.05)",
+                                        border: isSelected ? "1px solid #3b82f6" : "1px solid rgba(var(--il-glass-rgb), 0.05)",
                                         cursor: "pointer"
                                     }}
                                 >
                                     <div style={{ float: "right", display: "flex", gap: "8px" }}>
-                                        <span style={{ background: "rgba(255,255,255,0.06)", color: "#9ca3af", padding: "3px 8px", borderRadius: "5px", fontSize: "11px" }}>{item.difficulty}</span>
+                                        <span style={{ background: "rgba(var(--il-glass-rgb), 0.06)", color: "var(--secondary-text)", padding: "3px 8px", borderRadius: "5px", fontSize: "11px" }}>{item.difficulty}</span>
                                         <span style={{ background: "#10b981", color: "#064e3b", padding: "3px 8px", borderRadius: "5px", fontSize: "11px", fontWeight: "700" }}>{item.category}</span>
                                     </div>
-                                    {/*<h2 style={{ margin: "0 0 6px 0", fontSize: "20px", color: isSelected ? "#60a5fa" : "#fff" }}>{item.instruction}</h2>*/}
+                                    {/*<h2 style={{ margin: "0 0 6px 0", fontSize: "20px", color: isSelected ? "#60a5fa" : "var(--text-color)" }}>{item.instruction}</h2>*/}
                                     {/*  Corrected Line */}
-                                    <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: isSelected ? "#60a5fa" : "#ffffff" }}>
+                                    <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: isSelected ? "#60a5fa" : "var(--text-color)" }}>
                                         {item.instruction}
                                     </h2>
-                                    <p style={{ margin: "0", color: "#9ca3af", fontSize: "14px" }}>{item.function}</p>
+                                    <p style={{ margin: "0", color: "var(--secondary-text)", fontSize: "14px" }}>{item.function}</p>
                                 </div>
                             );
                         })}
@@ -514,60 +517,60 @@ function InstructionLaboratoryPage() {
                 </div> {/* End of LEFT COLUMN */}
 
                 {/* RIGHT COLUMN: SANDBOX PANEL (40%) */}
-                <div style={{ flex: "2", position: "sticky", top: "40px", background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)", padding: "25px", borderRadius: "16px", border: "1px solid rgba(255, 255, 255, 0.1)", backdropFilter: "blur(12px)" }}>
+                <div style={{ flex: "2", position: "sticky", top: "40px", background: "linear-gradient(135deg, rgba(var(--il-glass-rgb), 0.05) 0%, rgba(var(--il-glass-rgb), 0.01) 100%)", padding: "25px", borderRadius: "16px", border: "1px solid rgba(var(--il-glass-rgb), 0.1)", backdropFilter: "blur(12px)" }}>
                     {selectedInstruction && (
                         <div>
                             {!showDemo ? (
                                 <div>
-                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "15px" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1px solid rgba(var(--il-glass-rgb), 0.1)", paddingBottom: "15px" }}>
                                         <h2 style={{ margin: 0, fontSize: "28px", color: "#3b82f6" }}>{selectedInstruction.instruction}</h2>
                                         <span style={{ background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", padding: "4px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "600" }}>{selectedInstruction.syntax}</span>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                                         <div>
-                                            <h4 style={{ margin: "0 0 4px 0", color: "#9ca3af", fontSize: "12px", textTransform: "uppercase" }}>Description</h4>
-                                            <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5", color: "#d1d5db" }}>{selectedInstruction.description}</p>
+                                            <h4 style={{ margin: "0 0 4px 0", color: "var(--secondary-text)", fontSize: "12px", textTransform: "uppercase" }}>Description</h4>
+                                            <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5", color: "var(--il-text-body)" }}>{selectedInstruction.description}</p>
                                         </div>
                                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
                                             <div>
-                                                <h4 style={{ margin: "0 0 4px 0", color: "#9ca3af", fontSize: "12px", textTransform: "uppercase" }}>Valid Operands</h4>
-                                                <p style={{ margin: 0, fontSize: "14px", color: "#f3f4f6" }}>{selectedInstruction.operands}</p>
+                                                <h4 style={{ margin: "0 0 4px 0", color: "var(--secondary-text)", fontSize: "12px", textTransform: "uppercase" }}>Valid Operands</h4>
+                                                <p style={{ margin: 0, fontSize: "14px", color: "var(--text-color)" }}>{selectedInstruction.operands}</p>
                                             </div>
                                             <div>
-                                                <h4 style={{ margin: "0 0 4px 0", color: "#9ca3af", fontSize: "12px", textTransform: "uppercase" }}>Affected Flags</h4>
+                                                <h4 style={{ margin: "0 0 4px 0", color: "var(--secondary-text)", fontSize: "12px", textTransform: "uppercase" }}>Affected Flags</h4>
                                                 <p style={{ margin: 0, fontSize: "14px", color: "#f43f5e", fontWeight: "600" }}>{selectedInstruction.affectedFlags}</p>
                                             </div>
                                         </div>
                                         <div>
-                                            <h4 style={{ margin: "0 0 4px 0", color: "#9ca3af", fontSize: "12px", textTransform: "uppercase" }}>Code Examples</h4>
-                                            <pre style={{ margin: 0, padding: "12px", background: "#030712", borderRadius: "6px", color: "#34d399", fontFamily: "monospace", fontSize: "13px" }}>{selectedInstruction.examples}</pre>
+                                            <h4 style={{ margin: "0 0 4px 0", color: "var(--secondary-text)", fontSize: "12px", textTransform: "uppercase" }}>Code Examples</h4>
+                                            <pre style={{ margin: 0, padding: "12px", background: "var(--il-code-bg)", borderRadius: "6px", color: "#34d399", fontFamily: "monospace", fontSize: "13px" }}>{selectedInstruction.examples}</pre>
                                         </div>
                                         <div>
                                             <h4 style={{ margin: "0 0 4px 0", color: "#ef4444", fontSize: "12px", textTransform: "uppercase" }}>Common Pitfalls</h4>
                                             <p style={{ margin: 0, fontSize: "13px", color: "#fca5a5", background: "rgba(239, 68, 68, 0.1)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(239, 68, 68, 0.2)" }}>{selectedInstruction.commonMistakes}</p>
                                         </div>
-                                        <button onClick={() => setShowDemo(true)} style={{ marginTop: "10px", width: "100%", padding: "12px", borderRadius: "8px", background: "linear-gradient(90deg, #3b82f6, #2563eb)", border: "none", color: "#fff", fontWeight: "600", cursor: "pointer" }}>
+                                        <button onClick={() => setShowDemo(true)} style={{ marginTop: "10px", width: "100%", padding: "12px", borderRadius: "8px", background: "linear-gradient(90deg, #3b82f6, #2563eb)", border: "none", color: "var(--text-color)", fontWeight: "600", cursor: "pointer" }}>
                                             Launch Live Demonstration →
                                         </button>
                                     </div>
                                 </div>
                             ) : (
                                 <div>
-                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "15px" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1px solid rgba(var(--il-glass-rgb), 0.1)", paddingBottom: "15px" }}>
                                         <h2 style={{ margin: 0, fontSize: "22px", color: "#10b981" }}>⚡ Live Sandbox: {selectedInstruction.instruction}</h2>
                                         {/* //////////////////////////////////////////////////////// */}
                                         {/* START: Hex vs Dec Toggle Switch UI */}
                                         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "15px" }}>
-                                            <div style={{ display: "inline-flex", background: "#111827", padding: "4px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                                            <div style={{ display: "inline-flex", background: "var(--il-surface-soft)", padding: "4px", borderRadius: "8px", border: "1px solid var(--il-border-solid)" }}>
                                                 <button
                                                     onClick={() => setIsHex(false)}
-                                                    style={{ padding: "6px 12px", borderRadius: "6px", border: "none", background: !isHex ? "#3b82f6" : "transparent", color: "#fff", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}
+                                                    style={{ padding: "6px 12px", borderRadius: "6px", border: "none", background: !isHex ? "#3b82f6" : "transparent", color: "var(--text-color)", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}
                                                 >
                                                     DEC
                                                 </button>
                                                 <button
                                                     onClick={() => setIsHex(true)}
-                                                    style={{ padding: "6px 12px", borderRadius: "6px", border: "none", background: isHex ? "#3b82f6" : "transparent", color: "#fff", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}
+                                                    style={{ padding: "6px 12px", borderRadius: "6px", border: "none", background: isHex ? "#3b82f6" : "transparent", color: "var(--text-color)", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}
                                                 >
                                                     HEX
                                                 </button>
@@ -575,28 +578,28 @@ function InstructionLaboratoryPage() {
                                         </div>
                                         {/* END: Hex vs Dec Toggle Switch UI */}
                                         {/* //////////////////////////////////////////////////////// */}
-                                        <button onClick={() => { setShowDemo(false); setSimOutput(null); }} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "#9ca3af", padding: "4px 10px", borderRadius: "6px", cursor: "pointer", fontSize: "12px" }}>← Back</button>
+                                        <button onClick={() => { setShowDemo(false); setSimOutput(null); }} style={{ background: "transparent", border: "1px solid rgba(var(--il-glass-rgb), 0.2)", color: "var(--secondary-text)", padding: "4px 10px", borderRadius: "6px", cursor: "pointer", fontSize: "12px" }}>← Back</button>
                                     </div>
                                     {/* UPDATED REGISTER INPUTS: DISPLAYING ALL 4 COAL REGISTERS */}
                                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "10px", marginBottom: "20px" }}>
                                         <div>
-                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "#9ca3af" }}>Register AX</label>
-                                            <input type="number" value={regAX} onChange={(e) => setRegAX(e.target.value)} style={{ width: "100%", padding: "10px", background: "#111827", border: "1px solid #1e293b", color: "#fff", borderRadius: "6px", boxSizing: "border-box" }} />
+                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "var(--secondary-text)" }}>Register AX</label>
+                                            <input type="number" value={regAX} onChange={(e) => setRegAX(e.target.value)} style={{ width: "100%", padding: "10px", background: "var(--il-surface-soft)", border: "1px solid var(--il-border-solid)", color: "var(--text-color)", borderRadius: "6px", boxSizing: "border-box" }} />
                                         </div>
                                         <div>
-                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "#9ca3af" }}>Register BX</label>
-                                            <input type="number" value={regBX} onChange={(e) => setRegBX(e.target.value)} style={{ width: "100%", padding: "10px", background: "#111827", border: "1px solid #1e293b", color: "#fff", borderRadius: "6px", boxSizing: "border-box" }} />
+                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "var(--secondary-text)" }}>Register BX</label>
+                                            <input type="number" value={regBX} onChange={(e) => setRegBX(e.target.value)} style={{ width: "100%", padding: "10px", background: "var(--il-surface-soft)", border: "1px solid var(--il-border-solid)", color: "var(--text-color)", borderRadius: "6px", boxSizing: "border-box" }} />
                                         </div>
                                         <div>
-                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "#9ca3af" }}>Register CX</label>
-                                            <input type="number" value={regCX} onChange={(e) => setRegCX(e.target.value)} style={{ width: "100%", padding: "10px", background: "#111827", border: "1px solid #1e293b", color: "#fff", borderRadius: "6px", boxSizing: "border-box" }} />
+                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "var(--secondary-text)" }}>Register CX</label>
+                                            <input type="number" value={regCX} onChange={(e) => setRegCX(e.target.value)} style={{ width: "100%", padding: "10px", background: "var(--il-surface-soft)", border: "1px solid var(--il-border-solid)", color: "var(--text-color)", borderRadius: "6px", boxSizing: "border-box" }} />
                                         </div>
                                         <div>
-                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "#9ca3af" }}>Register DX</label>
-                                            <input type="number" value={regDX} onChange={(e) => setRegDX(e.target.value)} style={{ width: "100%", padding: "10px", background: "#111827", border: "1px solid #1e293b", color: "#fff", borderRadius: "6px", boxSizing: "border-box" }} />
+                                            <label style={{ display: "block", fontSize: "12px", marginBottom: "5px", color: "var(--secondary-text)" }}>Register DX</label>
+                                            <input type="number" value={regDX} onChange={(e) => setRegDX(e.target.value)} style={{ width: "100%", padding: "10px", background: "var(--il-surface-soft)", border: "1px solid var(--il-border-solid)", color: "var(--text-color)", borderRadius: "6px", boxSizing: "border-box" }} />
                                         </div>
                                     </div>
-                                    <div style={{ background: "#030712", padding: "12px", borderRadius: "6px", fontFamily: "monospace", color: "#60a5fa", marginBottom: "20px", border: "1px solid #1e293b" }}>
+                                    <div style={{ background: "var(--il-code-bg)", padding: "12px", borderRadius: "6px", fontFamily: "monospace", color: "#60a5fa", marginBottom: "20px", border: "1px solid var(--il-border-solid)" }}>
                                         {selectedInstruction.id === "inc"
                                             ? `INC AX`
                                             : (selectedInstruction.id === "shl" || selectedInstruction.id === "sal")
@@ -608,28 +611,28 @@ function InstructionLaboratoryPage() {
 
                                     {simOutput && (
                                         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                                            <div style={{ background: "rgba(255,255,255,0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                                                <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#9ca3af", textTransform: "uppercase" }}>Register Changes</h4>
+                                            <div style={{ background: "rgba(var(--il-glass-rgb), 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(var(--il-glass-rgb), 0.05)" }}>
+                                                <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "var(--secondary-text)", textTransform: "uppercase" }}>Register Changes</h4>
                                                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "14px", fontFamily: "monospace" }}>
                                                     {/* START: Updated Dynamic Output formatting */}
                                                     <div>AX: <span style={{ color: "#34d399", fontWeight: "bold" }}>{formatValue(simOutput.finalAX)}</span></div>
-                                                    <div>BX: <span style={{ color: "#cbd5e1" }}>{formatValue(simOutput.finalBX)}</span></div>
-                                                    <div>CX: <span style={{ color: "#cbd5e1" }}>{formatValue(simOutput.finalCX)}</span></div>
-                                                    <div>DX: <span style={{ color: "#cbd5e1" }}>{formatValue(simOutput.finalDX)}</span></div>
+                                                    <div>BX: <span style={{ color: "var(--il-text-body)" }}>{formatValue(simOutput.finalBX)}</span></div>
+                                                    <div>CX: <span style={{ color: "var(--il-text-body)" }}>{formatValue(simOutput.finalCX)}</span></div>
+                                                    <div>DX: <span style={{ color: "var(--il-text-body)" }}>{formatValue(simOutput.finalDX)}</span></div>
                                                     {/* END: Updated Dynamic Output formatting */}
                                                 </div>
                                             </div>
-                                            <div style={{ background: "rgba(255,255,255,0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                                                <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#9ca3af", textTransform: "uppercase" }}>Status Flag Changes</h4>
+                                            <div style={{ background: "rgba(var(--il-glass-rgb), 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(var(--il-glass-rgb), 0.05)" }}>
+                                                <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "var(--secondary-text)", textTransform: "uppercase" }}>Status Flag Changes</h4>
                                                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", fontSize: "13px", fontFamily: "monospace" }}>
-                                                    <div>ZF: <span style={{ color: simOutput.flags.ZF.startsWith("1") ? "#f43f5e" : "#9ca3af" }}>{simOutput.flags.ZF}</span></div>
-                                                    <div>SF: <span style={{ color: simOutput.flags.SF.startsWith("1") ? "#f43f5e" : "#9ca3af" }}>{simOutput.flags.SF}</span></div>
-                                                    <div>CF: <span style={{ color: simOutput.flags.CF.startsWith("1") ? "#f43f5e" : "#9ca3af" }}>{simOutput.flags.CF}</span></div>
+                                                    <div>ZF: <span style={{ color: simOutput.flags.ZF.startsWith("1") ? "#f43f5e" : "var(--secondary-text)" }}>{simOutput.flags.ZF}</span></div>
+                                                    <div>SF: <span style={{ color: simOutput.flags.SF.startsWith("1") ? "#f43f5e" : "var(--secondary-text)" }}>{simOutput.flags.SF}</span></div>
+                                                    <div>CF: <span style={{ color: simOutput.flags.CF.startsWith("1") ? "#f43f5e" : "var(--secondary-text)" }}>{simOutput.flags.CF}</span></div>
                                                 </div>
                                             </div>
                                             <div style={{ background: "rgba(59, 130, 246, 0.05)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(59, 130, 246, 0.15)" }}>
                                                 <h4 style={{ margin: "0 0 6px 0", fontSize: "12px", color: "#60a5fa", textTransform: "uppercase" }}>Step Explanation</h4>
-                                                <p style={{ margin: 0, fontSize: "13px", color: "#d1d5db", lineHeight: "1.4" }}>{simOutput.explanation}</p>
+                                                <p style={{ margin: 0, fontSize: "13px", color: "var(--il-text-body)", lineHeight: "1.4" }}>{simOutput.explanation}</p>
                                             </div>
                                         </div>
                                     )}
@@ -642,34 +645,34 @@ function InstructionLaboratoryPage() {
 
 
             {/* ─── NEW FEATURE: INSTRUCTION COMPARISON HUB ─── */}
-            <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "30px", borderRadius: "16px", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
-                <h2 style={{ margin: "0 0 20px 0", fontSize: "22px", color: "#fff" }}>📋 Architectural Comparison Hub</h2>
+            <div style={{ background: "rgba(var(--il-glass-rgb), 0.02)", padding: "30px", borderRadius: "16px", border: "1px solid rgba(var(--il-glass-rgb), 0.06)" }}>
+                <h2 style={{ margin: "0 0 20px 0", fontSize: "22px", color: "var(--text-color)" }}>📋 Architectural Comparison Hub</h2>
 
                 {/* TAB SWITCHERS */}
-                <div style={{ display: "flex", gap: "10px", marginBottom: "25px", borderBottom: "1px solid #1e293b", paddingBottom: "15px" }}>
-                    <button onClick={() => setActiveCompareTab("inc_add")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "inc_add" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>INC vs ADD 1</button>
-                    <button onClick={() => setActiveCompareTab("shl_sal")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "shl_sal" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>SHL vs SAL</button>
-                    <button onClick={() => setActiveCompareTab("jmp_call")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "jmp_call" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>JMP vs CALL</button>
-                    <button onClick={() => setActiveCompareTab("mov_pushpop")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "mov_pushpop" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>MOV vs PUSH/POP</button>
-                    <button onClick={() => setActiveCompareTab("and_xor")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "and_xor" ? "#3b82f6" : "#1e293b", color: "#fff", cursor: "pointer", fontWeight: "600" }}>AND vs XOR</button>
+                <div style={{ display: "flex", gap: "10px", marginBottom: "25px", borderBottom: "1px solid var(--il-border-solid)", paddingBottom: "15px" }}>
+                    <button onClick={() => setActiveCompareTab("inc_add")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "inc_add" ? "#3b82f6" : "var(--il-border-solid)", color: "var(--text-color)", cursor: "pointer", fontWeight: "600" }}>INC vs ADD 1</button>
+                    <button onClick={() => setActiveCompareTab("shl_sal")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "shl_sal" ? "#3b82f6" : "var(--il-border-solid)", color: "var(--text-color)", cursor: "pointer", fontWeight: "600" }}>SHL vs SAL</button>
+                    <button onClick={() => setActiveCompareTab("jmp_call")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "jmp_call" ? "#3b82f6" : "var(--il-border-solid)", color: "var(--text-color)", cursor: "pointer", fontWeight: "600" }}>JMP vs CALL</button>
+                    <button onClick={() => setActiveCompareTab("mov_pushpop")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "mov_pushpop" ? "#3b82f6" : "var(--il-border-solid)", color: "var(--text-color)", cursor: "pointer", fontWeight: "600" }}>MOV vs PUSH/POP</button>
+                    <button onClick={() => setActiveCompareTab("and_xor")} style={{ padding: "10px 20px", borderRadius: "6px", border: "none", background: activeCompareTab === "and_xor" ? "#3b82f6" : "var(--il-border-solid)", color: "var(--text-color)", cursor: "pointer", fontWeight: "600" }}>AND vs XOR</button>
                 </div> {/* End of TAB SWITCHERS */}
 
                 {/* COMPARISON RESULTS VIEWER CONTAINER */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "25px" }}>
 
-                    <div style={{ background: "#0f172a", padding: "20px", borderRadius: "10px", border: "1px solid #1e293b" }}>
+                    <div style={{ background: "var(--il-surface)", padding: "20px", borderRadius: "10px", border: "1px solid var(--il-border-solid)" }}>
                         <h3 style={{ margin: "0 0 10px 0", color: "#60a5fa", fontSize: "16px" }}>{currentCompare.title.split(" vs ")[0]}</h3>
-                        <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#cbd5e1" }}>{currentCompare.desc1}</p>
+                        <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "var(--il-text-body)" }}>{currentCompare.desc1}</p>
                     </div>
 
-                    <div style={{ background: "#0f172a", padding: "20px", borderRadius: "10px", border: "1px solid #1e293b" }}>
+                    <div style={{ background: "var(--il-surface)", padding: "20px", borderRadius: "10px", border: "1px solid var(--il-border-solid)" }}>
                         <h3 style={{ margin: "0 0 10px 0", color: "#a78bfa", fontSize: "16px" }}>{currentCompare.title.split(" vs ")[1]}</h3>
-                        <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#cbd5e1" }}>{currentCompare.desc2}</p>
+                        <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "var(--il-text-body)" }}>{currentCompare.desc2}</p>
                     </div>
 
                     <div style={{ gridColumn: "1 / -1", background: "rgba(16, 185, 129, 0.04)", padding: "15px 20px", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
                         <strong style={{ color: "#10b981", display: "block", fontSize: "12px", textTransform: "uppercase", marginBottom: "4px" }}>Core Architectural Verdict ({currentCompare.metric})</strong>
-                        <p style={{ margin: 0, fontSize: "14px", color: "#d1d5db" }}>{currentCompare.verdict}</p>
+                        <p style={{ margin: 0, fontSize: "14px", color: "var(--il-text-body)" }}>{currentCompare.verdict}</p>
                     </div>
 
                 </div> {/* End of COMPARISON RESULTS VIEWER CONTAINER */}
