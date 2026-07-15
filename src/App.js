@@ -13,11 +13,7 @@ import RouteSeoManager from "./components/seo/RouteSeoManager";
 import RouteNormalizer from "./components/seo/RouteNormalizer";
 import AnalyticsTracker from "./components/seo/AnalyticsTracker";
 import DlsMentorWidget from "./components/DlsMentorWidget/DlsMentorWidget";
-import InstructionTraceLabPage from "./pages/Coal/InstructionTraceLabPage";
-import StackMemorySimulatorPage from "./pages/Coal/StackMemorySimulatorPage";
-import AssemblyDrillsPage from "./pages/Coal/AssemblyDrillsPage";
-import AddressingModePlaygroundPage from "./pages/Coal/AddressingModePlaygroundPage";
-import InstructionLaboratoryPage from "./pages/Coal/InstructionLaboratoryPage";
+
 // UTILS / OTHER TOOLS:
 import ScrollToTop from "./utils/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -26,6 +22,22 @@ const Home = lazy(() => import("./pages/Home/Home"));
 const Boolforge = lazy(() => import("./pages/Boolforge"));
 const ProblemsPage = lazy(() => import("./pages/Problems/ProblemsPage"));
 const CoalProblemsPage = lazy(() => import("./pages/Problems/CoalProblemsPage"));
+// ── COAL Practical Labs (now lazy-loaded, previously eager imports) ──
+const InstructionTraceLabPage = lazy(
+  () => import("./pages/Coal/InstructionTraceLabPage"),
+);
+const StackMemorySimulatorPage = lazy(
+  () => import("./pages/Coal/StackMemorySimulatorPage"),
+);
+const AssemblyDrillsPage = lazy(
+  () => import("./pages/Coal/AssemblyDrillsPage"),
+);
+const AddressingModePlaygroundPage = lazy(
+  () => import("./pages/Coal/AddressingModePlaygroundPage"),
+);
+const InstructionLaboratoryPage = lazy(
+  () => import("./pages/Coal/InstructionLaboratoryPage"),
+);
 const RegCounters = lazy(
   () => import("./pages/RegistersAndTransfers/RegCounters"),
 );
