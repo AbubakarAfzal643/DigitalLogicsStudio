@@ -5230,7 +5230,7 @@ select:focus-visible {
   margin-bottom: 6px;
 }
 
-.kmap-page .kmap-expression {
+.kmap-page {
   font-size: 1.05rem;
   font-weight: 600;
   word-break: break-word;
@@ -6107,44 +6107,116 @@ select:focus-visible {
   font-size: 1.05rem;
 }
 
-/* Light mode overrides for truth table */
+/* ═══════════════════════════════════════════════════════════
+   LIGHT THEME OVERRIDES FOR TRUTH TABLE & MODAL
+   ═══════════════════════════════════════════════════════════ */
+
+/* Modal Container Light Mode */
+.theme-light .tt-modal-inner,
+[data-theme="light"] .tt-modal-inner {
+  background: #ffffff !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+}
+.theme-light .tt-modal-header h2,
+[data-theme="light"] .tt-modal-header h2 {
+  color: #0f172a !important;
+}
+.theme-light .tt-modal-header {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+/* Expand Button Styling */
+.tt-expand-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, #64748b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.tt-expand-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+.theme-light .tt-expand-btn:hover,
+[data-theme="light"] .tt-expand-btn:hover {
+  background: rgba(37, 99, 235, 0.1) !important;
+  color: #2563eb !important;
+}
+
+/* Modal Inner Layout Helpers */
+.tt-modal-inner {
+  display: flex;
+  flex-direction: column;
+}
+.tt-modal-header {
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tt-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f8fafc;
+}
+.tt-modal-body {
+  flex: 1;
+  padding: 24px;
+}
+
+/* Table Light Mode Overrides */
+.theme-light .kmap-truth-table,
 [data-theme="light"] .kmap-truth-table {
-  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
 }
+.theme-light .kmap-truth-table thead tr,
 [data-theme="light"] .kmap-truth-table thead tr {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.09) 0%, rgba(2, 132, 199, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(2, 132, 199, 0.04) 100%) !important;
 }
+.theme-light .kmap-truth-table th,
 [data-theme="light"] .kmap-truth-table th {
-  color: #2563eb;
-  border-bottom-color: rgba(37, 99, 235, 0.28);
+  color: #2563eb !important;
+  border-bottom-color: rgba(37, 99, 235, 0.2) !important;
 }
+.theme-light .kmap-truth-table tbody tr,
 [data-theme="light"] .kmap-truth-table tbody tr {
+  background: #ffffff !important;
+}
+.theme-light .kmap-truth-table tbody tr:nth-child(even),
+[data-theme="light"] .kmap-truth-table tbody tr:nth-child(even) {
   background: #f8fafc !important;
 }
-[data-theme="light"] .kmap-truth-table tbody tr:nth-child(even) {
-  background: #f1f5f9 !important;
-}
+.theme-light .kmap-truth-table tbody tr:hover,
 [data-theme="light"] .kmap-truth-table tbody tr:hover {
-  background: rgba(37, 99, 235, 0.05) !important;
+  background: rgba(37, 99, 235, 0.06) !important;
 }
+.theme-light .kmap-truth-table td,
 [data-theme="light"] .kmap-truth-table td {
-  color: #0f172a !important;
-  border-bottom-color: rgba(148, 163, 184, 0.18);
+  color: #334155 !important;
+  border-bottom-color: rgba(148, 163, 184, 0.2) !important;
 }
+.theme-light .kmap-truth-table .input-term-cell,
 [data-theme="light"] .kmap-truth-table .input-term-cell {
-  color: #475569 !important;
+  color: #64748b !important;
 }
+.theme-light .kmap-truth-table .output-1,
 [data-theme="light"] .kmap-truth-table .output-1 {
   color: #059669 !important;
 }
+.theme-light .kmap-truth-table .output-0,
 [data-theme="light"] .kmap-truth-table .output-0 {
   color: #94a3b8 !important;
 }
+.theme-light .kmap-truth-table .output-x,
+.theme-light .kmap-truth-table .output-dontcare,
 [data-theme="light"] .kmap-truth-table .output-x,
 [data-theme="light"] .kmap-truth-table .output-dontcare {
   color: #d97706 !important;
 }
-
 /* ═══════════════════════════════════════════════════════════
    GROUPING GUIDE
    ═══════════════════════════════════════════════════════════ */

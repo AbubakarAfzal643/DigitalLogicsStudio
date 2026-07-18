@@ -70,6 +70,29 @@ const KMapGenerator = () => {
         setShowGroupingGuide(false);
     };
 
+    const getIntermediateTerms = (expr, type, inputVars) => {
+        if (!expr || expr === '1' || expr === '0') return [];
+        
+        const cleanExpr = expr.includes('=') ? expr.split('=')[1].trim() : expr;
+        
+        let terms = [];
+        if (type === 'SOP') {
+            // Split by '+' for SOP
+            terms = cleanExpr.split('+').map(t => t.trim()).filter(Boolean);
+        } else {
+            // Extract groupings for POS
+            const matches = cleanExpr.match(/\([^)]+\)/g);
+            if (matches) {
+                terms = matches.map(m => m.replace(/[()]/g, '').trim());
+            }
+        }
+        terms = terms.filter(term => !inputVars.includes(term));
+
+        return terms;
+    };
+
+    const intermediateTerms = getIntermediateTerms(expression, optimizationType, variables);
+
     return (
         <div className={`kmap-page theme-${theme}`}>
         <div className="grid-background" />
@@ -148,6 +171,8 @@ const KMapGenerator = () => {
                     inputValue={inputValue}
                     dontCares={dontCares}
                     optimizationType={optimizationType}
+                    intermediateTerms={intermediateTerms}
+                    expression={expression}
                     />
 
                     {/* Divider */}
