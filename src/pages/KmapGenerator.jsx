@@ -13,6 +13,7 @@ import { useTheme } from '../context/ThemeContext';
 import {
     CirclePlus, 
     X, 
+    Plug,
 } from 'lucide-react';
 
 const KMapGenerator = () => {
@@ -101,10 +102,7 @@ const KMapGenerator = () => {
                         setShowSolution(true);
                         }}
                         onExample={handleExample}
-                        onReset={handleReset}
-                        showGroupingGuide={showGroupingGuide}
-                        expression={expression}
-                        onExperiment={() => setShowCircuitModal(true)}  
+                        onReset={handleReset} 
                     />
                 </div>
             </aside>
@@ -126,9 +124,13 @@ const KMapGenerator = () => {
                     </div>
                 )}
 
-                {/* Results stack — unchanged components, new container */}
                 {showSolution && (
                 <div className="kmap-results-stack">
+                    
+                    <SimplifiedExpression
+                    expression={expression}
+                    />
+
                     <KMapDisplay
                     grid={grid}
                     groups={groups}
@@ -139,12 +141,27 @@ const KMapGenerator = () => {
                     showGroupingGuide={showGroupingGuide}
                     optimizationType={optimizationType}
                     />
-
-                    <SimplifiedExpression
-                    expression={expression}
-                    showGroupingGuide={showGroupingGuide}
-                    onToggleGuide={() => setShowGroupingGuide(!showGroupingGuide)}
+                    
+                    <TruthTableDisplay
+                    numVariables={numVariables}
+                    variables={variables}
+                    inputValue={inputValue}
+                    dontCares={dontCares}
+                    optimizationType={optimizationType}
                     />
+
+                    {/* Divider */}
+                    <div className="kmap-section-divider">
+                        <span></span>
+                    </div>
+
+                    <button
+                        className="kmap-btn kmap-btn-outline kmap-btn-full"
+                        onClick={() => setShowGroupingGuide(!showGroupingGuide)}
+                        style={{ marginTop: 'var(--spacing-lg)' }}
+                    >
+                        {showGroupingGuide ? 'Hide' : 'Show'} Grouping Guide
+                    </button>
 
                     {showGroupingGuide && (
                     <GroupingGuide
@@ -158,13 +175,13 @@ const KMapGenerator = () => {
                     />
                     )}
 
-                    <TruthTableDisplay
-                    numVariables={numVariables}
-                    variables={variables}
-                    inputValue={inputValue}
-                    dontCares={dontCares}
-                    optimizationType={optimizationType}
-                    />
+                    <button
+                        className="kmap-btn kmap-btn-circuit"
+                        onClick={() => setShowCircuitModal(true)}
+                        title="Open the interactive circuit editor"
+                    >
+                        <Plug className="h-4 w-4 mr-2" /> Experiment with Circuit
+                    </button>
 
                     <RelatedSeoLinks />
                 </div>

@@ -5200,6 +5200,101 @@ select:focus-visible {
   50%      { opacity: 0.8; transform: scale(1.1); }
 }
 
+/* ================================================= */
+/* =========== K-MAP PAGE (Scoped Overrides) ======== */
+/* These overrides apply only when the page root has the `.kmap-page` class */
+/* They adjust typography, spacing and button sizing for improved readability */
+/* ================================================= */
+.kmap-page {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.kmap-page .kmap-card {
+  padding: 18px;
+  border-radius: 12px;
+}
+
+.kmap-page .kmap-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.2px;
+}
+
+.kmap-page .kmap-empty-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.kmap-page .kmap-expression {
+  font-size: 1.05rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.kmap-page .kmap-controls-grid .kmap-label,
+.kmap-page .kmap-helper-text {
+  font-size: 0.95rem;
+}
+
+.kmap-page .kmap-input,
+.kmap-page .kmap-var-input {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.6rem;
+}
+
+.kmap-page .kmap-btn {
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+}
+
+.kmap-page .kmap-btn.kmap-btn-primary {
+  min-width: 120px;
+}
+
+.kmap-page .kmap-btn.kmap-btn-outline.kmap-btn-full {
+  width: 100%;
+}
+
+.kmap-page .kmap-wrapper,
+.kmap-page .kmap-table {
+  font-size: 0.95rem;
+}
+
+.kmap-page .kmap-cell-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.kmap-page .kmap-row-header,
+.kmap-page .kmap-header-cell {
+  font-size: 0.9rem;
+  padding: 8px 10px;
+}
+
+.kmap-page .kmap-groups-legend-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Responsive tweaks scoped to KMap page */
+@media (max-width: 768px) {
+  .kmap-page { font-size: 15px; }
+  .kmap-page .kmap-section-title { font-size: 1.05rem; }
+  .kmap-page .kmap-card { padding: 14px; }
+  .kmap-page .kmap-btn { padding: 0.5rem 0.75rem; font-size: 0.9rem; }
+  .kmap-page .kmap-grid-container { overflow-x: auto; }
+}
+
+/* Small utility: slightly increase contrast for empty-state hint on KMap page */
+.kmap-page .kmap-empty-hint { color: var(--text-secondary); font-size: 0.98rem; }
+
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
