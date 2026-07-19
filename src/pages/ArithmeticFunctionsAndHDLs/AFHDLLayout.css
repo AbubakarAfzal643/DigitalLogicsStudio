@@ -23,14 +23,12 @@
   --afhdl-sidebar-width: clamp(240px, 28vw, 300px);
   --afhdl-topbar-height: 56px;
 
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
   background: var(--afhdl-bg);
   color: var(--afhdl-text);
   font-family: Inter, system-ui, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* ── Light theme overrides ─────────────────────────────────── */
@@ -104,7 +102,6 @@
   z-index: 100;
   height: var(--afhdl-topbar-height);
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -253,9 +250,7 @@
 .afhdl-body {
   position: relative;
   z-index: 1;
-  flex: 1;
   display: flex;
-  overflow: hidden;
   min-height: calc(100vh - var(--afhdl-topbar-height));
 }
 
@@ -280,7 +275,6 @@
   width: var(--afhdl-sidebar-width);
   transform: translateX(-100%);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  flex-shrink: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -453,7 +447,6 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   gap: 1.25rem;
   width: min(860px, 100%);
   margin: 0 auto;
