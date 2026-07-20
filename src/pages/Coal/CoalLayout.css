@@ -26,7 +26,18 @@
 }
 
 .coal-layout .afhdl-body {
-  padding-top: var(--afhdl-topbar-height);
+  padding-top: var(--afhdl-topbar-height, 56px);
+}
+
+/* Desktop only: hide the built-in sidebar in favor of CoalSidebar.jsx.
+   Safe because the hamburger toggle is already display:none at this
+   breakpoint in AFHDLLayout.css, so there's no drawer-state to break.
+   .afhdl-body's padding-left (set in AFHDLLayout.css) still reserves the
+   exact space CoalSidebar fills, so main content doesn't shift. */
+@media (min-width: 1280px) {
+  .coal-layout .afhdl-sidebar {
+    display: none;
+  }
 }
 
 .coal-layout .afhdl-bg-1 {
@@ -40,6 +51,23 @@
 
 .coal-layout .afhdl-pill-dot {
   background: #a78bfa;
+}
+
+/* Universal green completion accent — overrides the shared shell's blue/
+   indigo theming and the purple COAL accent above wherever a "done" state
+   is shown outside the sidebar (CoalSidebar has its own copy of this). */
+.coal-layout .core-topic-pill.is-done,
+.coal-layout .core-topic-check.is-complete,
+.coal-layout .afhdl-nav-item.is-visited .afhdl-nav-check,
+.coal-layout .afhdl-mark-read-btn.is-read {
+  color: #10b981;
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.coal-layout .afhdl-mark-read-btn.is-read svg,
+.coal-layout .core-topic-check.is-complete svg {
+  stroke: #10b981;
 }
 
 .coal-theory-overview {
@@ -75,7 +103,6 @@
 .coal-theory-overview .core-topics-header p {
   max-width: 62ch;
 }
-
 
 .coal-theory-overview .core-topics-header {
   margin-bottom: 1.5rem;

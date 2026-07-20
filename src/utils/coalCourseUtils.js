@@ -144,7 +144,17 @@ function isCoalPartSidebarActive(page, location) {
  * @param {object} page           - sidebar page object (has .partId)
  * @param {string[]} completedSubtopics - IDs already marked as read
  */
+
 function isCoalPartSidebarDone(page, completedSubtopics) {
+  // Topic-level page (used for the hero chapter dots + prev/next):
+  // check that one specific subtopic, not the whole part.
+  if (page.path && page.path.startsWith("/coal/")) {
+    const subtopicId = COAL_PATH_TO_SUBTOPIC_ID[page.path];
+    return subtopicId ? completedSubtopics.includes(subtopicId) : false;
+  }
+
+  // Part-level sidebar item: done only when every module in the part
+  // is completed.
   const part = coalCourseParts.find((p) => p.id === page.partId);
   if (!part) return false;
   return part.modules.every((module) =>
