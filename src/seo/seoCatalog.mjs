@@ -954,6 +954,27 @@ export const SEO_ROUTES = [
     ]
   }),
   buildRoute({
+    path: "/resources/coal/practical/alu-flags-simulator",
+    title: "ALU & Flags Simulator | Boolforge",
+    description:
+      "Practice arithmetic operations and see how ZF, CF, OF, and SF change in real time. Interactive x86 ALU simulator with flag visualisation.",
+    keywords: [
+      "alu flags simulator",
+      "x86 arithmetic flags",
+      "ZF CF OF SF",
+      "flag register simulation",
+      "assembly flags practice"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/practical/instruction-laboratory", label: "Instruction laboratory" },
+      { to: "/coal/register-flags", label: "Flags & condition codes theory" }
+    ]
+  }),
+  buildRoute({
     path: "/resources/coal/practical/stack-memory-simulator",
     title: "x86 Stack Memory Simulator and Visualizer | Boolforge",
     description:

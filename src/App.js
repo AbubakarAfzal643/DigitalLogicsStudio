@@ -26,6 +26,9 @@ const CoalProblemsPage = lazy(() => import("./pages/Problems/CoalProblemsPage"))
 const InstructionTraceLabPage = lazy(
   () => import("./pages/Coal/InstructionTraceLabPage"),
 );
+const AluFlagsSimulatorPage = lazy(
+  () => import("./pages/Coal/AluFlagsSimulatorPage"),
+);
 const StackMemorySimulatorPage = lazy(
   () => import("./pages/Coal/StackMemorySimulatorPage"),
 );
@@ -502,6 +505,10 @@ const AppContent = () => {
           <Route
             path="/resources/coal/practical/instruction-trace-lab"
             element={<InstructionTraceLabPage />}
+          />
+          <Route
+            path="/resources/coal/practical/alu-flags-simulator"
+            element={<AluFlagsSimulatorPage />}
           />
           <Route
             path="/resources/coal/practical/stack-memory-simulator"
