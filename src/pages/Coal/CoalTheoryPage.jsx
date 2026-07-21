@@ -5,15 +5,26 @@ import CoreTopicsSection from "../../components/topics/CoreTopicsSection";
 import { buildCoalCoreTopics } from "../../data/coalCoreTopics";
 import { coalCourseMeta, coalCourseParts } from "../../data/coalCourseOutline";
 import { getAllCoalModules } from "../../utils/coalCourseUtils";
+import { useCoalScrollSpy } from "../../hooks/useCoalScrollSpy";
 import "./CoalLayout.css";
 
 const coalTopics = buildCoalCoreTopics();
+const coalPartIds = coalCourseParts.map((part) => part.id);
 
 function CoalTheoryPage() {
   const location = useLocation();
   const modules = getAllCoalModules();
   const publishedCount = modules.filter((module) => module.hasContent).length;
 
+  // Scrollspy: updates the URL hash as the user scrolls past each part's
+  // card, which CoalSidebar (via useLocation) and isCoalPartSidebarActive
+  // both already key off of — no separate state needed.
+  useCoalScrollSpy(coalPartIds);
+
+  // One-shot: on direct load/navigation with a hash already in the URL
+  // (e.g. clicking a sidebar folder link), jump to that section. Scrollspy
+  // above only listens *outward* (scroll → hash); this handles the reverse
+  // (hash → scroll) so the two don't fight each other.
   useEffect(() => {
     if (!location.hash) return;
     const id = location.hash.replace("#", "");
@@ -21,7 +32,10 @@ function CoalTheoryPage() {
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [location.hash]);
+    // Only run on the hash actually present at navigation time, not on
+    // every scrollspy-driven hash replace, or it'll fight the scroll.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <CoalLayout

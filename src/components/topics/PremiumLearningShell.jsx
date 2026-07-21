@@ -8,36 +8,6 @@ import "../../pages/ArithmeticFunctionsAndHDLs/AFHDLLayout.css";
 import "./PremiumLearningShell.css";
 import RelatedSeoLinks from "../seo/RelatedSeoLinks";
 
-function useScrollSpy(sectionIds) {
-  const [activeId, setActiveId] = useState('');
-
-  useEffect(() => {
-    if (!sectionIds || sectionIds.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -80% 0px' 
-      }
-    );
-
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, [sectionIds]);
-
-  return activeId;
-}
-
 function SunIcon() {
   return (
     <svg
@@ -130,23 +100,6 @@ const PremiumLearningShell = ({
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [expandedFolders, setExpandedFolders] = useState(() => {
-    const saved = sessionStorage.getItem('sidebar-expanded-folders');
-    return saved ? JSON.parse(saved) : {};
-  });
-
-  const toggleFolder = (partId, e) => {
-    e.preventDefault(); 
-    
-    setExpandedFolders(prev => {
-      const newState = {
-        ...prev,
-        [partId]: !prev[partId]
-      };
-      sessionStorage.setItem('sidebar-expanded-folders', JSON.stringify(newState));
-      return newState;
-    });
-  };
 
   const currentPath = location.pathname;
   const navPages = sidebarPages?.length ? sidebarPages : pages;
@@ -267,14 +220,6 @@ const PremiumLearningShell = ({
     return pageSubtopicId ? completedSubtopics.includes(pageSubtopicId) : false;
   };
 
-  const sectionIdsToTrack = useMemo(() => {
-    return navPages
-      .map(page => page.path.includes("#") ? page.path.split("#")[1] : null)
-      .filter(Boolean);
-  }, [navPages]);
-
-  const activeScrolledId = useScrollSpy(sectionIdsToTrack);
-
   return (
     <div
       className={`afhdl-layout premium-topic-shell ${rootClassName} ${
@@ -385,75 +330,37 @@ const PremiumLearningShell = ({
             <nav className="afhdl-sidebar-nav">
               {navPages.map((page, index) => {
                 const done = pageDone(index, page);
-                let active = false;
-      
-                if (activeScrolledId && page.path.includes(`#${activeScrolledId}`)) {
-                  active = true;
-                } else if (!activeScrolledId) {
-                  active = isSidebarItemActive
-                    ? isSidebarItemActive(page, location)
-                    : page.path.split("#")[0] === currentPath &&
-                      (!page.path.includes("#") ||
-                        location.hash === page.path.slice(page.path.indexOf("#")));
-                }
-
-                const isExpanded = expandedFolders[page.partId];
+                const active = isSidebarItemActive
+                  ? isSidebarItemActive(page, location)
+                  : page.path.split("#")[0] === currentPath &&
+                    (!page.path.includes("#") ||
+                      location.hash === page.path.slice(page.path.indexOf("#")));
                 return (
-                  <div key={page.path} className="afhdl-sidebar-folder">
-                    {/* The Main Folder Button */}
-                    <NavLink
-                      to={page.path}
-                      className={() =>
-                        `afhdl-nav-item${active ? " is-active" : ""}${done ? " is-visited" : ""}`
-                      }
-                      onClick={(e) => {
-                        toggleFolder(page.partId, e);
-                        if (!page.modules || page.modules.length === 0) setSidebarOpen(false); 
-                      }}
-                    >
-                      <span className="afhdl-nav-index">
-                        {String(index + 1).padStart(2, "0")}
+                  <NavLink
+                    key={page.path}
+                    to={page.path}
+                    className={() =>
+                      `afhdl-nav-item${active ? " is-active" : ""}${done ? " is-visited" : ""}`
+                    }
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <span className="afhdl-nav-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="afhdl-nav-copy">
+                      <span className="afhdl-nav-label">{page.label}</span>
+                      <span className="afhdl-nav-description">
+                        {page.description}
                       </span>
-                      <span className="afhdl-nav-copy">
-                        <span className="afhdl-nav-label">{page.label}</span>
-                        <span className="afhdl-nav-description">
-                          {page.description}
+                    </span>
+                    <span className="afhdl-nav-status">
+                      {done ? (
+                        <span className="afhdl-nav-check" title="Completed">
+                          ✓
                         </span>
-                      </span>
-                      
-                      {/* Dropdown Arrow Icon */}
-                      {page.modules && page.modules.length > 0 && (
-                        <span className="afhdl-nav-chevron" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                          ›
-                        </span>
-                      )}
-                    </NavLink>
-
-                    {/* The Subtopics Dropdown */}
-                    {isExpanded && page.modules && (
-                      <div className="afhdl-sidebar-subnav">
-                        {page.modules.map(module => {
-                          const subtopicPath = `/coal/${module.slug}`;
-                          const isSubActive = currentPath === subtopicPath;
-                          const isSubDone = completedSubtopics.includes(module.slug);
-
-                          return (
-                            <NavLink
-                              key={module.slug}
-                              to={subtopicPath}
-                              className={`afhdl-subnav-item ${isSubActive ? "is-active" : ""} ${isSubDone ? "is-visited" : ""}`}
-                              onClick={() => setSidebarOpen(false)}
-                            >
-                              <span className="afhdl-subnav-indicator">
-                                {isSubDone ? "✓" : null}
-                              </span>
-                              <span className="afhdl-subnav-title">{module.title}</span>
-                            </NavLink>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+                      ) : null}
+                    </span>
+                  </NavLink>
                 );
               })}
             </nav>
@@ -468,15 +375,13 @@ const PremiumLearningShell = ({
 
         <main className="afhdl-main">
           <nav className="afhdl-breadcrumb" aria-label="Breadcrumb">
-            <Link to="/" className="afhdl-bc-link">Home</Link>
+            <Link to="/" className="afhdl-bc-link">
+              Home
+            </Link>
             <span className="afhdl-bc-sep">›</span>
-            <Link to="/resources/coal" className="afhdl-bc-link">COAL</Link>
+            <span className="afhdl-bc-mid">{topicLabel}</span>
             <span className="afhdl-bc-sep">›</span>
-            <Link to="/resources/coal/theory" className="afhdl-bc-link">Theory</Link>
-            <span className="afhdl-bc-sep">›</span>
-            {!isOverview && (
-              <span className="afhdl-bc-current">{title}</span>
-            )}
+            <span className="afhdl-bc-current">{title}</span>
           </nav>
 
           <section className="afhdl-hero">

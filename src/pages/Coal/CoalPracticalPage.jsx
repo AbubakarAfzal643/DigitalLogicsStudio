@@ -34,7 +34,8 @@ const PLANNED_PRACTICALS = [
     title: "ALU & flags simulator",
     description: "Practice arithmetic and see how ZF, CF, OF, and SF change.",
     icon: Cpu,
-    ready: false,
+    ready: true,
+    path: "/resources/coal/practical/alu-flags-simulator",
   },
   {
     key: "stack-memory-simulator",

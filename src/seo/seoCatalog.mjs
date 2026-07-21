@@ -1,3 +1,5 @@
+import { coalCourseParts } from "../data/coalCourseOutline.js";
+
 export const SITE_NAME = "Boolforge";
 export const SITE_URL = (
   process.env.REACT_APP_SITE_URL ||
@@ -815,26 +817,6 @@ export const SEO_ROUTES = [
     category: "Advanced Logic",
   }),
   buildRoute({
-    path: "/universal-gates",
-    title: "Universal Gates Tutorial | NAND and NOR Explained",
-    description:
-      "Learn why NAND and NOR are universal gates and how they implement complete digital logic systems.",
-    keywords: ["universal gates", "nand gate tutorial", "nor gate tutorial"],
-    type: "LearningResource",
-    section: "Advanced Logic",
-    category: "Advanced Logic",
-  }),
-  buildRoute({
-    path: "/odd-function",
-    title: "Odd Function and 3-Variable XOR | Boolforge",
-    description:
-      "Study the odd function, 3-variable XOR, and parity behavior for digital logic design and exam preparation.",
-    keywords: ["odd function xor", "3 variable xor"],
-    type: "LearningResource",
-    section: "Advanced Logic",
-    category: "Advanced Logic",
-  }),
-  buildRoute({
     path: "/gates",
     title: "Logic Gates Explained | Boolforge",
     description:
@@ -844,6 +826,359 @@ export const SEO_ROUTES = [
     section: "Advanced Logic",
     category: "Advanced Logic",
   }),
+  buildRoute({
+    path: "/resources",
+    title: "Computer Engineering & Digital Design Learning Resources | Boolforge",
+    description:
+      "Access interactive simulators, calculators, study guides, and custom practice sets for Digital Logic Design (DLD) and Computer Organization & Assembly Language (COAL).",
+    keywords: [
+      "digital logic design",
+      "computer organization",
+      "assembly language",
+      "computer engineering resources",
+      "dld track",
+      "coal track"
+    ],
+    type: "LearningResource",
+    section: "Resources",
+    category: "Learning Guides",
+    relatedLinks: [
+      { to: "/resources/dld", label: "DLD resources" },
+      { to: "/resources/coal", label: "COAL resources" },
+      { to: "/problems", label: "DLD practice" },
+      { to: "/resources/coal/problems", label: "COAL practice" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/dld",
+    title: "Digital Logic Design (DLD) Learning Resources | Boolforge",
+    description:
+      "Master digital logic design with our structured resource hub. Includes Boolean algebra simplifiers, K-map generators, and practice sets.",
+    keywords: [
+      "dld study guide",
+      "digital logic design tutorial",
+      "logic gates calculator",
+      "karnaugh map solver"
+    ],
+    type: "LearningResource",
+    section: "Resources",
+    category: "Digital Logic",
+    relatedLinks: [
+      { to: "/boolean/overview", label: "Boolean algebra tutorial" },
+      { to: "/kmapgenerator", label: "K-map solver" },
+      { to: "/book", label: "Solved practice exercises" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal",
+    title: "Computer Organization & Assembly Language (COAL) Hub | Boolforge",
+    description:
+      "Forge mastery in computer organization and assembly language. Learn CPU internals, positional number systems, x86 assembly, and execute instruction cycles visually.",
+    keywords: [
+      "computer organization and assembly language",
+      "coal tutorial",
+      "x86 assembly tutorial",
+      "cpu architecture",
+      "assembly drills"
+    ],
+    type: "LearningResource",
+    section: "COAL",
+    category: "Computer Organization",
+    relatedLinks: [
+      { to: "/resources/coal/theory", label: "COAL course syllabus" },
+      { to: "/resources/coal/practical", label: "Interactive assembly simulators" },
+      { to: "/resources/coal/problems", label: "COAL practice problems" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/theory",
+    title: "COAL Theory Syllabus & Learning Path | Boolforge",
+    description:
+      "Navigate the complete theoretical roadmap of Computer Organization & Assembly Language, from hardware gates up to pipelined instruction execution.",
+    keywords: [
+      "coal theory syllabus",
+      "computer organization lectures",
+      "assembly language lessons",
+      "x86 CPU design"
+    ],
+    type: "LearningResource",
+    section: "COAL",
+    category: "Computer Organization",
+    relatedLinks: [
+      { to: "/resources/coal", label: "COAL track landing" },
+      { to: "/resources/coal/practical", label: "Interactive labs" },
+      { to: "/resources/coal/problems", label: "COAL practice problems" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical",
+    title: "COAL Practical Labs and x86 Simulators | Boolforge",
+    description:
+      "Interactive tools for learning assembly language: trace x86 CPU fetch-decode-execute cycle, visualize stack memory frames, and practice coding drills.",
+    keywords: [
+      "x86 simulation tools",
+      "assembly compiler online",
+      "stack simulator",
+      "cpu register trace",
+      "addressing mode calculator"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical/instruction-trace-lab", label: "Instruction Trace Lab" },
+      { to: "/resources/coal/practical/stack-memory-simulator", label: "Stack Memory Simulator" },
+      { to: "/resources/coal/practical/assembly-drills", label: "Assembly Coding Drills" },
+      { to: "/resources/coal/practical/addressing-mode-playground", label: "Addressing Mode Playground" },
+      { to: "/resources/coal/practical/instruction-laboratory", label: "Instruction Laboratory" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/instruction-trace-lab",
+    title: "Instruction Trace Lab & CPU Datapath Simulator | Boolforge",
+    description:
+      "Step through the fetch, decode, and execute phases of assembly instructions in our interactive CPU register and bus visualizer.",
+    keywords: [
+      "instruction trace simulator",
+      "cpu datapath visualizer",
+      "fetch decode execute steps",
+      "register transfer simulator"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/practical/stack-memory-simulator", label: "Stack simulator" },
+      { to: "/coal/instruction-cycle", label: "Instruction cycle theory" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/alu-flags-simulator",
+    title: "ALU & Flags Simulator | Boolforge",
+    description:
+      "Practice arithmetic operations and see how ZF, CF, OF, and SF change in real time. Interactive x86 ALU simulator with flag visualisation.",
+    keywords: [
+      "alu flags simulator",
+      "x86 arithmetic flags",
+      "ZF CF OF SF",
+      "flag register simulation",
+      "assembly flags practice"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/practical/instruction-laboratory", label: "Instruction laboratory" },
+      { to: "/coal/register-flags", label: "Flags & condition codes theory" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/stack-memory-simulator",
+    title: "x86 Stack Memory Simulator and Visualizer | Boolforge",
+    description:
+      "Visualize how the stack grows and shrinks in memory with push, pop, call, and ret instructions. Track ESP, EBP and stack variables dynamically.",
+    keywords: [
+      "x86 stack simulator",
+      "stack memory visualizer",
+      "esp and ebp visualization",
+      "push pop stack frame"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/practical/instruction-laboratory", label: "Instruction laboratory" },
+      { to: "/coal/procedures-stack", label: "Stack & procedures theory" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/assembly-drills",
+    title: "x86 Assembly Programming Drills & Exercises | Boolforge",
+    description:
+      "Strengthen your coding skills with interactive assembly drills. Solve registry transfer, arithmetic, loops, and conditional problems in MASM style.",
+    keywords: [
+      "assembly drills",
+      "x86 coding exercises",
+      "assembly practice problems",
+      "learn x86 programming"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/problems", label: "COAL exam questions" },
+      { to: "/coal/coal-syntax", label: "Assembly syntax guide" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/addressing-mode-playground",
+    title: "CPU Addressing Modes Interactive Playground | Boolforge",
+    description:
+      "Compute effective addresses for immediate, direct, indirect, indexed, and scaled-indexed addressing modes visually.",
+    keywords: [
+      "addressing modes playground",
+      "effective address calculator",
+      "assembly addressing modes",
+      "x86 direct and indirect addressing"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/coal/addressing-modes", label: "Addressing modes theory" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/practical/instruction-laboratory",
+    title: "Intel x86 Instruction Laboratory | Boolforge",
+    description:
+      "Write and run assembly code, view memory registers, and study data movement and control flow instruction execution interactively.",
+    keywords: [
+      "x86 instruction simulator",
+      "intel assembly sandbox",
+      "assembly code runner online",
+      "learn instruction sets"
+    ],
+    type: "SoftwareApplication",
+    section: "COAL",
+    category: "SoftwareApplication",
+    relatedLinks: [
+      { to: "/resources/coal/practical", label: "All practical labs" },
+      { to: "/resources/coal/practical/instruction-trace-lab", label: "Instruction trace lab" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/problems",
+    title: "COAL Practice Problems & Assembly Exam Questions | Boolforge",
+    description:
+      "Practice exam-style assembly questions, number representation quizzes, and micro-operation tracing problems for COAL revision.",
+    keywords: [
+      "coal exam questions",
+      "assembly programming practice",
+      "computer organization questions",
+      "cache memory questions"
+    ],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL",
+    relatedLinks: [
+      { to: "/resources/coal/problems/foundations", label: "Foundations practice" },
+      { to: "/resources/coal/problems/number-systems", label: "Number system practice" },
+      { to: "/resources/coal/problems/assembly-programming", label: "Assembly coding practice" }
+    ]
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/foundations",
+    title: "COAL Foundations Practice Problems | Boolforge",
+    description: "Solve conceptual challenges on Von Neumann architecture, CPU buses, and computer organization fundamentals.",
+    keywords: ["computer organization problems", "von neumann questions"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL Foundations",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/number-systems",
+    title: "COAL Number Systems & Signed Arithmetic Problems | Boolforge",
+    description: "Practice conversion exercises, 2's complement bounds, and binary arithmetic overflow challenges.",
+    keywords: ["signed numbers practice", "binary overflow problems"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL Number Systems",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/isa-registers",
+    title: "COAL ISA and Registers Practice Problems | Boolforge",
+    description: "Solve challenges on x86 register sets, flags register status, and addressing mode calculations.",
+    keywords: ["x86 register problems", "effective address exercises"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL ISA & Registers",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/assembly-programming",
+    title: "COAL x86 Assembly Programming Practice Problems | Boolforge",
+    description: "Solve coding and debug exercises on loops, conditions, procedure stack frames, arrays, and string operations.",
+    keywords: ["x86 assembly coding exercises", "procedures stack frames problems"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL Assembly Coding",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/cache-memory",
+    title: "COAL Cache and Memory Hierarchy Problems | Boolforge",
+    description: "Practice problems on direct-mapped cache, associative caches, cache hit/miss ratio, and memory decoding.",
+    keywords: ["cache hit miss ratio problems", "direct mapped cache questions"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL Cache & Memory",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/io-interrupts",
+    title: "COAL I/O and Interrupt Handling Practice Problems | Boolforge",
+    description: "Solve conceptual questions on programmed I/O, interrupt-driven systems, IVT, and DMA transfers.",
+    keywords: ["dma transfer questions", "interrupt service routine problems"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL I/O & Interrupts",
+  }),
+  buildRoute({
+    path: "/resources/coal/problems/pipelining-risc",
+    title: "COAL Pipelining & RISC Architecture Problems | Boolforge",
+    description: "Analyze instruction pipelining, hazards (structural, data, control), CPI, and RISC vs CISC design tradeoffs.",
+    keywords: ["pipelining hazards problems", "risc vs cisc exercises"],
+    type: "FAQPage",
+    section: "Practice",
+    category: "COAL Pipelining & RISC",
+  }),
+  buildRoute({
+    path: "/forgot-password",
+    title: "Forgot Password | Recover Account | Boolforge",
+    description: "Reset your Boolforge account password to recover your study progress and solved problems.",
+    noindex: true,
+    type: "WebPage",
+    section: "Account",
+    category: "Authentication",
+  }),
+  buildRoute({
+    path: "/settings",
+    title: "Settings | Manage Account | Boolforge",
+    description: "Manage your Boolforge account settings and study preferences.",
+    noindex: true,
+    type: "WebPage",
+    section: "Account",
+    category: "Authentication",
+  }),
+  ...coalCourseParts.flatMap((part) =>
+    part.modules.map((module) => {
+      const description = `Study ${module.title} on Boolforge. Outcomes: ${module.outcomes.slice(0, 2).join(", ")}. Part of the Computer Organization & Assembly Language (COAL) track.`;
+      return buildRoute({
+        path: `/coal/${module.slug}`,
+        title: `${module.title} | COAL Tutorial | Boolforge`,
+        description,
+        category: `COAL ${part.title}`,
+        section: "COAL",
+        type: "LearningResource",
+        keywords: [
+          module.slug.replace(/-/g, " "),
+          module.title.toLowerCase(),
+          "coal tutorial",
+          "assembly language",
+          "computer organization",
+          ...module.outcomes.map(o => o.toLowerCase().slice(0, 30))
+        ],
+        relatedLinks: [
+          { to: "/resources/coal/theory", label: "COAL Syllabus & Modules" },
+          { to: "/resources/coal/practical", label: "COAL Assembly Labs" },
+          { to: "/resources/coal/problems", label: "COAL Practice Problems" }
+        ]
+      });
+    })
+  )
 ];
 
 export const SEO_ROUTE_MAP = Object.fromEntries(

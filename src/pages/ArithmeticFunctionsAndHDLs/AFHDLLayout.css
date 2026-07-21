@@ -23,14 +23,12 @@
   --afhdl-sidebar-width: clamp(240px, 28vw, 300px);
   --afhdl-topbar-height: 56px;
 
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
   background: var(--afhdl-bg);
   color: var(--afhdl-text);
   font-family: Inter, system-ui, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* ── Light theme overrides ─────────────────────────────────── */
@@ -104,7 +102,6 @@
   z-index: 100;
   height: var(--afhdl-topbar-height);
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -253,9 +250,7 @@
 .afhdl-body {
   position: relative;
   z-index: 1;
-  flex: 1;
   display: flex;
-  overflow: hidden;
   min-height: calc(100vh - var(--afhdl-topbar-height));
 }
 
@@ -280,7 +275,6 @@
   width: var(--afhdl-sidebar-width);
   transform: translateX(-100%);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  flex-shrink: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -357,7 +351,7 @@
 
 .afhdl-nav-item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto; 
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.7rem;
   align-items: center;
   padding: 0.72rem 0.8rem;
@@ -446,72 +440,6 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DROPDOWN FOLDERS & SUB-NAVIGATION
-══════════════════════════════════════════════════════════════ */
-
-.afhdl-sidebar-folder {
-  display: flex;
-  flex-direction: column;
-}
-
-.afhdl-nav-chevron {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--afhdl-muted);
-  font-size: 1.2rem;
-  padding-left: 0.2rem;
-  line-height: 1;
-}
-
-.afhdl-sidebar-subnav {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 2px;
-  margin-bottom: 6px;
-  margin-left: 1.4rem; 
-  padding-left: 0.8rem;
-  border-left: 1px solid var(--afhdl-border); 
-}
-
-.afhdl-subnav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 0.6rem;
-  font-size: 0.82rem;
-  color: var(--afhdl-muted);
-  text-decoration: none;
-  transition: 
-    background 0.16s ease, 
-    color 0.16s ease, 
-    transform 0.16s ease;
-}
-
-.afhdl-subnav-item:hover {
-  color: var(--afhdl-text);
-  background: var(--afhdl-accent-soft);
-  transform: translateX(2px);
-}
-
-.afhdl-subnav-item.is-active {
-  color: var(--afhdl-text);
-  font-weight: 600;
-  background: linear-gradient(90deg, rgba(79, 70, 229, 0.1), transparent);
-}
-
-.afhdl-subnav-indicator {
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.afhdl-subnav-item.is-visited .afhdl-subnav-indicator {
-  color: #4ade80; 
-}
-
-/* ══════════════════════════════════════════════════════════════
    MAIN CONTENT AREA
 ══════════════════════════════════════════════════════════════ */
 .afhdl-main {
@@ -519,7 +447,6 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   gap: 1.25rem;
   width: min(860px, 100%);
   margin: 0 auto;

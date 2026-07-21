@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageCircle, Minus, Send, Trash2 } from "lucide-react";
+import {Bot, MessageCircle, Minus, Send, Trash2} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { sendChatMessage } from "../../services/aiService";
 import { isPrerendering } from "../../utils/prerender";
@@ -12,7 +12,7 @@ import {
 } from "../../utils/topicFromPath";
 import "./DlsMentorWidget.css";
 import { renderChatMessage } from "./formatChatMessage";
-
+// import { Bot, Minus, Send, Trash2 } from "lucide-react";
 const LEVEL_OPTIONS = [
   { value: "beginner", label: "Beginner" },
   { value: "intermediate", label: "Intermediate" },
@@ -29,6 +29,7 @@ const QUICK_PROMPTS = [
 const LEVEL_STORAGE_KEY = "dls-mentor-level";
 const COURSE_STORAGE_KEY = "dls-mentor-course";
 const TOPIC_STORAGE_KEY = "dls-mentor-topic";
+
 
 function getDefaultTopicForCourse(course) {
   return course === "coal"
@@ -67,6 +68,7 @@ function DlsMentorWidget() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [recentTopics, setRecentTopics] = useState([]);
+  const [showIntroIcon, setShowIntroIcon] = useState(true);
   const [level, setLevel] = useState(() => {
     if (typeof window === "undefined") return "intermediate";
     return window.localStorage.getItem(LEVEL_STORAGE_KEY) || "intermediate";
@@ -123,6 +125,19 @@ function DlsMentorWidget() {
       return next.slice(0, 3);
     });
   }, [selectedTopic]);
+
+useEffect(() => {
+    let timer;
+    const cycle = () => {
+      setShowIntroIcon((prev) => {
+        const next = !prev;
+        timer = setTimeout(cycle, next ? 1000 : 3000);
+        return next;
+      });
+    };
+    timer = setTimeout(cycle, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleCourseChange = (event) => {
     const nextCourse = event.target.value;
@@ -213,14 +228,22 @@ function DlsMentorWidget() {
         type="button"
         className="dls-mentor-launcher"
         onClick={() => setIsOpen(true)}
-        aria-label="Open DLS & COAL Mentor chat"
-        title="DLS & COAL Mentor"
+        aria-label="Open BoolMentor chat"
+        title="BoolMentor"
       >
-        <MentorAvatar className="dls-mentor-launcher__icon" iconSize={22} />
-        <span className="dls-mentor-launcher__text">
-          <span className="dls-mentor-launcher__title">DLS & COAL Mentor</span>
-          <span className="dls-mentor-launcher__hint">Digital Logic · Computer Organization</span>
+         <span className="dls-mentor-launcher__icon" aria-hidden="true">
+          <span
+            className={`bot-icon bot-icon--intro${showIntroIcon ? " is-visible" : ""}`}
+          >
+            Hi
+          </span>
+          <Bot
+            size={22}
+            strokeWidth={2}
+            className={`bot-icon bot-icon--main${showIntroIcon ? "" : " is-visible"}`}
+          />
         </span>
+        <span className="dls-mentor-launcher__title">BoolMentor</span>
       </button>
     );
   }
