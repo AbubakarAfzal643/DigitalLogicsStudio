@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import authService from "../services/authService";
@@ -95,17 +96,20 @@ export function AuthProvider({ children }) {
     [applyUserState],
   );
 
-  const value = {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    register,
-    logout,
-    solvedProblems,
-    markProblemSolved,
-    hasSolvedProblem,
-  };
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthenticated: !!user,
+      login,
+      register,
+      logout,
+      solvedProblems,
+      markProblemSolved,
+      hasSolvedProblem,
+    }),
+    [user, loading, login, register, logout, solvedProblems, markProblemSolved, hasSolvedProblem],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
