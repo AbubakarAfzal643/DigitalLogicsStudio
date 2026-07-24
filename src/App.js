@@ -1,11 +1,11 @@
-import React, { Suspense, lazy, useEffect, useRef } from "react";
+import React, { Suspense, lazy } from "react";
 import "./App.css";
 import {
   BrowserRouter,
   Routes,
   Route,
   Navigate,
-  useLocation,
+ 
 } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { useTheme } from "./context/ThemeContext";
@@ -205,7 +205,6 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // ScrollToTop and route synchronization
 const AppContent = () => {
-  const location = useLocation();
   
 
   return (
